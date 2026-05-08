@@ -67,6 +67,7 @@ raw_thestats <- list_score(
 
 clean_thestats <- raw_thestats %>%
   filter(as.numeric(year) <= 2020) %>%
+  filter(!str_detect(str_to_lower(department), "woodworking|fisheries|aquaculture|forest|design")) %>%
   mutate(
     University_Type = case_when(
       str_detect(str_to_lower(type), "devlet|state") ~ "State",
@@ -95,17 +96,39 @@ clean_kaggle <- raw_kaggle %>%
     dept_kucuk = str_to_lower(department_name),
     tur_kucuk = str_to_lower(university_type)
   ) %>%
-  # KESİN FİLTRE: "Endüstri" ve "Mühendis" geçmeli, AMA Orman/Ağaç/Tasarım GEÇMEMELİ
   filter(
     str_detect(dept_kucuk, "end.str") & str_detect(dept_kucuk, "m.hendis"),
-    !str_detect(dept_kucuk, "orman|a.a.|tasar.m")
+    !str_detect(dept_kucuk, "orman|a.a.|tasar.m|su .r.nleri")
   ) %>%
   mutate(
     University_Type = case_when(
       str_detect(tur_kucuk, "devlet|state|kamu") ~ "State",
-      str_detect(tur_kucuk, "vak|foundation|özel|private") ~ "Foundation",
+      str_detect(tur_kucuk, "vak|foundation|.zel|private") ~ "Foundation",
       TRUE ~ "Other"
-    )
+    ),
+    # ==========================================
+    # KUSURSUZ (ASCII-SAFE) ÇEVİRİ MOTORU
+    # RStudio'yu çökerten tüm Türkçe harfler noktaya (.) çevrildi.
+    # (?i) komutu büyük/küçük harf ayrımını otomatik yok eder.
+    # ==========================================
+    university_name = str_replace_all(university_name, "(?i).n.vers.tes.", "UNIVERSITY"),
+    university_name = str_replace_all(university_name, "(?i)tekn.k", "TECHNICAL"),
+    university_name = str_replace_all(university_name, "(?i)enst.t.s.", "INSTITUTE"),
+    
+    faculty_name = str_replace_all(faculty_name, "(?i)m.hend.sl.k", "Engineering"),
+    faculty_name = str_replace_all(faculty_name, "(?i)fak.ltes.", "Faculty"),
+    faculty_name = str_replace_all(faculty_name, "(?i)m.marl.k", "Architecture"),
+    faculty_name = str_replace_all(faculty_name, "(?i)do.a b.l.mler.", "Natural Sciences"),
+    faculty_name = str_replace_all(faculty_name, "(?i) ve ", " and "),
+    faculty_name = str_replace_all(faculty_name, "(?i).sletme", "Business"),
+    faculty_name = str_replace_all(faculty_name, "(?i)b.l.mler.", "Sciences"),
+    
+    department_name = str_replace_all(department_name, "(?i)end.str.", "Industrial"),
+    department_name = str_replace_all(department_name, "(?i)m.hend.sl...", "Engineering"),
+    department_name = str_replace_all(department_name, "(?i).ng.l.zce", "English"),
+    department_name = str_replace_all(department_name, "(?i)burslu", "Scholarship"),
+    department_name = str_replace_all(department_name, "(?i).nd.r.ml.", "Discount"),
+    department_name = str_replace_all(department_name, "(?i).cretl.", "Paid")
   ) %>%
   filter(University_Type != "Other") %>%
   select(
@@ -121,7 +144,11 @@ clean_kaggle <- raw_kaggle %>%
 # PART 3: MASTER COMBINED DATASET
 # ==========================================
 ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
-  mutate(University_Name = str_squish(University_Name)) %>%
+  mutate(
+    University_Name = str_to_title(str_squish(University_Name)),
+    Faculty_Name = str_to_title(str_squish(Faculty_Name)),
+    Department_Name = str_to_title(str_squish(Department_Name))
+  ) %>%
   arrange(desc(Year), University_Name)
 
 # İnteraktif Tabloyu Gösterme
