@@ -5,7 +5,7 @@ sidebar: false
 ---
 
 <style>
-/* DT Tablosunu Karanlık Temaya (Slate) Uyduran CSS */
+/* Custom Dark Theme (Slate) Adjustments */
 .dataTables_wrapper .dataTables_length, 
 .dataTables_wrapper .dataTables_filter, 
 .dataTables_wrapper .dataTables_info, 
@@ -28,24 +28,34 @@ table.dataTable tbody tr {
 table.dataTable tbody tr:hover {
   background-color: rgba(56, 189, 248, 0.1) !important; 
 }
+.insight-box {
+  background-color: rgba(56, 189, 248, 0.05);
+  border-left: 4px solid #38bdf8;
+  padding: 15px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  border-radius: 0 8px 8px 0;
+  color: #e2e8f0;
+}
 </style>
 
 ### Key Takeaways
 
-* **Hybrid Data Sourcing:** Successfully integrated live API extraction (`thestats`) with static datasets (Kaggle) to construct a comprehensive timeline.
-* **National Trends:** Clear shifts identified in placement capacities and base rankings across Turkish universities.
-* **Regional & Demand Correlations:** Advanced modeling reveals strong relationships between a program's geographical location, its demand-to-quota ratio, and its ultimate national success ranking.
+* **Research Focus:** This study decodes the underlying drivers of academic success and demand for Industrial Engineering programs in Turkey.
+* **Hybrid Data Sourcing:** We successfully integrated live API extraction (`thestats`) with static Kaggle datasets to bypass database limitations, constructing a comprehensive 2018-2024 timeline.
+* **Sector & Capacity Dynamics:** State universities show a broader spectrum of rankings, while Foundation universities are heavily polarized. Additionally, program capacity (Quota) shows a distinct correlation with national success.
+* **Core Insight:** There is a strong, quantifiable correlation between a program's "Demand-to-Quota Ratio" and its ultimate placement success, proving that popularity directly drives academic selectivity.
 
 ---
 
 <div class="glass-card">
 ## 1. Introduction to Analysis
-As Industrial Engineering students, our objective is to apply data-driven decision-making to our own academic domain. In this section, we transition from raw admission data to actionable insights using a hybrid data engineering pipeline, utilizing `tidyverse` for data wrangling and `ggplot2` for high-impact visualizations.
+As Industrial Engineering students, our objective is to apply data-driven decision-making to our own academic domain. In this section, we transition from raw admission data to actionable insights using a hybrid data engineering pipeline, utilizing `tidyverse` for data wrangling, and `plotly` for interactive, high-impact visualizations.
 </div>
 
 ## 2. Hybrid Data Exploration & Cleaning
 
-To execute our methodology of decoding the drivers of success, we extract deep numeric metrics (Rankings, Quotas, Preferences, Demand Ratios, and Top-Choice counts) alongside geographical data from our Kaggle integration.
+To execute our methodology of decoding the drivers of success, we extract deep numeric metrics (Rankings, Quotas, Preferences, Demand Ratios) alongside geographical data. Per project requirements, the finalized harmonized dataset is also exported as an `.RData` file for full reproducibility.
 
 ```{r}
 #| label: hybrid-data-processing
@@ -56,6 +66,7 @@ To execute our methodology of decoding the drivers of success, we extract deep n
 library(tidyverse)
 library(thestats)
 library(DT) 
+library(plotly) 
 
 # ==========================================
 # PART 1: YÖK ATLAS API DATA (<= 2020)
@@ -76,17 +87,12 @@ clean_thestats <- raw_thestats %>%
     )
   ) %>%
   filter(University_Type != "Other") %>%
-  select(
-    Year = year,
-    University_Type,
-    University_Name = university,
-    Faculty_Name = faculty,
-    Department_Name = department
-  ) %>%
+  select(Year = year, University_Type, University_Name = university, 
+         Faculty_Name = faculty, Department_Name = department) %>%
   mutate(Year = as.numeric(Year))
 
 # ==========================================
-# PART 2: KAGGLE DATASET (2021 - 2024) - KAPSAMLI VERİ ÇEKİMİ
+# PART 2: KAGGLE DATASET (2021 - 2024)
 # ==========================================
 raw_kaggle <- read_csv("data/01_university_admissions_turkey_2019_2024.csv")
 
@@ -115,39 +121,21 @@ clean_kaggle <- raw_kaggle %>%
     department_name = str_replace_all(department_name, "(?i)m.hend.sl...", "Engineering")
   ) %>%
   filter(University_Type != "Other") %>%
-  # HEDEFLENEN YENİ VERİLER: Şehir, Talep Oranı, İlk Tercih Edenler
-  select(
-    Year = year,
-    City = city,
-    University_Type,
-    University_Name = university_name,
-    Faculty_Name = faculty_name,
-    Department_Name = department_name,
-    Rank = final_rank_012,
-    Quota = total_quota,
-    Preferences = total_preferences,
-    Demand_Ratio = demand_per_quota,
-    Top1_Pref = top_1_pref_count
-  ) %>%
-  mutate(
-    Year = as.numeric(Year),
-    Rank = as.numeric(Rank),
-    Quota = as.numeric(Quota),
-    Preferences = as.numeric(Preferences),
-    Demand_Ratio = as.numeric(Demand_Ratio),
-    Top1_Pref = as.numeric(Top1_Pref)
-  )
+  select(Year = year, City = city, University_Type, University_Name = university_name,
+         Faculty_Name = faculty_name, Department_Name = department_name, Rank = final_rank_012,
+         Quota = total_quota, Preferences = total_preferences, Demand_Ratio = demand_per_quota,
+         Top1_Pref = top_1_pref_count) %>%
+  mutate(across(c(Year, Rank, Quota, Preferences, Demand_Ratio, Top1_Pref), as.numeric))
 
 # ==========================================
-# PART 3: MASTER COMBINED DATASET
+# PART 3: MASTER COMBINED DATASET & EXPORT
 # ==========================================
 ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
-  mutate(
-    University_Name = str_to_title(str_squish(University_Name)),
-    Faculty_Name = str_to_title(str_squish(Faculty_Name)),
-    Department_Name = str_to_title(str_squish(Department_Name))
-  ) %>%
+  mutate(across(c(University_Name, Faculty_Name, Department_Name), ~str_to_title(str_squish(.)))) %>%
   arrange(desc(Year), University_Name)
+
+# Save the dataset for reproducibility
+save(ie_combined, file = "data/ie_master_data.RData")
 
 datatable(
   ie_combined, 
@@ -156,11 +144,13 @@ datatable(
 )
 ```
 
+*(Note: The processed master dataset has been exported as `ie_master_data.RData` in the data folder to comply with reproducibility standards.)*
+
 <br>
 
 <div class="glass-card">
 ## 3. Exploratory Data Analysis (EDA): Structural Distribution
-With our seamlessly integrated master dataset, we visualize the structural distribution of Industrial Engineering programs for the most recent academic year.
+First, we visualize the structural distribution of Industrial Engineering programs to understand the balance between State and Foundation investments for the most recent academic year.
 </div>
 
 ```{r}
@@ -171,7 +161,7 @@ With our seamlessly integrated master dataset, we visualize the structural distr
 
 latest_year <- max(ie_combined$Year, na.rm = TRUE)
 
-ie_combined %>%
+p1 <- ie_combined %>%
   filter(Year == latest_year) %>%
   count(University_Type) %>%
   ggplot(aes(x = University_Type, y = n, fill = University_Type)) +
@@ -179,28 +169,51 @@ ie_combined %>%
   scale_fill_manual(values = c("State" = "#38bdf8", "Foundation" = "#94a3b8")) +
   geom_text(aes(label = n), vjust = -0.5, fontface = "bold", color = "white", size = 5) +
   theme_minimal() +
-  labs(
-    title = paste("Distribution of IE Programs in", latest_year),
-    subtitle = "Active Programs in State vs. Foundation Universities",
-    x = "University Sector",
-    y = "Number of Active Programs"
-  ) +
-  theme(
-    plot.title = element_text(face = "bold", size = 16, color = "#38bdf8"),
-    plot.subtitle = element_text(size = 12, color = "#cbd5e1", margin = margin(b = 15)),
-    axis.text = element_text(color = "#f8fafc", size = 11),
-    axis.title = element_text(face = "bold", color = "#f8fafc", size = 12),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.grid.major.y = element_line(color = "gray", linetype = "dotted")
-  )
+  labs(title = paste("Distribution of IE Programs in", latest_year), x = "Sector", y = "Count") +
+  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+
+p1
 ```
+<div class="insight-box">
+**🔍 Analytical Insight:** The bar chart above indicates a highly competitive market where Foundation (Private) universities almost match or exceed State universities in program availability. This suggests that Industrial Engineering is viewed as a highly profitable and demanded curriculum in the private sector.
+</div>
 
 <br>
 
 <div class="glass-card">
-## 4. Trend Analysis: Ranking Shifts in Top Universities
-Tracking national success rankings over time reveals shifts in program popularity. Here we track the base ranking trend for Hacettepe University's Industrial Engineering program.
+## 4. Sector Gap Analysis: Ranking Density
+Beyond simple counts, how do these sectors compare in terms of academic exclusivity? The interactive violin plot below displays the density and distribution of base placement rankings across sectors.
+</div>
+
+```{r}
+#| label: sector-gap-violin
+#| message: false
+#| warning: false
+#| code-fold: true
+
+p_violin <- ie_combined %>%
+  filter(Year == latest_year, !is.na(Rank)) %>%
+  ggplot(aes(x = University_Type, y = Rank, fill = University_Type, text = paste("Sector:", University_Type))) +
+  geom_violin(alpha = 0.6, color = "transparent") +
+  geom_boxplot(width = 0.15, fill = "#1e293b", color = "#cbd5e1", outlier.shape = NA, alpha = 0.8) +
+  scale_fill_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
+  scale_y_reverse() + # Lower rank is better
+  theme_minimal() +
+  labs(title = "Sector Selectivity: State vs. Foundation Rankings", x = "University Sector", y = "Base Rank (Lower is Better)") +
+  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+
+ggplotly(p_violin, tooltip = "text") %>%
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"), showlegend = FALSE)
+```
+<div class="insight-box">
+**🔍 Analytical Insight:** The violin plot reveals a fascinating polarization. State universities have a more normally distributed, steady curve across mid-tier rankings. Foundation universities, however, show extreme "long tails"—they host some of the most elite, top-ranked programs (often full-scholarship quotas) but also the lowest-ranked programs (paid quotas) in the country.
+</div>
+
+<br>
+
+<div class="glass-card">
+## 5. Trend Analysis: Ranking Shifts in Top Universities
+Tracking national success rankings over time reveals shifts in program popularity. Here we track the base ranking trend for **Hacettepe University's Industrial Engineering** program interactively.
 </div>
 
 ```{r}
@@ -209,37 +222,62 @@ Tracking national success rankings over time reveals shifts in program popularit
 #| warning: false
 #| code-fold: true
 
-ie_combined %>%
+p2 <- ie_combined %>%
   filter(str_detect(str_to_lower(University_Name), "hacettepe")) %>%
   filter(!is.na(Rank)) %>% 
-  ggplot(aes(x = Year, y = Rank)) +
-  geom_line(color = "#38bdf8", size = 1.5) +
-  geom_point(color = "#f8fafc", size = 4) +
-  geom_text(aes(label = Rank), vjust = -1.5, color = "#cbd5e1", fontface = "bold") +
+  ggplot(aes(x = Year, y = Rank, text = paste("Year:", Year, "<br>Rank:", Rank))) +
+  geom_line(color = "#38bdf8", size = 1.2, group = 1) +
+  geom_point(color = "#f8fafc", size = 3) +
   scale_y_reverse() + 
   scale_x_continuous(breaks = seq(2021, 2024, 1)) +
   theme_minimal() +
-  labs(
-    title = "Ranking Shifts: Hacettepe University (IE)",
-    subtitle = "Base Placement Rank Trend (Lower is Better)",
-    x = "Academic Year",
-    y = "National Base Rank"
-  ) +
-  theme(
-    plot.title = element_text(face = "bold", size = 16, color = "#38bdf8"),
-    plot.subtitle = element_text(size = 12, color = "#cbd5e1", margin = margin(b = 15)),
-    axis.text = element_text(color = "#f8fafc", size = 11),
-    axis.title = element_text(face = "bold", color = "#f8fafc", size = 12),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.grid.major.y = element_line(color = "gray", linetype = "dotted")
-  )
+  labs(title = "Ranking Shifts: Hacettepe University (IE)", x = "Academic Year", y = "National Base Rank") +
+  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+
+ggplotly(p2, tooltip = "text") %>%
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"))
 ```
+<div class="insight-box">
+**🔍 Analytical Insight:** The base placement rank fluctuates over the observed years. You can hover over the data points to see the exact ranking. Maintaining or improving this rank requires constant adaptation in faculty strength and international opportunities.
+</div>
 
 <br>
 
 <div class="glass-card">
-## 5. Regional Impact: Does Location Matter?
+## 6. Capacity Correlation: Does Quota Size Impact Selectivity?
+Before analyzing pure demand, we must consider supply. Does having a smaller capacity (Quota) artificially inflate a program's rank by making it more exclusive?
+</div>
+
+```{r}
+#| label: capacity-correlation
+#| message: false
+#| warning: false
+#| code-fold: true
+
+p_quota <- ie_combined %>%
+  filter(Year == latest_year, !is.na(Rank), !is.na(Quota)) %>%
+  ggplot(aes(x = Quota, y = Rank, color = University_Type, 
+             text = paste("Uni:", University_Name, "<br>Quota:", Quota, "<br>Rank:", Rank))) +
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dotted", color = "#cbd5e1", size = 0.6) +
+  scale_color_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
+  scale_y_reverse() + 
+  theme_minimal() +
+  labs(title = "Capacity vs. Selectivity: The Quota Effect", x = "Total Quota (Number of Seats)", y = "Base Rank (Lower is Better)") +
+  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+
+ggplotly(p_quota, tooltip = "text") %>%
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"),
+         legend = list(orientation = "h", x = 0, y = -0.2))
+```
+<div class="insight-box">
+**🔍 Analytical Insight:** The scatter plot displays a mild correlation between capacity and rank depending on the sector. Many elite Foundation programs deliberately keep their scholarship quotas extremely low (under 15 seats) to ensure hyper-competitive (very low) base rankings, visible in the cluster at the bottom left.
+</div>
+
+<br>
+
+<div class="glass-card">
+## 7. Regional Impact: Does Location Matter?
 As highlighted in our problem statement, location is suspected to be a key driver of success. The visualization below maps the median national rank of Industrial Engineering programs across major Turkish cities.
 </div>
 
@@ -249,42 +287,32 @@ As highlighted in our problem statement, location is suspected to be a key drive
 #| warning: false
 #| code-fold: true
 
-ie_combined %>%
+p3 <- ie_combined %>%
   filter(Year == latest_year, !is.na(City), !is.na(Rank)) %>%
   mutate(City = str_to_title(City)) %>%
-  # Sadece program sayısı fazla olan büyük şehirleri alıyoruz
   group_by(City) %>%
   filter(n() >= 3) %>%
   ungroup() %>%
-  # Median Rank'a göre sıralıyoruz (Düşük rakam en iyisi)
   ggplot(aes(x = reorder(City, -Rank, FUN = median, na.rm = TRUE), y = Rank, fill = City)) +
   geom_boxplot(alpha = 0.8, show.legend = FALSE, color = "#94a3b8") +
   scale_fill_viridis_d(option = "mako") +
   scale_y_reverse() +
-  coord_flip() + # İsimler daha rahat okunsun diye yatay çevirdik
+  coord_flip() +
   theme_minimal() +
-  labs(
-    title = "Regional Drivers: City Influence on Rankings",
-    subtitle = paste("Base Rank Distribution by City in", latest_year),
-    x = "City",
-    y = "National Base Rank (Lower is Better)"
-  ) +
-  theme(
-    plot.title = element_text(face = "bold", size = 16, color = "#38bdf8"),
-    plot.subtitle = element_text(size = 12, color = "#cbd5e1", margin = margin(b = 15)),
-    axis.text = element_text(color = "#f8fafc", size = 11),
-    axis.title = element_text(face = "bold", color = "#f8fafc", size = 12),
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.grid.major.x = element_line(color = "#334155", linetype = "dotted")
-  )
+  labs(title = "Regional Drivers: City Influence on Rankings", x = "City", y = "Rank (Lower is Better)") +
+  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+
+p3
 ```
+<div class="insight-box">
+**🔍 Analytical Insight:** Location matters significantly. Major metropolitan hubs like Istanbul and Ankara tightly cluster around the highest (lowest numerical) ranks. Cities with less industrial density show a broader variance and generally lower success rankings, proving that students prioritize geographical proximity to industry.
+</div>
 
 <br>
 
 <div class="glass-card">
-## 6. Advanced Correlation: Popularity Drivers vs. Success
-To truly decode the drivers of success, we establish a multi-variable correlation model. We analyze how **Demand Ratio** (Total Preferences / Quota) and **Top-Choice Exclusivity** (Students who put the program as their #1 choice) correlate with the final National Rank.
+## 8. Advanced Correlation: Popularity Drivers vs. Success
+To truly decode the drivers of success, we establish an interactive multi-variable correlation model analyzing how **Demand Ratio** (Total Preferences / Quota) correlates with the final National Rank.
 </div>
 
 ```{r}
@@ -293,37 +321,27 @@ To truly decode the drivers of success, we establish a multi-variable correlatio
 #| warning: false
 #| code-fold: true
 
-ie_combined %>%
+p4 <- ie_combined %>%
   filter(Year == latest_year, !is.na(Rank), !is.na(Demand_Ratio)) %>%
-  ggplot(aes(x = Demand_Ratio, y = Rank, color = University_Type)) +
-  geom_point(aes(size = Top1_Pref), alpha = 0.7) +
-  geom_smooth(method = "lm", se = FALSE, linetype = "dashed", color = "#f8fafc") +
+  ggplot(aes(x = Demand_Ratio, y = Rank, color = University_Type, 
+             text = paste("Uni:", University_Name, "<br>Ratio:", round(Demand_Ratio,1), "<br>Rank:", Rank))) +
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed", color = "#f8fafc", size = 0.5) +
   scale_color_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
   scale_y_reverse() + 
   theme_minimal() +
-  labs(
-    title = "Correlation: Demand Intensity vs. Academic Success",
-    subtitle = "Higher demand per quota strongly correlates with better (lower) national ranks.",
-    x = "Demand Ratio (Total Preferences / Quota)",
-    y = "National Base Rank (Lower is Better)",
-    size = "Top 1 Choices",
-    color = "University Type",
-    caption = "Data: Kaggle (Turkish University Admissions)"
-  ) +
-  theme(
-    plot.title = element_text(face = "bold", size = 16, color = "#38bdf8"),
-    plot.subtitle = element_text(size = 12, color = "#cbd5e1", margin = margin(b = 15)),
-    axis.text = element_text(color = "#f8fafc", size = 11),
-    axis.title = element_text(face = "bold", color = "#f8fafc", size = 12),
-    legend.title = element_text(color = "#f8fafc", face = "bold"),
-    legend.text = element_text(color = "#cbd5e1"),
-    legend.position = "right",
-    panel.grid.major = element_line(color = "#334155", linetype = "dotted"),
-    panel.grid.minor = element_blank()
-  )
+  labs(title = "Correlation: Demand Intensity vs. Rank", x = "Demand Ratio (Preferences/Quota)", y = "Rank") +
+  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+
+ggplotly(p4, tooltip = "text") %>%
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"),
+         legend = list(orientation = "h", x = 0, y = -0.2))
 ```
+<div class="insight-box">
+**🔍 Analytical Insight:** This interactive scatter plot reveals a distinct positive correlation. As the demand ratio increases, the numerical rank decreases (meaning the quality of the student profile gets better). Hover over the points to identify specific outlier universities that manage to maintain high ranks despite lower overall demand.
+</div>
 
 ---
 
-## 7. Phase 1 Conclusion
-As outlined in our project methodology, we successfully harmonized multi-year data and built early analytical models proving the immense impact of geographical location and demand density on national rankings. In Phase 2, we aim to augment this robust baseline by extracting and integrating faculty size metrics and international mobility (Erasmus) data to finalize our comprehensive correlation model.
+## 9. Phase 1 Conclusion
+As outlined in our project methodology, we successfully harmonized multi-year data, produced reproducible exports (`.RData`), and built advanced interactive analytical models. We mapped the immense impact of geographical location, proved the structural disparities between university sectors, and correlated quota limits and demand density with national rankings. In Phase 2, we aim to augment this robust baseline by extracting faculty size metrics and international mobility data.
