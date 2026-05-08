@@ -18,7 +18,7 @@
     "href": "analysis.html",
     "title": "Data Analytics & Results",
     "section": "",
-    "text": "Comprehensive Data: 2018-2025 multi-year data extracted via thestats.\nAnalytical Approach: Moving from descriptive statistics to predictive insights.\nFaculty Factor: Measuring the real impact of academic staff size on student rankings.\n#| label: load-packages #| message: false library(tidyverse) # Analiz kodları buraya gelecek ### Key Takeaways"
+    "text": "Comprehensive Data: Multi-year data for Industrial Engineering programs dynamically extracted via the thestats package.\nAnalytical Approach: Moving from descriptive statistics to predictive and actionable insights.\nFaculty Factor: Measuring the real impact of academic staff size on student rankings.\nRegional Dynamics: Identifying how geographical location influences program popularity."
   },
   {
     "objectID": "analysis.html#exploratory-analysis",
@@ -32,14 +32,14 @@
     "href": "analysis.html#introduction-to-analysis",
     "title": "Data Analytics & Results",
     "section": "1. Introduction to Analysis",
-    "text": "1. Introduction to Analysis\nThis section presents our exploratory data analysis and findings. By leveraging the power of tidyverse and ggplot2, we uncover the trends that define Industrial Engineering education in Turkey."
+    "text": "1. Introduction to Analysis\nThis section presents our exploratory data analysis and findings. By leveraging the power of tidyverse and ggplot2, we aim to uncover the trends that define Industrial Engineering education in Turkey. We prioritize data-driven narrative over raw outputs."
   },
   {
     "objectID": "analysis.html#preliminary-data-exploration",
     "href": "analysis.html#preliminary-data-exploration",
     "title": "Data Analytics & Results",
     "section": "2. Preliminary Data Exploration",
-    "text": "2. Preliminary Data Exploration\n(Buraya veri çekme ve ilk görselleştirme kodlarımızı ekleyeceğiz.)\n#| label: setup #| message: false #| warning: false #| code-fold: true\nlibrary(tidyverse) # library(thestats) # Veri çekme aşamasında aktif edilecek"
+    "text": "2. Preliminary Data Exploration\nInstead of relying on static Excel files, we establish a direct connection to the YÖK Atlas database. Below, we extract the placement scores and university details for Industrial Engineering departments.\n#| label: data-extraction #| message: false #| warning: false #| code-fold: true"
   },
   {
     "objectID": "data.html",
