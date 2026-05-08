@@ -1,0 +1,15 @@
+{
+  "hash": "fba9028ff538ebb6874363277f5c4fb7",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Data Analytics & Results\"\nsubtitle: \"Evidence-Based Insights into IE Programs\"\nsidebar: false\n---\n\n### Key Takeaways\n* **Comprehensive Data:** 2018-2025 multi-year data extracted via `thestats`.\n* **Analytical Approach:** Moving from descriptive statistics to predictive insights.\n* **Faculty Factor:** Measuring the real impact of academic staff size on student rankings.\n\n---\n\n<div class=\"glass-card\">\n## Exploratory Analysis\n*(Burada harika ggplot2 grafiklerimiz ve yorumlarımız olacak)*\n</div>\n\n#| label: load-packages\n#| message: false\nlibrary(tidyverse)\n# Analiz kodları buraya gelecek\n### Key Takeaways\n\n* **Comprehensive Data:** 2018-2025 multi-year data extracted via `thestats`.\n* **Analytical Approach:** Moving from descriptive statistics to predictive insights.\n* **Faculty Factor:** Measuring the real impact of academic staff size on student rankings.\n* **Regional Dynamics:** Identifying how geographical location influences program popularity.\n\n---\n\n<div class=\"glass-card\">\n## 1. Introduction to Analysis\nThis section presents our exploratory data analysis and findings. By leveraging the power of `tidyverse` and `ggplot2`, we uncover the trends that define Industrial Engineering education in Turkey.\n</div>\n\n## 2. Preliminary Data Exploration\n*(Buraya veri çekme ve ilk görselleştirme kodlarımızı ekleyeceğiz.)*\n\n#| label: setup\n#| message: false\n#| warning: false\n#| code-fold: true\n\nlibrary(tidyverse)\n# library(thestats) # Veri çekme aşamasında aktif edilecek",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

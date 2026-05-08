@@ -1,5 +1,7 @@
 ---
 title: "Data Analytics & Results"
+subtitle: "Evidence-Based Insights into IE Programs"
+sidebar: false
 ---
 
 ### Key Takeaways
@@ -19,3 +21,28 @@ title: "Data Analytics & Results"
 #| message: false
 library(tidyverse)
 # Analiz kodları buraya gelecek
+### Key Takeaways
+
+* **Comprehensive Data:** 2018-2025 multi-year data extracted via `thestats`.
+* **Analytical Approach:** Moving from descriptive statistics to predictive insights.
+* **Faculty Factor:** Measuring the real impact of academic staff size on student rankings.
+* **Regional Dynamics:** Identifying how geographical location influences program popularity.
+
+---
+
+<div class="glass-card">
+## 1. Introduction to Analysis
+This section presents our exploratory data analysis and findings. By leveraging the power of `tidyverse` and `ggplot2`, we uncover the trends that define Industrial Engineering education in Turkey.
+</div>
+
+## 2. Preliminary Data Exploration
+*(Buraya veri çekme ve ilk görselleştirme kodlarımızı ekleyeceğiz.)*
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+#| code-fold: true
+
+library(tidyverse)
+# library(thestats) # Veri çekme aşamasında aktif edilecek

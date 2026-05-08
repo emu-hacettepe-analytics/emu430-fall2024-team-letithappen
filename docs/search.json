@@ -16,9 +16,9 @@
   {
     "objectID": "analysis.html",
     "href": "analysis.html",
-    "title": "Exploratory Data Analysis & Modeling",
+    "title": "Data Analytics & Results",
     "section": "",
-    "text": "Data Scope: We extracted and harmonized multi-year data (2018-2025) from the YÖK Atlas using the thestats R package.\nRegional Shifts: Preliminary results show a significant trend in how student regional origins affect placement scores.\nFaculty Impact: There is a measurable correlation between the academic staff size and the national success ranking of the IE departments.\nPrescriptive Value: The insights generated can help prospective students make data-driven choices."
+    "text": "Comprehensive Data: 2018-2025 multi-year data extracted via thestats.\nAnalytical Approach: Moving from descriptive statistics to predictive insights.\nFaculty Factor: Measuring the real impact of academic staff size on student rankings.\n#| label: load-packages #| message: false library(tidyverse) # Analiz kodları buraya gelecek ### Key Takeaways"
   },
   {
     "objectID": "data.html",
@@ -30,9 +30,9 @@
   {
     "objectID": "analysis.html#introduction-to-analysis",
     "href": "analysis.html#introduction-to-analysis",
-    "title": "Exploratory Data Analysis & Modeling",
+    "title": "Data Analytics & Results",
     "section": "1. Introduction to Analysis",
-    "text": "1. Introduction to Analysis\nIn this section, we apply Exploratory Data Analysis (EDA) and correlation modeling to our cleaned dataset. Our goal is to move beyond descriptive statistics and provide actionable insights regarding the performance of Industrial Engineering programs."
+    "text": "1. Introduction to Analysis\nThis section presents our exploratory data analysis and findings. By leveraging the power of tidyverse and ggplot2, we uncover the trends that define Industrial Engineering education in Turkey."
   },
   {
     "objectID": "analysis.html#data-loading-and-initial-glimpse",
@@ -68,5 +68,19 @@
     "title": "Data Strategy & Preprocessing",
     "section": "Variables & Data Dictionary",
     "text": "Variables & Data Dictionary\nThe dataset encompasses time-series data from 2018 to 2025. Key variables include:\n\nUniversity_Type: State vs. Foundation universities.\nBase_Score: Minimum placement scores for the department.\nSuccess_Ranking: National ranking of the admitted students.\nAcademic_Staff: Total number of professors, associate professors, etc.\nErasmus_Mobility: Incoming and outgoing exchange student traffic.\n\n(Note: The R codes used for data extraction and cleaning will be displayed in the Analysis section.)"
+  },
+  {
+    "objectID": "analysis.html#exploratory-analysis",
+    "href": "analysis.html#exploratory-analysis",
+    "title": "Data Analytics & Results",
+    "section": "Exploratory Analysis",
+    "text": "Exploratory Analysis\n(Burada harika ggplot2 grafiklerimiz ve yorumlarımız olacak)"
+  },
+  {
+    "objectID": "analysis.html#preliminary-data-exploration",
+    "href": "analysis.html#preliminary-data-exploration",
+    "title": "Data Analytics & Results",
+    "section": "2. Preliminary Data Exploration",
+    "text": "2. Preliminary Data Exploration\n(Buraya veri çekme ve ilk görselleştirme kodlarımızı ekleyeceğiz.)\n#| label: setup #| message: false #| warning: false #| code-fold: true\nlibrary(tidyverse) # library(thestats) # Veri çekme aşamasında aktif edilecek"
   }
 ]
