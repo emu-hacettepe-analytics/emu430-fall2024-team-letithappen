@@ -1,0 +1,18 @@
+/* Tüm sayfa bileşenlerini tek bir renge zorla (Slate Teması Rengi) */
+html[data-bs-theme="dark"] body, 
+html[data-bs-theme="dark"] .quarto-container,
+html[data-bs-theme="dark"] main,
+html[data-bs-theme="dark"] section,
+html[data-bs-theme="dark"] .content {
+  background-color: #272B30 !important; /* Bu renk Slate temasının o hoş mavimsi tonudur */
+}
+
+/* Cam Kartlarımızı her yerde aynı yapalım */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+}
