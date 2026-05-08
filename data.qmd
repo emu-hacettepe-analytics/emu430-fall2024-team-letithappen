@@ -1,127 +1,100 @@
-title: "Data Preparation"
+---
+title: "Data"
+subtitle: "Sourcing and Preparation of Industrial Engineering Admission Data"
+---
 
-::: {.column-screen .bg-light .p-5 .mb-5 .border-bottom}
-📊 Data Preparation Process
+## 1. Data Overview & Sources
 
-Welcome to the data engine room of the LetitHappen team. On this page, we document the entire technical lifecycle of the dataset used to analyze the evolution of Industrial Engineering departments in Turkey between 2018 and 2025—from sourcing and extraction to cleaning and final preparation.
-:::
+This project utilizes a hybrid data strategy to analyze the trends of Industrial Engineering programs in Turkey between 2018 and 2024. Our objective is to understand the drivers of academic success and regional demand.
 
-🎯 Strategy and Sources
+We have integrated data from two primary sources:
 
-The foundation of our project is built upon principles of scientific transparency and reproducibility.
+* **YÖK Atlas (via `thestats` R package):** We utilized the `thestats` package, developed by M. Çavuş and O. Aydın, to programmatically extract official time-series data (2018-2020) on base scores and success rankings directly from the YÖK Atlas "Lisans Atlası" module.
+* **Kaggle Dataset:** For the more recent academic years (2021-2024), we integrated a comprehensive Turkish University Admissions dataset to capture advanced metrics such as total preferences, demand-to-quota ratios, and city-based information.
 
-::: {.callout-note icon="false"}
-🏫 Primary Source: YÖK Atlas
+## 2. Data Preprocessing & Cleaning
 
-Our analysis relies on official placement statistics from the "Lisans Atlası" (Undergraduate Atlas) module of YÖK Atlas. This is the most reliable database for metrics such as base scores, success rankings, and academic staff counts in Turkey.
-:::
+Raw data from university admissions is often inconsistent due to naming variations and nested department titles. To ensure a reproducible and high-quality analysis, we implemented the following steps using the `tidyverse` framework:
 
-::: {.callout-tip icon="false"}
-🛠 Extraction Tool: thestats R Package
+1.  **Filtering:** We isolated Industrial Engineering programs while strictly excluding unrelated fields like Woodworking, Forest, or Fisheries Engineering that appeared in keyword searches.
+2.  **Harmonization:** University and faculty names were standardized (e.g., converting "Üniversitesi" to "UNIVERSITY" and "Mühendislik" to "Engineering") to allow for seamless merging across different years.
+3.  **Variable Transformation:** We calculated critical metrics such as the **Demand Ratio** (Total Preferences / Quota) to measure the popularity of programs relative to their capacity.
+4.  **Type Classification:** Institutions were categorized into "State" and "Foundation" sectors to enable comparative benchmarking.
 
-To import data into our R environment, we utilized the thestats package developed by M. Çavuş and O. Aydın. This tool allows us to query YÖK Atlas data dynamically, ensuring our analysis remains updated with the latest 2025 statistics.
-:::
+## 3. Data Dictionary
 
-📖 Data Dictionary
+The following table describes the primary variables used in our final integrated dataset:
 
-The key variables we focused on during our analysis are defined in the table below:
+| Variable | Description |
+|----------|-------------|
+| `Year` | The academic year of the admission cycle (2018-2024). |
+| `University_Name` | The standardized name of the institution. |
+| `Rank` | The national base placement rank for the IE program (Lower is better). |
+| `Demand_Ratio` | Total number of student preferences divided by the available quota. |
+| `Top1_Pref` | The number of students who placed the program as their first choice. |
 
-Variable
+## 4. Final Dataset & Downloads
 
-Description
+As required by the project guidelines, our final processed dataset is stored in `.RData` format for full reproducibility.
 
-Typeaaa
+**Note to User:** You can access the final processed data used in our analysis via the link below.
 
-univ_name
+> [**Download Final Processed Data (.RData)**](data/ie_combined_final.RData)
 
-Name of the University
+---
 
-Categorical
+### Data Preparation Code (Internal)
 
-u_type
+Below is the explicit, reproducible code used to import, clean, and merge the master dataset.
 
-Type of Institution (State / Foundation)
+```{r}
+#| label: data-import-preparation
+#| message: false
+#| warning: false
+#| code-fold: true
 
-Categorical
+library(tidyverse)
+library(thestats)
 
-city
+# ==========================================
+# PART 1: YÖK ATLAS API DATA (<= 2020)
+# ==========================================
+raw_thestats <- list_score(
+  department_names = "Industrial Engineering",
+  lang = "en"
+)
 
-The city where the university is located
+clean_thestats <- raw_thestats %>%
+  filter(as.numeric(year) <= 2020) %>%
+  filter(!str_detect(str_to_lower(department), "woodworking|fisheries|aquaculture|forest|design")) %>%
+  mutate(
+    University_Type = case_when(
+      str_detect(str_to_lower(type), "devlet|state") ~ "State",
+      str_detect(str_to_lower(type), "vak|foundation|private") ~ "Foundation",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  filter(University_Type != "Other") %>%
+  select(
+    Year = year,
+    University_Type,
+    University_Name = university,
+    Faculty_Name = faculty,
+    Department_Name = department
+  ) %>%
+  mutate(Year = as.numeric(Year))
 
-Categorical
+# ==========================================
+# PART 2: KAGGLE DATASET (2021 - 2024)
+# ==========================================
+# Dosyanın adının ve yolunun bilgisayarındakiyle aynı olduğundan emin ol
+raw_kaggle <- read_csv("data/01_university_admissions_turkey_2019_2024.csv")
 
-base_score
-
-The minimum score of the last student placed
-
-Numerical
-
-success_rank
-
-The national ranking of the last student placed
-
-Numerical
-
-staff_count
-
-Total academic staff (Prof, Assoc. Prof, etc.)
-
-Numerical
-
-erasmus_traffic
-
-Student traffic participating in Erasmus programs
-
-Numerical
-
-🛠 Data Collection & Preprocessing
-
-Transforming raw data into an "analysis-ready" format was performed under the principle of "clean data, accurate results."
-
-1.  Data Import
-
-The following code block demonstrates how the data was retrieved using the thestats package.
-
-#\| label: setup-data #\| message: false #\| warning: false #\| code-fold: true #\| code-summary: "Show R Code (Data Extraction)"
-
-# Loading required libraries
-
-library(thestats) library(tidyverse)
-
-# Structural example of the data retrieval process (2018-2025):
-
-# data_raw \<- list_score(2018:2025) %\>%
-
-# filter(str_detect(program_name, "Endüstri Mühendisliği"))
-
-print("Data retrieval infrastructure is ready.")
-
-2.  Cleaning Steps
-
-To enhance the quality of our analysis, we followed these preprocessing steps:
-
-Filtering: We narrowed our focus specifically to "Industrial Engineering" programs.
-
-Handling Missing Values (NAs): Newly established departments without a base score or those with unfilled quotas were excluded from trend analyses to prevent statistical bias.
-
-Standardization: Spelling discrepancies in city names and university types were corrected for consistency.
-
-Data Transformation: Success rankings and scores were converted to numeric formats to be used in mathematical modeling.
-
-💾 Final Dataset
-
-You can download our processed and analysis-ready dataset via the link below. This file serves as the foundation for all visualizations on our Analysis page.
-
-::: callout-important
-📥 Download Final Data: letithappen_data.RData
-
-Note: This link will become active once you upload the .RData file to your GitHub repository.
-:::
-
-::: {.border .p-3 .bg-light .rounded}
-📝 Ethics Statement and AI Usage
-
-AI Usage: The visual design, table structures, and technical descriptions of this page were optimized with the assistance of Gemini 2.5 Flash.
-
-Human Intelligence (HI) Statement: All generated technical content and data definitions were reviewed and verified by Yusuf Bora Çavdar and Onur Furkan Gök to ensure accuracy and alignment with EMU430 course standards.
-:::
+clean_kaggle <- raw_kaggle %>%
+  filter(as.numeric(year) > 2020) %>%
+  mutate(
+    dept_kucuk = str_to_lower(department_name),
+    tur_kucuk = str_to_lower(university_type)
+  ) %>%
+  filter(
+    str_detect(

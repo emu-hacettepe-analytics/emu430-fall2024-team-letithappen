@@ -72,9 +72,9 @@
   {
     "objectID": "data.html",
     "href": "data.html",
-    "title": "Loading required libraries",
+    "title": "Data",
     "section": "",
-    "text": "title: “Data Preparation”\n\n📊 Data Preparation Process\nWelcome to the data engine room of the LetitHappen team. On this page, we document the entire technical lifecycle of the dataset used to analyze the evolution of Industrial Engineering departments in Turkey between 2018 and 2025—from sourcing and extraction to cleaning and final preparation.\n\n🎯 Strategy and Sources\nThe foundation of our project is built upon principles of scientific transparency and reproducibility.\n\n\n\n\n\n\nNote\n\n\n\n🏫 Primary Source: YÖK Atlas\nOur analysis relies on official placement statistics from the “Lisans Atlası” (Undergraduate Atlas) module of YÖK Atlas. This is the most reliable database for metrics such as base scores, success rankings, and academic staff counts in Turkey.\n\n\n\n\n\n\n\n\nTip\n\n\n\n🛠 Extraction Tool: thestats R Package\nTo import data into our R environment, we utilized the thestats package developed by M. Çavuş and O. Aydın. This tool allows us to query YÖK Atlas data dynamically, ensuring our analysis remains updated with the latest 2025 statistics.\n\n\n📖 Data Dictionary\nThe key variables we focused on during our analysis are defined in the table below:\nVariable\nDescription\nTypeaaa\nuniv_name\nName of the University\nCategorical\nu_type\nType of Institution (State / Foundation)\nCategorical\ncity\nThe city where the university is located\nCategorical\nbase_score\nThe minimum score of the last student placed\nNumerical\nsuccess_rank\nThe national ranking of the last student placed\nNumerical\nstaff_count\nTotal academic staff (Prof, Assoc. Prof, etc.)\nNumerical\nerasmus_traffic\nStudent traffic participating in Erasmus programs\nNumerical\n🛠 Data Collection & Preprocessing\nTransforming raw data into an “analysis-ready” format was performed under the principle of “clean data, accurate results.”\n\nData Import\n\nThe following code block demonstrates how the data was retrieved using the thestats package.\n#| label: setup-data #| message: false #| warning: false #| code-fold: true #| code-summary: “Show R Code (Data Extraction)”\n\nLoading required libraries\nlibrary(thestats) library(tidyverse)\n\n\nStructural example of the data retrieval process (2018-2025):\n\n\ndata_raw &lt;- list_score(2018:2025) %&gt;%\n\n\nfilter(str_detect(program_name, “Endüstri Mühendisliği”))\nprint(“Data retrieval infrastructure is ready.”)\n\nCleaning Steps\n\nTo enhance the quality of our analysis, we followed these preprocessing steps:\nFiltering: We narrowed our focus specifically to “Industrial Engineering” programs.\nHandling Missing Values (NAs): Newly established departments without a base score or those with unfilled quotas were excluded from trend analyses to prevent statistical bias.\nStandardization: Spelling discrepancies in city names and university types were corrected for consistency.\nData Transformation: Success rankings and scores were converted to numeric formats to be used in mathematical modeling.\n💾 Final Dataset\nYou can download our processed and analysis-ready dataset via the link below. This file serves as the foundation for all visualizations on our Analysis page.\n\n\n\n\n\n\nImportant\n\n\n\n📥 Download Final Data: letithappen_data.RData\nNote: This link will become active once you upload the .RData file to your GitHub repository.\n\n\n\n📝 Ethics Statement and AI Usage\nAI Usage: The visual design, table structures, and technical descriptions of this page were optimized with the assistance of Gemini 2.5 Flash.\nHuman Intelligence (HI) Statement: All generated technical content and data definitions were reviewed and verified by Yusuf Bora Çavdar and Onur Furkan Gök to ensure accuracy and alignment with EMU430 course standards."
+    "text": "This project utilizes a hybrid data strategy to analyze the trends of Industrial Engineering programs in Turkey between 2018 and 2024. Our objective is to understand the drivers of academic success and regional demand.\nWe have integrated data from two primary sources:\n\nYÖK Atlas (via thestats R package): We utilized the thestats package, developed by M. Çavuş and O. Aydın, to programmatically extract official time-series data (2018-2020) on base scores and success rankings directly from the YÖK Atlas “Lisans Atlası” module.\nKaggle Dataset: For the more recent academic years (2021-2024), we integrated a comprehensive Turkish University Admissions dataset to capture advanced metrics such as total preferences, demand-to-quota ratios, and city-based information."
   },
   {
     "objectID": "analysis.html#sector-gap-analysis-ranking-density",
@@ -89,5 +89,33 @@
     "title": "Data Analytics & Results",
     "section": "6. Capacity Correlation: Does Quota Size Impact Selectivity?",
     "text": "6. Capacity Correlation: Does Quota Size Impact Selectivity?\nBefore analyzing pure demand, we must consider supply. Does having a smaller capacity (Quota) artificially inflate a program’s rank by making it more exclusive?"
+  },
+  {
+    "objectID": "data.html#data-overview-sources",
+    "href": "data.html#data-overview-sources",
+    "title": "Data",
+    "section": "",
+    "text": "This project utilizes a hybrid data strategy to analyze the trends of Industrial Engineering programs in Turkey between 2018 and 2024. Our objective is to understand the drivers of academic success and regional demand.\nWe have integrated data from two primary sources:\n\nYÖK Atlas (via thestats R package): We utilized the thestats package, developed by M. Çavuş and O. Aydın, to programmatically extract official time-series data (2018-2020) on base scores and success rankings directly from the YÖK Atlas “Lisans Atlası” module.\nKaggle Dataset: For the more recent academic years (2021-2024), we integrated a comprehensive Turkish University Admissions dataset to capture advanced metrics such as total preferences, demand-to-quota ratios, and city-based information."
+  },
+  {
+    "objectID": "data.html#data-preprocessing-cleaning",
+    "href": "data.html#data-preprocessing-cleaning",
+    "title": "Data",
+    "section": "2. Data Preprocessing & Cleaning",
+    "text": "2. Data Preprocessing & Cleaning\nRaw data from university admissions is often inconsistent due to naming variations and nested department titles. To ensure a reproducible and high-quality analysis, we implemented the following steps using the tidyverse framework:\n\nFiltering: We isolated Industrial Engineering programs while strictly excluding unrelated fields like Woodworking, Forest, or Fisheries Engineering that appeared in keyword searches.\nHarmonization: University and faculty names were standardized (e.g., converting “Üniversitesi” to “UNIVERSITY” and “Mühendislik” to “Engineering”) to allow for seamless merging across different years.\nVariable Transformation: We calculated critical metrics such as the Demand Ratio (Total Preferences / Quota) to measure the popularity of programs relative to their capacity.\nType Classification: Institutions were categorized into “State” and “Foundation” sectors to enable comparative benchmarking."
+  },
+  {
+    "objectID": "data.html#data-dictionary",
+    "href": "data.html#data-dictionary",
+    "title": "Data",
+    "section": "3. Data Dictionary",
+    "text": "3. Data Dictionary\nThe following table describes the primary variables used in our final integrated dataset:\n\n\n\n\n\n\n\nVariable\nDescription\n\n\n\n\nYear\nThe academic year of the admission cycle (2018-2024).\n\n\nUniversity_Name\nThe standardized name of the institution.\n\n\nRank\nThe national base placement rank for the IE program (Lower is better).\n\n\nDemand_Ratio\nTotal number of student preferences divided by the available quota.\n\n\nTop1_Pref\nThe number of students who placed the program as their first choice."
+  },
+  {
+    "objectID": "data.html#final-dataset-downloads",
+    "href": "data.html#final-dataset-downloads",
+    "title": "Data",
+    "section": "4. Final Dataset & Downloads",
+    "text": "4. Final Dataset & Downloads\nAs required by the project guidelines, our final processed dataset is stored in .RData format for full reproducibility.\nNote to User: You can access the final processed data used in our analysis via the link below.\n\nDownload Final Processed Data (.RData)\n\n\n\nData Preparation Code (Internal)\nBelow is the explicit, reproducible code used to import, clean, and merge the master dataset.\n#| label: data-import-preparation #| message: false #| warning: false #| code-fold: true\nlibrary(tidyverse) library(thestats)"
   }
 ]
