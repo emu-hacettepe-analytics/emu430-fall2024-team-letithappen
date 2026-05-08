@@ -1,25 +1,23 @@
 ---
-title: "Decoding Higher Education: A Trend Analysis of Industrial Engineering Programs in Turkey"
+title: "Decoding Higher Education"
+subtitle: "A Trend Analysis of Industrial Engineering Programs in Turkey"
 sidebar: false
 ---
 
-## Welcome to Our Project Homepage!
+<div class="glass-card">
+## Project Overview
+While university placement data is public, there is a lack of analytical perspective on how factors like faculty size and location impact a department's popularity. This project identifies the underlying drivers of success for Industrial Engineering departments in Turkey.
 
-**Team Name:** Let It Happen
+**Team Name:** [Let It Happen]  
+**Team Members:** * [Yusuf Bora Çavdar](https://yusufboracavdar.github.io)  
+* [Onur Furkan Gök](https://onurfgg.github.io)
+</div>
 
-**Team Members:**
-* [Yusuf Bora Çavdar](https://emu-hacettepe-analytics.github.io/emu430-spring2026-boracavdar/) 
-* [Onur Furkan Gök](https://emu-hacettepe-analytics.github.io/emu430-spring2026-onurfgg/) 
-
-### Project Description
-While university placement data is public, there is a lack of analytical perspective on how factors like faculty size, location, and international mobility impact a department's popularity. As Industrial Engineering students, our objective is to apply data analytics to our own domain. We aim to identify the underlying drivers of success and regional demand for Industrial Engineering departments across Turkey over recent years.
-
----
+<br>
 
 ### Key Takeaways
-*(Note: As per the project guidelines, here are the main highlights of our study.)*
+*(3-5 ana çıktı buraya gelecek)*
 
-* **Data Scope:** We successfully extracted and harmonized multi-year data (2018-2025) from the YÖK Atlas using the `thestats` R package.
-* **Regional Shifts:** Preliminary results show a significant trend in how student regional origins and university locations affect placement scores.
-* **Faculty Impact:** There is a measurable correlation between the academic staff size/strength and the national success ranking of the IE departments.
-* **Prescriptive Value:** The insights generated can help prospective students make data-driven choices and assist university administrations in strategic planning.
+* **Comprehensive Data:** 2018-2025 multi-year data extracted via `thestats`.
+* **Analytical Approach:** Moving from descriptive statistics to predictive insights.
+* **Faculty Factor:** Measuring the real impact of academic staff size on student rankings.

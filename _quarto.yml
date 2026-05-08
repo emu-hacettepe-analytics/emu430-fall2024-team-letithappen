@@ -3,9 +3,12 @@ project:
   output-dir: docs
 
 website:
-  title: "Team Let It Happen"
+  title: "Let It Happen | Decoding IE"
+  description: "A Trend Analysis of IE Programs in Turkey"
+  
   navbar:
-    background: primary
+    pinned: true
+    background: primary # Navbar'ı koyu ve profesyonel yapar
     left:
       - text: "Home"
         href: index.qmd
@@ -13,10 +16,21 @@ website:
         href: data.qmd
       - text: "Analysis"
         href: analysis.qmd
+    right:
+      - icon: github
+        href: https://github.com/emu-hacettepe-analytics/emu430-fall2024-team-letithappen
 
 format:
   html:
-    theme: cosmo
-    code-fold: true      # Hocanın kuralı: Kodlar katlanabilir olmalı!
-    code-tools: true
-    toc: true
+    theme: 
+      dark: slate # Senin sevdiğin o modern koyu ton
+    css: styles.css
+    code-fold: true # Hocanın zorunlu tuttuğu katlanabilir kod özelliği
+    toc: true # Sağ tarafta içindekiler tablosu
+    toc-title: "Bu Sayfada"
+    number-sections: false
+    smooth-scroll: true
+
+# Tüm sayfalarda aynı font ve stilin korunması için
+execute:
+  freeze: auto
