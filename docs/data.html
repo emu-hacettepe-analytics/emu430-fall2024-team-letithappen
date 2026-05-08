@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Data Preparation – Team Let It Happen</title>
+<title>data – Team Let It Happen</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,118 +120,56 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-strategy" id="toc-data-strategy" class="nav-link active" data-scroll-target="#data-strategy">Data Strategy</a></li>
-  <li><a href="#data-dictionary" id="toc-data-dictionary" class="nav-link" data-scroll-target="#data-dictionary">Data Dictionary</a></li>
-  <li><a href="#data-acquisition-preprocessing" id="toc-data-acquisition-preprocessing" class="nav-link" data-scroll-target="#data-acquisition-preprocessing">Data Acquisition &amp; Preprocessing</a>
-  <ul class="collapse">
-  <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import">1. Data Import</a></li>
-  </ul></li>
-  <li><a href="#example-extracting-2024-industrial-engineering-data" id="toc-example-extracting-2024-industrial-engineering-data" class="nav-link" data-scroll-target="#example-extracting-2024-industrial-engineering-data">Example: Extracting 2024 Industrial Engineering data</a></li>
-  <li><a href="#raw_data---list_score20182024-filterprogram_name-endüstri-mühendisliği" id="toc-raw_data---list_score20182024-filterprogram_name-endüstri-mühendisliği" class="nav-link" data-scroll-target="#raw_data---list_score20182024-filterprogram_name-endüstri-mühendisliği">raw_data &lt;- list_score(2018:2024) %&gt;% filter(program_name == “Endüstri Mühendisliği”)</a></li>
-  <li><a href="#required-libraries" id="toc-required-libraries" class="nav-link" data-scroll-target="#required-libraries">Required libraries</a></li>
-  <li><a href="#note-in-a-real-scenario-we-loop-through-years-2018-to-2025." id="toc-note-in-a-real-scenario-we-loop-through-years-2018-to-2025." class="nav-link" data-scroll-target="#note-in-a-real-scenario-we-loop-through-years-2018-to-2025.">Note: In a real scenario, we loop through years 2018 to 2025.</a></li>
-  <li><a href="#here-is-the-structural-representation-of-our-data-pull" id="toc-here-is-the-structural-representation-of-our-data-pull" class="nav-link" data-scroll-target="#here-is-the-structural-representation-of-our-data-pull">Here is the structural representation of our data pull:</a></li>
+  <li><a href="#loading-required-libraries" id="toc-loading-required-libraries" class="nav-link active" data-scroll-target="#loading-required-libraries">Loading required libraries</a></li>
+  <li><a href="#structural-example-of-the-data-retrieval-process-2018-2025" id="toc-structural-example-of-the-data-retrieval-process-2018-2025" class="nav-link" data-scroll-target="#structural-example-of-the-data-retrieval-process-2018-2025">Structural example of the data retrieval process (2018-2025):</a></li>
   <li><a href="#data_raw---list_score20182025" id="toc-data_raw---list_score20182025" class="nav-link" data-scroll-target="#data_raw---list_score20182025">data_raw &lt;- list_score(2018:2025) %&gt;%</a></li>
   <li><a href="#filterstr_detectprogram_name-endüstri-mühendisliği" id="toc-filterstr_detectprogram_name-endüstri-mühendisliği" class="nav-link" data-scroll-target="#filterstr_detectprogram_name-endüstri-mühendisliği">filter(str_detect(program_name, “Endüstri Mühendisliği”))</a></li>
-  <li><a href="#preprocessing-steps" id="toc-preprocessing-steps" class="nav-link" data-scroll-target="#preprocessing-steps">Preprocessing steps:</a></li>
-  <li><a href="#clean-column-names" id="toc-clean-column-names" class="nav-link" data-scroll-target="#clean-column-names">1. Clean column names</a></li>
-  <li><a href="#convert-scores-and-ranks-to-numeric-types" id="toc-convert-scores-and-ranks-to-numeric-types" class="nav-link" data-scroll-target="#convert-scores-and-ranks-to-numeric-types">2. Convert scores and ranks to numeric types</a></li>
-  <li><a href="#filter-out-rows-with-missing-base_score-nas" id="toc-filter-out-rows-with-missing-base_score-nas" class="nav-link" data-scroll-target="#filter-out-rows-with-missing-base_score-nas">3. Filter out rows with missing ‘base_score’ (NAs)</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Data Preparation</h1>
-</div>
+<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="data-strategy" class="level3 glass-card">
-<h3 class="anchored" data-anchor-id="data-strategy">Data Strategy</h3>
-<p>[cite_start]Our analysis is based on dynamic data retrieval from the <strong>YÖK Atlas</strong> system[cite: 89]. [cite_start]By using the <code>thestats</code> R package (developed by M. Çavuş and O. Aydın), we ensure our study is fully reproducible and updated with the latest 2018-2025 statistics[cite: 90, 91].</p>
-</section>
-<section id="data-dictionary" class="level2">
-<h2 class="anchored" data-anchor-id="data-dictionary">Data Dictionary</h2>
-<p>[cite_start]Our dataset consists of time-series information regarding Industrial Engineering programs in Turkey[cite: 91]. Below are the key variables we focus on:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Variable</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>University_Type</strong></td>
-<td>[cite_start]Categorizes institutions as State or Foundation[cite: 94].</td>
-</tr>
-<tr class="even">
-<td><strong>Base_Score</strong></td>
-<td>[cite_start]The minimum score required for student placement[cite: 91].</td>
-</tr>
-<tr class="odd">
-<td><strong>Success_Rank</strong></td>
-<td>[cite_start]The national ranking of the last student placed in the program[cite: 91].</td>
-</tr>
-<tr class="even">
-<td><strong>Academic_Staff</strong></td>
-<td>[cite_start]Total number of professors, associate professors, and doctoral faculty[cite: 91].</td>
-</tr>
-<tr class="odd">
-<td><strong>Erasmus_Mobility</strong></td>
-<td>[cite_start]Traffic of students participating in Erasmus exchange programs[cite: 91].</td>
-</tr>
-<tr class="even">
-<td><strong>City</strong></td>
-<td>[cite_start]The geographical location of the university[cite: 84].</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="data-acquisition-preprocessing" class="level2">
-<h2 class="anchored" data-anchor-id="data-acquisition-preprocessing">Data Acquisition &amp; Preprocessing</h2>
-<p>[cite_start]The primary goal of this phase is to transform raw data from YÖK Atlas into a tidy format suitable for analysis.</p>
-<section id="data-import" class="level3">
-<h3 class="anchored" data-anchor-id="data-import">1. Data Import</h3>
-<p>[cite_start]We utilized the <code>thestats</code> package to query university data directly into our R environment[cite: 90].</p>
-<p>#| label: data-import #| message: false #| code-fold: true #| code-summary: “Show code for data extraction”</p>
-<p>library(thestats) library(tidyverse)</p>
-</section>
-</section>
-<section id="example-extracting-2024-industrial-engineering-data" class="level1">
-<h1>Example: Extracting 2024 Industrial Engineering data</h1>
-</section>
-<section id="raw_data---list_score20182024-filterprogram_name-endüstri-mühendisliği" class="level1">
-<h1>raw_data &lt;- list_score(2018:2024) %&gt;% filter(program_name == “Endüstri Mühendisliği”)</h1>
 <p>title: “Data Preparation”</p>
-<p>📊 Data Strategy &amp; Sources</p>
-<p>Our project focuses on the evolution of Industrial Engineering (IE) departments in Turkey between 2018 and 2025. To ensure scientific accuracy and reproducibility, we retrieve our data directly from official sources using automated tools.</p>
-<p>Primary Data Source</p>
-<p>The data is sourced from the YÖK Atlas “Lisans Atlası” module, which provides official statistics on university placements in Turkey.</p>
-<p>Extraction Tool</p>
-<p>We use the thestats R package, developed by M. Çavuş and O. Aydın, to query the YÖK Atlas database. This allows us to maintain a dynamic and updateable workflow.</p>
+<div class="column-screen bg-light p-5 mb-5 border-bottom">
+<p>📊 Data Preparation Process</p>
+<p>Welcome to the data engine room of the LetitHappen team. On this page, we document the entire technical lifecycle of the dataset used to analyze the evolution of Industrial Engineering departments in Turkey between 2018 and 2025—from sourcing and extraction to cleaning and final preparation.</p>
+</div>
+<p>🎯 Strategy and Sources</p>
+<p>The foundation of our project is built upon principles of scientific transparency and reproducibility.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🏫 Primary Source: YÖK Atlas</p>
+<p>Our analysis relies on official placement statistics from the “Lisans Atlası” (Undergraduate Atlas) module of YÖK Atlas. This is the most reliable database for metrics such as base scores, success rankings, and academic staff counts in Turkey.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>🛠 Extraction Tool: thestats R Package</p>
+<p>To import data into our R environment, we utilized the thestats package developed by M. Çavuş and O. Aydın. This tool allows us to query YÖK Atlas data dynamically, ensuring our analysis remains updated with the latest 2025 statistics.</p>
+</div>
+</div>
 <p>📖 Data Dictionary</p>
-<p>To understand the drivers of departmental success, we focus on the following key variables:</p>
+<p>The key variables we focused on during our analysis are defined in the table below:</p>
 <p>Variable</p>
 <p>Description</p>
 <p>Type</p>
@@ -239,7 +177,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Name of the University</p>
 <p>Categorical</p>
 <p>u_type</p>
-<p>Institution type (State or Foundation)</p>
+<p>Type of Institution (State / Foundation)</p>
 <p>Categorical</p>
 <p>city</p>
 <p>The city where the university is located</p>
@@ -248,55 +186,63 @@ ul.task-list li input[type="checkbox"] {
 <p>The minimum score of the last student placed</p>
 <p>Numerical</p>
 <p>success_rank</p>
-<p>National success ranking of the last student</p>
+<p>The national ranking of the last student placed</p>
 <p>Numerical</p>
 <p>staff_count</p>
-<p>Total number of academic staff (Prof, Assoc. Prof, etc.)</p>
+<p>Total academic staff (Prof, Assoc. Prof, etc.)</p>
 <p>Numerical</p>
 <p>erasmus_traffic</p>
-<p>Number of students involved in Erasmus exchange</p>
+<p>Student traffic participating in Erasmus programs</p>
 <p>Numerical</p>
-<p>🛠 Data Acquisition &amp; Tidying</p>
-<p>The following section contains the technical implementation of our data retrieval process.</p>
-<p>#| label: setup-data #| message: false #| warning: false #| code-fold: true #| code-summary: “Show R Code for Data Import”</p>
-</section>
-<section id="required-libraries" class="level1">
-<h1>Required libraries</h1>
+<p>🛠 Data Collection &amp; Preprocessing</p>
+<p>Transforming raw data into an “analysis-ready” format was performed under the principle of “clean data, accurate results.”</p>
+<ol type="1">
+<li>Data Import</li>
+</ol>
+<p>The following code block demonstrates how the data was retrieved using the thestats package.</p>
+<p>#| label: setup-data #| message: false #| warning: false #| code-fold: true #| code-summary: “Show R Code (Data Extraction)”</p>
+<section id="loading-required-libraries" class="level1">
+<h1>Loading required libraries</h1>
 <p>library(thestats) library(tidyverse)</p>
 </section>
-<section id="note-in-a-real-scenario-we-loop-through-years-2018-to-2025." class="level1">
-<h1>Note: In a real scenario, we loop through years 2018 to 2025.</h1>
-</section>
-<section id="here-is-the-structural-representation-of-our-data-pull" class="level1">
-<h1>Here is the structural representation of our data pull:</h1>
+<section id="structural-example-of-the-data-retrieval-process-2018-2025" class="level1">
+<h1>Structural example of the data retrieval process (2018-2025):</h1>
 </section>
 <section id="data_raw---list_score20182025" class="level1">
 <h1>data_raw &lt;- list_score(2018:2025) %&gt;%</h1>
 </section>
 <section id="filterstr_detectprogram_name-endüstri-mühendisliği" class="level1">
 <h1>filter(str_detect(program_name, “Endüstri Mühendisliği”))</h1>
-</section>
-<section id="preprocessing-steps" class="level1">
-<h1>Preprocessing steps:</h1>
-</section>
-<section id="clean-column-names" class="level1">
-<h1>1. Clean column names</h1>
-</section>
-<section id="convert-scores-and-ranks-to-numeric-types" class="level1">
-<h1>2. Convert scores and ranks to numeric types</h1>
-</section>
-<section id="filter-out-rows-with-missing-base_score-nas" class="level1">
-<h1>3. Filter out rows with missing ‘base_score’ (NAs)</h1>
-<p>Preprocessing Steps</p>
-<p>To prepare the data for analysis, we followed these steps:</p>
-<p>Filtering: We isolated “Industrial Engineering” programs, excluding other engineering branches.</p>
-<p>Handling NAs: Departments that did not fill their quota or were newly established (lacking base scores) were identified. We removed these from trend analyses to prevent statistical bias.</p>
-<p>Standardization: City names and university types were standardized to ensure consistent grouping during the visualization phase.</p>
+<p>print(“Data retrieval infrastructure is ready.”)</p>
+<ol start="2" type="1">
+<li>Cleaning Steps</li>
+</ol>
+<p>To enhance the quality of our analysis, we followed these preprocessing steps:</p>
+<p>Filtering: We narrowed our focus specifically to “Industrial Engineering” programs.</p>
+<p>Handling Missing Values (NAs): Newly established departments without a base score or those with unfilled quotas were excluded from trend analyses to prevent statistical bias.</p>
+<p>Standardization: Spelling discrepancies in city names and university types were corrected for consistency.</p>
+<p>Data Transformation: Success rankings and scores were converted to numeric formats to be used in mathematical modeling.</p>
 <p>💾 Final Dataset</p>
-<p>We have saved our cleaned and processed dataset for full reproducibility. You can download the .RData file used in our Analysis page below:</p>
-<p>📥 Download letithappen_data.RData (Note: Please ensure this file is placed in your project directory before rendering the Analysis page.)</p>
-<p>📝 Ethics &amp; AI Disclosure</p>
-<p>AI Usage: This page structure and technical descriptions were drafted with the assistance of AI (Gemini 2.5 Flash). Prompt Used: “Generate a complete Quarto data.qmd file for an IE department analysis project using thestats package, including a data dictionary table and preprocessing explanations.” Human Intelligence (HI) Statement: All AI-generated code and text were reviewed and verified by Yusuf Bora Çavdar and Onur Furkan Gök to ensure accuracy and alignment with EMU430 course standards.</p>
+<p>You can download our processed and analysis-ready dataset via the link below. This file serves as the foundation for all visualizations on our Analysis page.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>📥 Download Final Data: letithappen_data.RData</p>
+<p>Note: This link will become active once you upload the .RData file to your GitHub repository.</p>
+</div>
+</div>
+<div class="border p-3 bg-light rounded">
+<p>📝 Ethics Statement and AI Usage</p>
+<p>AI Usage: The visual design, table structures, and technical descriptions of this page were optimized with the assistance of Gemini 2.5 Flash.</p>
+<p>Human Intelligence (HI) Statement: All generated technical content and data definitions were reviewed and verified by Yusuf Bora Çavdar and Onur Furkan Gök to ensure accuracy and alignment with EMU430 course standards.</p>
+</div>
 
 
 </section>

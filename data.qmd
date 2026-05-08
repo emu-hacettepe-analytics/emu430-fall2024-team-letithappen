@@ -1,61 +1,30 @@
----
-title: "Data Preparation"
----
-
-<div class="glass-card">
-### Data Strategy
-[cite_start]Our analysis is based on dynamic data retrieval from the **YÖK Atlas** system[cite: 89]. [cite_start]By using the `thestats` R package (developed by M. Çavuş and O. Aydın), we ensure our study is fully reproducible and updated with the latest 2018-2025 statistics[cite: 90, 91].
-</div>
-
-## Data Dictionary
-
-[cite_start]Our dataset consists of time-series information regarding Industrial Engineering programs in Turkey[cite: 91]. Below are the key variables we focus on:
-
-| Variable | Description |
-|---|---|
-| **University_Type** | [cite_start]Categorizes institutions as State or Foundation[cite: 94]. |
-| **Base_Score** | [cite_start]The minimum score required for student placement[cite: 91]. |
-| **Success_Rank** | [cite_start]The national ranking of the last student placed in the program[cite: 91]. |
-| **Academic_Staff** | [cite_start]Total number of professors, associate professors, and doctoral faculty[cite: 91]. |
-| **Erasmus_Mobility**| [cite_start]Traffic of students participating in Erasmus exchange programs[cite: 91]. |
-| **City** | [cite_start]The geographical location of the university[cite: 84]. |
-
-## Data Acquisition & Preprocessing
-
-[cite_start]The primary goal of this phase is to transform raw data from YÖK Atlas into a tidy format suitable for analysis.
-
-### 1. Data Import
-[cite_start]We utilized the `thestats` package to query university data directly into our R environment[cite: 90].
-
-```{r}
-#| label: data-import
-#| message: false
-#| code-fold: true
-#| code-summary: "Show code for data extraction"
-
-library(thestats)
-library(tidyverse)
-
-# Example: Extracting 2024 Industrial Engineering data
-# raw_data <- list_score(2018:2024) %>% filter(program_name == "Endüstri Mühendisliği")
-
 title: "Data Preparation"
 
-📊 Data Strategy & Sources
+::: {.column-screen .bg-light .p-5 .mb-5 .border-bottom}
+📊 Data Preparation Process
 
-Our project focuses on the evolution of Industrial Engineering (IE) departments in Turkey between 2018 and 2025. To ensure scientific accuracy and reproducibility, we retrieve our data directly from official sources using automated tools.
+Welcome to the data engine room of the LetitHappen team. On this page, we document the entire technical lifecycle of the dataset used to analyze the evolution of Industrial Engineering departments in Turkey between 2018 and 2025—from sourcing and extraction to cleaning and final preparation.
+:::
 
-Primary Data Source
+🎯 Strategy and Sources
 
-The data is sourced from the YÖK Atlas "Lisans Atlası" module, which provides official statistics on university placements in Turkey.
+The foundation of our project is built upon principles of scientific transparency and reproducibility.
 
-Extraction Tool
+::: {.callout-note icon="false"}
+🏫 Primary Source: YÖK Atlas
 
-We use the thestats R package, developed by M. Çavuş and O. Aydın, to query the YÖK Atlas database. This allows us to maintain a dynamic and updateable workflow.
+Our analysis relies on official placement statistics from the "Lisans Atlası" (Undergraduate Atlas) module of YÖK Atlas. This is the most reliable database for metrics such as base scores, success rankings, and academic staff counts in Turkey.
+:::
+
+::: {.callout-tip icon="false"}
+🛠 Extraction Tool: thestats R Package
+
+To import data into our R environment, we utilized the thestats package developed by M. Çavuş and O. Aydın. This tool allows us to query YÖK Atlas data dynamically, ensuring our analysis remains updated with the latest 2025 statistics.
+:::
 
 📖 Data Dictionary
 
-To understand the drivers of departmental success, we focus on the following key variables:
+The key variables we focused on during our analysis are defined in the table below:
 
 Variable
 
@@ -71,7 +40,7 @@ Categorical
 
 u_type
 
-Institution type (State or Foundation)
+Type of Institution (State / Foundation)
 
 Categorical
 
@@ -89,67 +58,70 @@ Numerical
 
 success_rank
 
-National success ranking of the last student
+The national ranking of the last student placed
 
 Numerical
 
 staff_count
 
-Total number of academic staff (Prof, Assoc. Prof, etc.)
+Total academic staff (Prof, Assoc. Prof, etc.)
 
 Numerical
 
 erasmus_traffic
 
-Number of students involved in Erasmus exchange
+Student traffic participating in Erasmus programs
 
 Numerical
 
-🛠 Data Acquisition & Tidying
+🛠 Data Collection & Preprocessing
 
-The following section contains the technical implementation of our data retrieval process.
+Transforming raw data into an "analysis-ready" format was performed under the principle of "clean data, accurate results."
 
-#| label: setup-data
-#| message: false
-#| warning: false
-#| code-fold: true
-#| code-summary: "Show R Code for Data Import"
+1.  Data Import
 
-# Required libraries
-library(thestats)
-library(tidyverse)
+The following code block demonstrates how the data was retrieved using the thestats package.
 
-# Note: In a real scenario, we loop through years 2018 to 2025.
-# Here is the structural representation of our data pull:
+#\| label: setup-data #\| message: false #\| warning: false #\| code-fold: true #\| code-summary: "Show R Code (Data Extraction)"
 
-# data_raw <- list_score(2018:2025) %>%
-#   filter(str_detect(program_name, "Endüstri Mühendisliği"))
+# Loading required libraries
 
-# Preprocessing steps:
-# 1. Clean column names
-# 2. Convert scores and ranks to numeric types
-# 3. Filter out rows with missing 'base_score' (NAs)
+library(thestats) library(tidyverse)
 
+# Structural example of the data retrieval process (2018-2025):
 
-Preprocessing Steps
+# data_raw \<- list_score(2018:2025) %\>%
 
-To prepare the data for analysis, we followed these steps:
+# filter(str_detect(program_name, "Endüstri Mühendisliği"))
 
-Filtering: We isolated "Industrial Engineering" programs, excluding other engineering branches.
+print("Data retrieval infrastructure is ready.")
 
-Handling NAs: Departments that did not fill their quota or were newly established (lacking base scores) were identified. We removed these from trend analyses to prevent statistical bias.
+2.  Cleaning Steps
 
-Standardization: City names and university types were standardized to ensure consistent grouping during the visualization phase.
+To enhance the quality of our analysis, we followed these preprocessing steps:
+
+Filtering: We narrowed our focus specifically to "Industrial Engineering" programs.
+
+Handling Missing Values (NAs): Newly established departments without a base score or those with unfilled quotas were excluded from trend analyses to prevent statistical bias.
+
+Standardization: Spelling discrepancies in city names and university types were corrected for consistency.
+
+Data Transformation: Success rankings and scores were converted to numeric formats to be used in mathematical modeling.
 
 💾 Final Dataset
 
-We have saved our cleaned and processed dataset for full reproducibility. You can download the .RData file used in our Analysis page below:
+You can download our processed and analysis-ready dataset via the link below. This file serves as the foundation for all visualizations on our Analysis page.
 
-📥 Download letithappen_data.RData
-(Note: Please ensure this file is placed in your project directory before rendering the Analysis page.)
+::: callout-important
+📥 Download Final Data: letithappen_data.RData
 
-📝 Ethics & AI Disclosure
+Note: This link will become active once you upload the .RData file to your GitHub repository.
+:::
 
-AI Usage: This page structure and technical descriptions were drafted with the assistance of AI (Gemini 2.5 Flash).
-Prompt Used: "Generate a complete Quarto data.qmd file for an IE department analysis project using thestats package, including a data dictionary table and preprocessing explanations."
-Human Intelligence (HI) Statement: All AI-generated code and text were reviewed and verified by Yusuf Bora Çavdar and Onur Furkan Gök to ensure accuracy and alignment with EMU430 course standards.
+::: {.border .p-3 .bg-light .rounded}
+📝 Ethics Statement and AI Usage
+
+AI Usage: The visual design, table structures, and technical descriptions of this page were optimized with the assistance of Gemini 2.5 Flash.
+
+Human Intelligence (HI) Statement: All generated technical content and data definitions were reviewed and verified by Yusuf Bora Çavdar and Onur Furkan Gök to ensure accuracy and alignment with EMU430 course standards.
+:::
