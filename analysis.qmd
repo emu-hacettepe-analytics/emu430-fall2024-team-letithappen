@@ -27,15 +27,22 @@ Instead of relying on static Excel files, we establish a direct connection to th
 #| warning: false
 #| code-fold: true
 
-# Gerekli kütüphanelerin çağrılması
+# Gerekli kütüphaneleri çağırıyoruz
 library(tidyverse)
 library(thestats)
 
-# thestats paketinin güncel versiyonu ile verinin çekilmesi
+# B PLANI: Windows Türkçe karakter bug'ını atlatmak için 
+# aramayı doğrudan İngilizce parametrelerle yapıyoruz.
 ie_data <- list_score(
-  department_names = "Endüstri Mühendisliği",
-  lang = "tr"
+  department_names = "Industrial Engineering",
+  lang = "en"
 )
 
-# Çekilen verinin yapısına ve sütun isimlerine ilk bakış
+# 1. Test: Veri gerçekten geldi mi? (Satır sayısını zorla ekrana basıyoruz)
+cat("YÖK Atlas'tan veri çekildi! Toplam program sayısı:", nrow(ie_data), "\n\n")
+
+# 2. Test: Sütun isimleri ve yapısı ne durumda?
 glimpse(ie_data)
+
+# 3. Test: Sitede şık durması için ilk 5 satırı tablo olarak basıyoruz
+knitr::kable(head(ie_data, 5))
