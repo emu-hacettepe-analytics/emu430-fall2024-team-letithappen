@@ -46,13 +46,20 @@
     "href": "data.html",
     "title": "Data Preparation",
     "section": "",
-    "text": "Our analysis is based on dynamic data retrieval from the YÖK Atlas system. By using the thestats package, we ensure our study is fully reproducible and updated with the latest 2025 statistics."
+    "text": "[cite_start]Our analysis is based on dynamic data retrieval from the YÖK Atlas system[cite: 89]. [cite_start]By using the thestats R package (developed by M. Çavuş and O. Aydın), we ensure our study is fully reproducible and updated with the latest 2018-2025 statistics[cite: 90, 91]."
   },
   {
     "objectID": "data.html#data-dictionary",
     "href": "data.html#data-dictionary",
     "title": "Data Preparation",
     "section": "Data Dictionary",
-    "text": "Data Dictionary\n\n\n\nVariable\nDescription\n\n\n\n\nUniversity_Type\nState or Foundation\n\n\nBase_Score\nMinimum score for placement\n\n\nStaff_Count\nTotal number of academic staff\n\n\n\n(Veri temizleme adımlarını burada anlatacağız)"
+    "text": "Data Dictionary\n[cite_start]Our dataset consists of time-series information regarding Industrial Engineering programs in Turkey[cite: 91]. Below are the key variables we focus on:\n\n\n\n\n\n\n\nVariable\nDescription\n\n\n\n\nUniversity_Type\n[cite_start]Categorizes institutions as State or Foundation[cite: 94].\n\n\nBase_Score\n[cite_start]The minimum score required for student placement[cite: 91].\n\n\nSuccess_Rank\n[cite_start]The national ranking of the last student placed in the program[cite: 91].\n\n\nAcademic_Staff\n[cite_start]Total number of professors, associate professors, and doctoral faculty[cite: 91].\n\n\nErasmus_Mobility\n[cite_start]Traffic of students participating in Erasmus exchange programs[cite: 91].\n\n\nCity\n[cite_start]The geographical location of the university[cite: 84]."
+  },
+  {
+    "objectID": "data.html#data-acquisition-preprocessing",
+    "href": "data.html#data-acquisition-preprocessing",
+    "title": "Data Preparation",
+    "section": "Data Acquisition & Preprocessing",
+    "text": "Data Acquisition & Preprocessing\n[cite_start]The primary goal of this phase is to transform raw data from YÖK Atlas into a tidy format suitable for analysis.\n\n1. Data Import\n[cite_start]We utilized the thestats package to query university data directly into our R environment[cite: 90].\n#| label: data-import #| message: false #| code-fold: true #| code-summary: “Show code for data extraction”\nlibrary(thestats) library(tidyverse)"
   }
 ]
