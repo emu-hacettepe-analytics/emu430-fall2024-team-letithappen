@@ -23,9 +23,9 @@
   {
     "objectID": "data.html",
     "href": "data.html",
-    "title": "Data",
+    "title": "Data Strategy & Preprocessing",
     "section": "",
-    "text": "Data source: xxx\n\n\n\n Back to top"
+    "text": "Our main data source is the YÖK Atlas “Lisans Atlası” module. Instead of relying on static Excel sheets, we dynamically queried the data directly into the R environment."
   },
   {
     "objectID": "analysis.html#introduction-to-analysis",
@@ -47,5 +47,26 @@
     "title": "Decoding Higher Education: A Trend Analysis of Industrial Engineering Programs in Turkey",
     "section": "",
     "text": "Team Name: Let It Happen\nTeam Members: * Yusuf Bora Çavdar * Onur Furkan Gök\n\n\nWhile university placement data is public, there is a lack of analytical perspective on how factors like faculty size, location, and international mobility impact a department’s popularity. As Industrial Engineering students, our objective is to apply data analytics to our own domain. We aim to identify the underlying drivers of success and regional demand for Industrial Engineering departments across Turkey over recent years.\n\n\n\n\n(Note: As per the project guidelines, here are the main highlights of our study.)\n\nData Scope: We successfully extracted and harmonized multi-year data (2018-2025) from the YÖK Atlas using the thestats R package.\nRegional Shifts: Preliminary results show a significant trend in how student regional origins and university locations affect placement scores.\nFaculty Impact: There is a measurable correlation between the academic staff size/strength and the national success ranking of the IE departments.\nPrescriptive Value: The insights generated can help prospective students make data-driven choices and assist university administrations in strategic planning."
+  },
+  {
+    "objectID": "data.html#primary-data-source",
+    "href": "data.html#primary-data-source",
+    "title": "Data Strategy & Preprocessing",
+    "section": "",
+    "text": "Our main data source is the YÖK Atlas “Lisans Atlası” module. Instead of relying on static Excel sheets, we dynamically queried the data directly into the R environment."
+  },
+  {
+    "objectID": "data.html#extraction-tool",
+    "href": "data.html#extraction-tool",
+    "title": "Data Strategy & Preprocessing",
+    "section": "Extraction Tool",
+    "text": "Extraction Tool\nWe utilized the thestats R package (developed by M. Çavuş and O. Aydın) to extract comprehensive data regarding Industrial Engineering programs in Turkey."
+  },
+  {
+    "objectID": "data.html#variables-data-dictionary",
+    "href": "data.html#variables-data-dictionary",
+    "title": "Data Strategy & Preprocessing",
+    "section": "Variables & Data Dictionary",
+    "text": "Variables & Data Dictionary\nThe dataset encompasses time-series data from 2018 to 2025. Key variables include:\n\nUniversity_Type: State vs. Foundation universities.\nBase_Score: Minimum placement scores for the department.\nSuccess_Ranking: National ranking of the admitted students.\nAcademic_Staff: Total number of professors, associate professors, etc.\nErasmus_Mobility: Incoming and outgoing exchange student traffic.\n\n(Note: The R codes used for data extraction and cleaning will be displayed in the Analysis section.)"
   }
 ]
