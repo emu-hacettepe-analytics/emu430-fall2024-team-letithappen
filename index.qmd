@@ -5,19 +5,27 @@ sidebar: false
 ---
 
 <div class="glass-card">
-## Project Overview
-While university placement data is public, there is a lack of analytical perspective on how factors like faculty size and location impact a department's popularity. This project identifies the underlying drivers of success for Industrial Engineering departments in Turkey.
+## Welcome to Our Project
 
-**Team Name:** [Let It Happen]  
+**Team Name:** Let It Happen
+
 **Team Members:** * [Yusuf Bora Çavdar](https://yusufboracavdar.github.io)  
 * [Onur Furkan Gök](https://onurfgg.github.io)
 </div>
 
 <br>
 
-### Key Takeaways
-*(3-5 ana çıktı buraya gelecek)*
+<div class="glass-card">
+## Project Overview
+While university placement data is public, there is often a lack of analytical perspective on how factors like geographic location, quota sizes, and demand density impact a department's popularity. As Industrial Engineering students, our objective is to apply data analytics to our own domain. 
 
-* **Comprehensive Data:** 2018-2025 multi-year data extracted via `thestats`.
-* **Analytical Approach:** Moving from descriptive statistics to predictive insights.
-* **Faculty Factor:** Measuring the real impact of academic staff size on student rankings.
+We aim to identify the underlying drivers of success and regional demand for Industrial Engineering departments across Turkey between 2018 and 2024. By integrating official placement statistics with comprehensive demand metrics, this project decodes the real factors that elevate an engineering program to the top tiers.
+</div>
+
+<br>
+
+### Key Takeaways
+
+* **Hybrid Data Sourcing:** Successfully integrated live API extraction (`thestats`) with static datasets (Kaggle) to construct a comprehensive timeline.
+* **National Trends:** Clear shifts identified in placement capacities and base rankings across Turkish universities.
+* **Regional & Demand Correlations:** Advanced modeling reveals strong relationships between a program's geographical location, its demand-to-quota ratio, and its ultimate national success ranking.

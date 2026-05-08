@@ -1,100 +1,70 @@
 ---
 title: "Data"
-subtitle: "Sourcing and Preparation of Industrial Engineering Admission Data"
+subtitle: "How We Prepared Our Dataset"
 ---
 
-## 1. Data Overview & Sources
+## 1. Where We Got Our Data
 
-This project utilizes a hybrid data strategy to analyze the trends of Industrial Engineering programs in Turkey between 2018 and 2024. Our objective is to understand the drivers of academic success and regional demand.
+To analyze the trends of Industrial Engineering programs in Turkey, our team combined two different data sources. We wanted to see the changes over a long period (2018-2024).
 
-We have integrated data from two primary sources:
+-   **YÖK Atlas Data (2018-2020):** We used the `thestats` R package created by M. Çavuş and O. Aydın. It helped us pull the official placement data directly into R.
+-   **Kaggle Dataset (2021-2024):** To get more recent data and extra details like total preference counts and city information, we downloaded a dataset from Kaggle.
 
-* **YÖK Atlas (via `thestats` R package):** We utilized the `thestats` package, developed by M. Çavuş and O. Aydın, to programmatically extract official time-series data (2018-2020) on base scores and success rankings directly from the YÖK Atlas "Lisans Atlası" module.
-* **Kaggle Dataset:** For the more recent academic years (2021-2024), we integrated a comprehensive Turkish University Admissions dataset to capture advanced metrics such as total preferences, demand-to-quota ratios, and city-based information.
+## 2. Data Cleaning and Wrangling
 
-## 2. Data Preprocessing & Cleaning
+Raw admission data is usually messy. University names change or contain typos, and there are many unrelated departments with "Engineering" in their name. We used `tidyverse` for data manipulation:
 
-Raw data from university admissions is often inconsistent due to naming variations and nested department titles. To ensure a reproducible and high-quality analysis, we implemented the following steps using the `tidyverse` framework:
-
-1.  **Filtering:** We isolated Industrial Engineering programs while strictly excluding unrelated fields like Woodworking, Forest, or Fisheries Engineering that appeared in keyword searches.
-2.  **Harmonization:** University and faculty names were standardized (e.g., converting "Üniversitesi" to "UNIVERSITY" and "Mühendislik" to "Engineering") to allow for seamless merging across different years.
-3.  **Variable Transformation:** We calculated critical metrics such as the **Demand Ratio** (Total Preferences / Quota) to measure the popularity of programs relative to their capacity.
-4.  **Type Classification:** Institutions were categorized into "State" and "Foundation" sectors to enable comparative benchmarking.
+-   **Filtering:** We only kept Industrial Engineering departments. We had to specifically remove "Woodworking" or "Forestry" engineering programs that popped up in our search.
+-   **Fixing Names:** We changed Turkish characters and standard words (like converting "Üniversitesi" to "UNIVERSITY") so we could join the two datasets properly.
+-   **Creating New Variables:** We calculated a `Demand_Ratio` by dividing Total Preferences by Quota. This helps us see how popular a program really is.
+-   **Grouping:** We separated universities into "State" and "Foundation" to compare them later in our EDA.
 
 ## 3. Data Dictionary
 
-The following table describes the primary variables used in our final integrated dataset:
+Here are the most important columns in our final merged dataset:
 
-| Variable | Description |
-|----------|-------------|
-| `Year` | The academic year of the admission cycle (2018-2024). |
-| `University_Name` | The standardized name of the institution. |
-| `Rank` | The national base placement rank for the IE program (Lower is better). |
-| `Demand_Ratio` | Total number of student preferences divided by the available quota. |
-| `Top1_Pref` | The number of students who placed the program as their first choice. |
+| Variable | Meaning |
+|:-----------------------------------|:-----------------------------------|
+| **Year** | Academic year (from 2018 to 2024) |
+| **University_Name** | Standardized name of the university |
+| **Rank** | National base placement rank (lower number is better) |
+| **Demand_Ratio** | Preferences / Quota (How many students applied per seat) |
+| **Top1_Pref** | How many students put this department as their first choice |
 
-## 4. Final Dataset & Downloads
+## 4. Final Dataset
 
-As required by the project guidelines, our final processed dataset is stored in `.RData` format for full reproducibility.
+As requested in the project guidelines, we saved our final merged data as an `.RData` file. You can download it below to reproduce our analysis.
 
-**Note to User:** You can access the final processed data used in our analysis via the link below.
+[**Download Final Processed Data (.RData)**](data/ie_combined_final.RData)
 
-> [**Download Final Processed Data (.RData)**](data/ie_combined_final.RData)
+------------------------------------------------------------------------
 
----
+## 5. Our R Code
 
-### Data Preparation Code (Internal)
+Below is the code we wrote to pull the data, clean it, and merge it together.
 
-Below is the explicit, reproducible code used to import, clean, and merge the master dataset.
+\`\`\`{r} #\| label: data-cleaning #\| message: false #\| warning: false #\| code-fold: true
 
-```{r}
-#| label: data-import-preparation
-#| message: false
-#| warning: false
-#| code-fold: true
+# We need these libraries first
 
-library(tidyverse)
-library(thestats)
+library(tidyverse) library(thestats)
 
-# ==========================================
-# PART 1: YÖK ATLAS API DATA (<= 2020)
-# ==========================================
-raw_thestats <- list_score(
-  department_names = "Industrial Engineering",
-  lang = "en"
-)
+# --- Step 1: Get YÖK Atlas Data (2018-2020) ---
 
-clean_thestats <- raw_thestats %>%
-  filter(as.numeric(year) <= 2020) %>%
-  filter(!str_detect(str_to_lower(department), "woodworking|fisheries|aquaculture|forest|design")) %>%
-  mutate(
-    University_Type = case_when(
-      str_detect(str_to_lower(type), "devlet|state") ~ "State",
-      str_detect(str_to_lower(type), "vak|foundation|private") ~ "Foundation",
-      TRUE ~ "Other"
-    )
-  ) %>%
-  filter(University_Type != "Other") %>%
-  select(
-    Year = year,
-    University_Type,
-    University_Name = university,
-    Faculty_Name = faculty,
-    Department_Name = department
-  ) %>%
-  mutate(Year = as.numeric(Year))
+raw_thestats \<- list_score(department_names = "Industrial Engineering", lang = "en")
 
-# ==========================================
-# PART 2: KAGGLE DATASET (2021 - 2024)
-# ==========================================
-# Dosyanın adının ve yolunun bilgisayarındakiyle aynı olduğundan emin ol
-raw_kaggle <- read_csv("data/01_university_admissions_turkey_2019_2024.csv")
+clean_thestats \<- raw_thestats %\>% filter(as.numeric(year) \<= 2020) %\>% \# Removing unrelated engineering programs that have similar names filter(!str_detect(str_to_lower(department), "woodworking\|fisheries\|aquaculture\|forest\|design")) %\>% mutate(University_Type = case_when( str_detect(str_to_lower(type), "devlet\|state") \~ "State", str_detect(str_to_lower(type), "vak\|foundation\|private") \~ "Foundation", TRUE \~ "Other")) %\>% filter(University_Type != "Other") %\>% select(Year = year, University_Type, University_Name = university, Faculty_Name = faculty, Department_Name = department) %\>% mutate(Year = as.numeric(Year))
 
-clean_kaggle <- raw_kaggle %>%
-  filter(as.numeric(year) > 2020) %>%
-  mutate(
-    dept_kucuk = str_to_lower(department_name),
-    tur_kucuk = str_to_lower(university_type)
-  ) %>%
-  filter(
-    str_detect(
+# --- Step 2: Get Kaggle Data (2021-2024) ---
+
+raw_kaggle \<- read_csv("data/01_university_admissions_turkey_2019_2024.csv")
+
+clean_kaggle \<- raw_kaggle %\>% filter(as.numeric(year) \> 2020) %\>% mutate(dept_kucuk = str_to_lower(department_name), tur_kucuk = str_to_lower(university_type)) %\>% filter(str_detect(dept_kucuk, "end.str") & str_detect(dept_kucuk, "m.hendis"), !str_detect(dept_kucuk, "orman\|a.a.\|tasar.m\|su .r.nleri")) %\>% \# Standardizing names so we can join data frames later mutate(University_Type = case_when( str_detect(tur_kucuk, "devlet\|state\|kamu") \~ "State", str_detect(tur_kucuk, "vak\|foundation\|.zel\|private") \~ "Foundation", TRUE \~ "Other"), university_name = str_replace_all(university_name, "(?i).n.vers.tes.", "UNIVERSITY"), faculty_name = str_replace_all(faculty_name, "(?i)m.hend.sl.k", "Engineering"), department_name = str_replace_all(department_name, "(?i)end.str.", "Industrial")) %\>% filter(University_Type != "Other") %\>% select(Year = year, City = city, University_Type, University_Name = university_name, Faculty_Name = faculty_name, Department_Name = department_name, Rank = final_rank_012, Quota = total_quota, Preferences = total_preferences, Demand_Ratio = demand_per_quota, Top1_Pref = top_1_pref_count) %\>% mutate(across(c(Year, Rank, Quota, Preferences, Demand_Ratio, Top1_Pref), as.numeric))
+
+# --- Step 3: Combine and Save ---
+
+ie_combined \<- bind_rows(clean_thestats, clean_kaggle) %\>% mutate(across(c(University_Name, Faculty_Name, Department_Name), \~str_to_title(str_squish(.)))) %\>% arrange(desc(Year), University_Name)
+
+# Save to data folder so we can use it in our analysis page
+
+save(ie_combined, file = "data/ie_combined_final.RData")
