@@ -16,7 +16,6 @@ website:
 
 format:
   html:
-    theme: slate      # Analysis sayfasında beğendiğin o profesyonel mavi-gri tonu budur.
-    css: styles.css    # Özel stillerimizi buradan zorla uygulayacağız.
-    code-fold: true
+    theme: slate  # 2. fotoğraftaki o karanlık temanın adı budur
+    css: styles.css
     toc: true

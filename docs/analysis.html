@@ -123,9 +123,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link active" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
   <li><a href="#introduction-to-analysis" id="toc-introduction-to-analysis" class="nav-link" data-scroll-target="#introduction-to-analysis">1. Introduction to Analysis</a></li>
   <li><a href="#preliminary-data-exploration" id="toc-preliminary-data-exploration" class="nav-link" data-scroll-target="#preliminary-data-exploration">2. Preliminary Data Exploration</a></li>
-  <li><a href="#gerekli-kütüphanelerin-çağrılması" id="toc-gerekli-kütüphanelerin-çağrılması" class="nav-link" data-scroll-target="#gerekli-kütüphanelerin-çağrılması">Gerekli kütüphanelerin çağrılması</a></li>
-  <li><a href="#thestats-paketinin-güncel-versiyonu-ile-verinin-çekilmesi" id="toc-thestats-paketinin-güncel-versiyonu-ile-verinin-çekilmesi" class="nav-link" data-scroll-target="#thestats-paketinin-güncel-versiyonu-ile-verinin-çekilmesi">thestats paketinin güncel versiyonu ile verinin çekilmesi</a></li>
-  <li><a href="#çekilen-verinin-yapısına-ve-sütun-isimlerine-ilk-bakış" id="toc-çekilen-verinin-yapısına-ve-sütun-isimlerine-ilk-bakış" class="nav-link" data-scroll-target="#çekilen-verinin-yapısına-ve-sütun-isimlerine-ilk-bakış">Çekilen verinin yapısına ve sütun isimlerine ilk bakış</a></li>
+  <li><a href="#gerekli-kütüphaneleri-çağırıyoruz" id="toc-gerekli-kütüphaneleri-çağırıyoruz" class="nav-link" data-scroll-target="#gerekli-kütüphaneleri-çağırıyoruz">Gerekli kütüphaneleri çağırıyoruz</a></li>
+  <li><a href="#b-plani-windows-türkçe-karakter-bugını-atlatmak-için" id="toc-b-plani-windows-türkçe-karakter-bugını-atlatmak-için" class="nav-link" data-scroll-target="#b-plani-windows-türkçe-karakter-bugını-atlatmak-için">B PLANI: Windows Türkçe karakter bug’ını atlatmak için</a></li>
+  <li><a href="#aramayı-doğrudan-ingilizce-parametrelerle-yapıyoruz." id="toc-aramayı-doğrudan-ingilizce-parametrelerle-yapıyoruz." class="nav-link" data-scroll-target="#aramayı-doğrudan-ingilizce-parametrelerle-yapıyoruz.">aramayı doğrudan İngilizce parametrelerle yapıyoruz.</a></li>
+  <li><a href="#test-veri-gerçekten-geldi-mi-satır-sayısını-zorla-ekrana-basıyoruz" id="toc-test-veri-gerçekten-geldi-mi-satır-sayısını-zorla-ekrana-basıyoruz" class="nav-link" data-scroll-target="#test-veri-gerçekten-geldi-mi-satır-sayısını-zorla-ekrana-basıyoruz">1. Test: Veri gerçekten geldi mi? (Satır sayısını zorla ekrana basıyoruz)</a></li>
+  <li><a href="#test-sütun-isimleri-ve-yapısı-ne-durumda" id="toc-test-sütun-isimleri-ve-yapısı-ne-durumda" class="nav-link" data-scroll-target="#test-sütun-isimleri-ve-yapısı-ne-durumda">2. Test: Sütun isimleri ve yapısı ne durumda?</a></li>
+  <li><a href="#test-sitede-şık-durması-için-ilk-5-satırı-tablo-olarak-basıyoruz" id="toc-test-sitede-şık-durması-için-ilk-5-satırı-tablo-olarak-basıyoruz" class="nav-link" data-scroll-target="#test-sitede-şık-durması-için-ilk-5-satırı-tablo-olarak-basıyoruz">3. Test: Sitede şık durması için ilk 5 satırı tablo olarak basıyoruz</a></li>
   </ul>
 </nav>
     </div>
@@ -170,17 +173,28 @@ ul.task-list li input[type="checkbox"] {
 <p>Instead of relying on static Excel files, we establish a direct connection to the YÖK Atlas database. Below, we extract the placement scores and university details for Industrial Engineering departments.</p>
 <p>#| label: data-extraction #| message: false #| warning: false #| code-fold: true</p>
 </section>
-<section id="gerekli-kütüphanelerin-çağrılması" class="level1">
-<h1>Gerekli kütüphanelerin çağrılması</h1>
+<section id="gerekli-kütüphaneleri-çağırıyoruz" class="level1">
+<h1>Gerekli kütüphaneleri çağırıyoruz</h1>
 <p>library(tidyverse) library(thestats)</p>
 </section>
-<section id="thestats-paketinin-güncel-versiyonu-ile-verinin-çekilmesi" class="level1">
-<h1>thestats paketinin güncel versiyonu ile verinin çekilmesi</h1>
-<p>ie_data &lt;- list_score( department_names = “Endüstri Mühendisliği”, lang = “tr” )</p>
+<section id="b-plani-windows-türkçe-karakter-bugını-atlatmak-için" class="level1">
+<h1>B PLANI: Windows Türkçe karakter bug’ını atlatmak için</h1>
 </section>
-<section id="çekilen-verinin-yapısına-ve-sütun-isimlerine-ilk-bakış" class="level1">
-<h1>Çekilen verinin yapısına ve sütun isimlerine ilk bakış</h1>
+<section id="aramayı-doğrudan-ingilizce-parametrelerle-yapıyoruz." class="level1">
+<h1>aramayı doğrudan İngilizce parametrelerle yapıyoruz.</h1>
+<p>ie_data &lt;- list_score( department_names = “Industrial Engineering”, lang = “en” )</p>
+</section>
+<section id="test-veri-gerçekten-geldi-mi-satır-sayısını-zorla-ekrana-basıyoruz" class="level1">
+<h1>1. Test: Veri gerçekten geldi mi? (Satır sayısını zorla ekrana basıyoruz)</h1>
+<p>cat(“YÖK Atlas’tan veri çekildi! Toplam program sayısı:”, nrow(ie_data), “”)</p>
+</section>
+<section id="test-sütun-isimleri-ve-yapısı-ne-durumda" class="level1">
+<h1>2. Test: Sütun isimleri ve yapısı ne durumda?</h1>
 <p>glimpse(ie_data)</p>
+</section>
+<section id="test-sitede-şık-durması-için-ilk-5-satırı-tablo-olarak-basıyoruz" class="level1">
+<h1>3. Test: Sitede şık durması için ilk 5 satırı tablo olarak basıyoruz</h1>
+<p>knitr::kable(head(ie_data, 5))</p>
 
 
 </section>
