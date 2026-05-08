@@ -41,9 +41,9 @@ table.dataTable tbody tr:hover {
 
 ### Key Takeaways
 
-* **Research Focus:** This study decodes the underlying drivers of academic success and demand for Industrial Engineering programs in Turkey.
-* **Hybrid Data Sourcing:** We successfully integrated live API extraction (`thestats`) with static Kaggle datasets to bypass database limitations, constructing a comprehensive 2018-2024 timeline.
-* **Sector & Capacity Dynamics:** State universities show a broader spectrum of rankings, while Foundation universities are heavily polarized. Additionally, program capacity (Quota) shows a distinct correlation with national success.
+* **Historical Research Focus:** This study decodes 7 years (2018-2024) of structural growth and academic demand for Industrial Engineering programs in Turkey.
+* **Hybrid Data Sourcing:** We successfully integrated live API extraction (`thestats`) with static Kaggle datasets to bypass database limitations, constructing a comprehensive timeline.
+* **Sector & Capacity Dynamics:** The historical timeline reveals a steady expansion in Foundation programs. Concurrently, program capacity (Quota) shows a distinct correlation with national success rankings.
 * **Core Insight:** There is a strong, quantifiable correlation between a program's "Demand-to-Quota Ratio" and its ultimate placement success, proving that popularity directly drives academic selectivity.
 
 ---
@@ -55,7 +55,7 @@ As Industrial Engineering students, our objective is to apply data-driven decisi
 
 ## 2. Hybrid Data Exploration & Cleaning
 
-To execute our methodology of decoding the drivers of success, we extract deep numeric metrics (Rankings, Quotas, Preferences, Demand Ratios) alongside geographical data. Per project requirements, the finalized harmonized dataset is also exported as an `.RData` file for full reproducibility.
+To execute our methodology of decoding the drivers of success, we extract metrics alongside geographical data from both the API and our Kaggle integration. Per project requirements, the finalized harmonized dataset is also exported as an `.RData` file.
 
 ```{r}
 #| label: hybrid-data-processing
@@ -87,6 +87,7 @@ clean_thestats <- raw_thestats %>%
     )
   ) %>%
   filter(University_Type != "Other") %>%
+  # ÇÖZÜM BURADA: Sadece konsolda açıkça gördüğümüz isimlendirilmiş 7 sütunu seçiyoruz.
   select(Year = year, University_Type, University_Name = university, 
          Faculty_Name = faculty, Department_Name = department) %>%
   mutate(Year = as.numeric(Year))
@@ -144,45 +145,44 @@ datatable(
 )
 ```
 
-*(Note: The processed master dataset has been exported as `ie_master_data.RData` in the data folder to comply with reproducibility standards.)*
+*(Note: The processed 2018-2024 master dataset has been exported as `ie_master_data.RData` in the data folder to comply with reproducibility standards.)*
 
 <br>
 
 <div class="glass-card">
-## 3. Exploratory Data Analysis (EDA): Structural Distribution
-First, we visualize the structural distribution of Industrial Engineering programs to understand the balance between State and Foundation investments for the most recent academic year.
+## 3. Exploratory Data Analysis (EDA): Historical Growth (2018-2024)
+By utilizing our fully merged timeline, we can observe the structural growth and expansion of Industrial Engineering programs across both sectors over the last 7 years.
 </div>
 
 ```{r}
-#| label: eda-distribution
+#| label: eda-distribution-historical
 #| message: false
 #| warning: false
 #| code-fold: true
 
-latest_year <- max(ie_combined$Year, na.rm = TRUE)
-
 p1 <- ie_combined %>%
-  filter(Year == latest_year) %>%
-  count(University_Type) %>%
-  ggplot(aes(x = University_Type, y = n, fill = University_Type)) +
-  geom_bar(stat = "identity", width = 0.5, show.legend = FALSE, alpha = 0.9) +
+  count(Year, University_Type) %>%
+  ggplot(aes(x = as.factor(Year), y = n, fill = University_Type, 
+             text = paste("Year:", Year, "<br>Sector:", University_Type, "<br>Programs:", n))) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7, alpha = 0.9) +
   scale_fill_manual(values = c("State" = "#38bdf8", "Foundation" = "#94a3b8")) +
-  geom_text(aes(label = n), vjust = -0.5, fontface = "bold", color = "white", size = 5) +
   theme_minimal() +
-  labs(title = paste("Distribution of IE Programs in", latest_year), x = "Sector", y = "Count") +
+  labs(title = "Growth of IE Programs (2018-2024)", x = "Academic Year", y = "Number of Active Programs") +
   theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
 
-p1
+ggplotly(p1, tooltip = "text") %>%
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"),
+         legend = list(orientation = "h", x = 0, y = -0.2))
 ```
 <div class="insight-box">
-**🔍 Analytical Insight:** The bar chart above indicates a highly competitive market where Foundation (Private) universities almost match or exceed State universities in program availability. This suggests that Industrial Engineering is viewed as a highly profitable and demanded curriculum in the private sector.
+**🔍 Analytical Insight:** This historical distribution confirms a steady structural expansion in the academic supply. While State universities maintain a relatively stable program count, Foundation universities have aggressively expanded their Industrial Engineering quotas, reflecting the private sector's response to high student demand over the past 7 years.
 </div>
 
 <br>
 
 <div class="glass-card">
 ## 4. Sector Gap Analysis: Ranking Density
-Beyond simple counts, how do these sectors compare in terms of academic exclusivity? The interactive violin plot below displays the density and distribution of base placement rankings across sectors.
+How do these sectors compare in terms of academic exclusivity? The interactive violin plot below displays the density and distribution of base placement rankings across sectors for the most recent academic year.
 </div>
 
 ```{r}
@@ -190,6 +190,8 @@ Beyond simple counts, how do these sectors compare in terms of academic exclusiv
 #| message: false
 #| warning: false
 #| code-fold: true
+
+latest_year <- max(ie_combined$Year, na.rm = TRUE)
 
 p_violin <- ie_combined %>%
   filter(Year == latest_year, !is.na(Rank)) %>%
@@ -206,18 +208,18 @@ ggplotly(p_violin, tooltip = "text") %>%
   layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"), showlegend = FALSE)
 ```
 <div class="insight-box">
-**🔍 Analytical Insight:** The violin plot reveals a fascinating polarization. State universities have a more normally distributed, steady curve across mid-tier rankings. Foundation universities, however, show extreme "long tails"—they host some of the most elite, top-ranked programs (often full-scholarship quotas) but also the lowest-ranked programs (paid quotas) in the country.
+**🔍 Analytical Insight:** The violin plot reveals a fascinating polarization. State universities have a more normally distributed, steady curve across mid-tier rankings. Foundation universities, however, show extreme "long tails"—they host some of the most elite, top-ranked programs (full-scholarship quotas) but also the lowest-ranked programs (paid quotas).
 </div>
 
 <br>
 
 <div class="glass-card">
-## 5. Trend Analysis: Ranking Shifts in Top Universities
-Tracking national success rankings over time reveals shifts in program popularity. Here we track the base ranking trend for **Hacettepe University's Industrial Engineering** program interactively.
+## 5. Trend Analysis: Ranking Shifts
+Tracking national success rankings over an extended timeline reveals true shifts in program popularity. Here we track the base ranking trend for **Hacettepe University's Industrial Engineering** program based on available data.
 </div>
 
 ```{r}
-#| label: trend-analysis
+#| label: trend-analysis-historical
 #| message: false
 #| warning: false
 #| code-fold: true
@@ -229,7 +231,7 @@ p2 <- ie_combined %>%
   geom_line(color = "#38bdf8", size = 1.2, group = 1) +
   geom_point(color = "#f8fafc", size = 3) +
   scale_y_reverse() + 
-  scale_x_continuous(breaks = seq(2021, 2024, 1)) +
+  scale_x_continuous(breaks = seq(min(ie_combined$Year, na.rm=TRUE), max(ie_combined$Year, na.rm=TRUE), 1)) +
   theme_minimal() +
   labs(title = "Ranking Shifts: Hacettepe University (IE)", x = "Academic Year", y = "National Base Rank") +
   theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
@@ -238,7 +240,7 @@ ggplotly(p2, tooltip = "text") %>%
   layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"))
 ```
 <div class="insight-box">
-**🔍 Analytical Insight:** The base placement rank fluctuates over the observed years. You can hover over the data points to see the exact ranking. Maintaining or improving this rank requires constant adaptation in faculty strength and international opportunities.
+**🔍 Analytical Insight:** The interactive chart illustrates the placement trajectory of the program. Maintaining or improving this rank against growing competition requires continuous adaptation in faculty strength and industrial partnerships.
 </div>
 
 <br>
@@ -271,7 +273,7 @@ ggplotly(p_quota, tooltip = "text") %>%
          legend = list(orientation = "h", x = 0, y = -0.2))
 ```
 <div class="insight-box">
-**🔍 Analytical Insight:** The scatter plot displays a mild correlation between capacity and rank depending on the sector. Many elite Foundation programs deliberately keep their scholarship quotas extremely low (under 15 seats) to ensure hyper-competitive (very low) base rankings, visible in the cluster at the bottom left.
+**🔍 Analytical Insight:** The scatter plot displays a mild correlation between capacity and rank depending on the sector. Many elite Foundation programs deliberately keep their scholarship quotas extremely low (under 15 seats) to ensure hyper-competitive base rankings, visible in the cluster at the bottom left.
 </div>
 
 <br>
@@ -305,7 +307,7 @@ p3 <- ie_combined %>%
 p3
 ```
 <div class="insight-box">
-**🔍 Analytical Insight:** Location matters significantly. Major metropolitan hubs like Istanbul and Ankara tightly cluster around the highest (lowest numerical) ranks. Cities with less industrial density show a broader variance and generally lower success rankings, proving that students prioritize geographical proximity to industry.
+**🔍 Analytical Insight:** Location matters significantly. Major metropolitan hubs like Istanbul and Ankara tightly cluster around the highest (lowest numerical) ranks. Cities with less industrial density show a broader variance and generally lower success rankings.
 </div>
 
 <br>
@@ -338,10 +340,10 @@ ggplotly(p4, tooltip = "text") %>%
          legend = list(orientation = "h", x = 0, y = -0.2))
 ```
 <div class="insight-box">
-**🔍 Analytical Insight:** This interactive scatter plot reveals a distinct positive correlation. As the demand ratio increases, the numerical rank decreases (meaning the quality of the student profile gets better). Hover over the points to identify specific outlier universities that manage to maintain high ranks despite lower overall demand.
+**🔍 Analytical Insight:** This scatter plot reveals a distinct positive correlation. As the demand ratio increases, the numerical rank decreases (meaning the quality of the student profile gets better). Hover over the points to identify specific outlier universities that manage to maintain high ranks despite lower overall demand.
 </div>
 
 ---
 
 ## 9. Phase 1 Conclusion
-As outlined in our project methodology, we successfully harmonized multi-year data, produced reproducible exports (`.RData`), and built advanced interactive analytical models. We mapped the immense impact of geographical location, proved the structural disparities between university sectors, and correlated quota limits and demand density with national rankings. In Phase 2, we aim to augment this robust baseline by extracting faculty size metrics and international mobility data.
+As outlined in our project methodology, we successfully harmonized multi-year data (2018-2024), produced reproducible exports (`.RData`), and built advanced interactive analytical models. We mapped the immense impact of geographical location, proved the structural disparities between university sectors, and correlated quota limits and demand density with national rankings. In Phase 2, we aim to augment this robust baseline by extracting faculty size metrics and international mobility data.
