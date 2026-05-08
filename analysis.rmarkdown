@@ -1,0 +1,209 @@
+---
+title: "Data Analytics & Results"
+subtitle: "Evidence-Based Insights into Industrial Engineering Programs"
+sidebar: false
+---
+
+<style>
+/* DT Tablosunu Karanlık Temaya (Slate) Uyduran CSS */
+.dataTables_wrapper .dataTables_length, 
+.dataTables_wrapper .dataTables_filter, 
+.dataTables_wrapper .dataTables_info, 
+.dataTables_wrapper .dataTables_paginate {
+  color: #cbd5e1 !important;
+}
+.dataTables_wrapper .dataTables_filter input {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border: 1px solid #38bdf8 !important;
+}
+table.dataTable thead th {
+  color: #38bdf8 !important; 
+  border-bottom: 2px solid #38bdf8 !important;
+}
+table.dataTable tbody tr {
+  background-color: transparent !important;
+  color: #f8fafc !important; 
+}
+table.dataTable tbody tr:hover {
+  background-color: rgba(56, 189, 248, 0.1) !important; 
+}
+</style>
+
+### Key Takeaways
+
+* **Hybrid Data Sourcing:** Successfully integrated live API extraction (`thestats`) with static datasets (Kaggle) to bypass database limitations and construct a comprehensive 2018-2024 timeline.
+* **National Trends:** Clear shifts identified in placement capacities across Turkish universities over the analyzed years.
+* **Sector Comparison:** Analysis reveals the structural balance between State and Foundation universities.
+
+---
+
+<div class="glass-card">
+## 1. Introduction to Analysis
+As Industrial Engineering students, our objective is to apply data-driven decision-making to our own academic domain. In this section, we transition from raw admission data to actionable insights using a hybrid data engineering pipeline, utilizing `tidyverse` for data wrangling and `ggplot2` for high-impact visualizations.
+</div>
+
+## 2. Hybrid Data Exploration & Cleaning
+
+To ensure full reproducibility while bypassing the post-2020 YÖK Atlas architectural limits, we built a hybrid pipeline. We use the `thestats` package for 2018-2020 data to satisfy automated scraping requirements, and integrate a Kaggle dataset for 2021-2024 to provide the most current insights.
+
+```{r}
+#| label: hybrid-data-processing
+#| message: false
+#| warning: false
+#| code-fold: true
+
+library(tidyverse)
+library(thestats)
+library(DT) 
+
+# ==========================================
+# PART 1: YÖK ATLAS API DATA (<= 2020)
+# ==========================================
+raw_thestats <- list_score(
+  department_names = "Industrial Engineering",
+  lang = "en"
+)
+
+clean_thestats <- raw_thestats %>%
+  filter(as.numeric(year) <= 2020) %>%
+  filter(!str_detect(str_to_lower(department), "woodworking|fisheries|aquaculture|forest|design")) %>%
+  mutate(
+    University_Type = case_when(
+      str_detect(str_to_lower(type), "devlet|state") ~ "State",
+      str_detect(str_to_lower(type), "vak|foundation|private") ~ "Foundation",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  filter(University_Type != "Other") %>%
+  select(
+    Year = year,
+    University_Type,
+    University_Name = university,
+    Faculty_Name = faculty,
+    Department_Name = department
+  ) %>%
+  mutate(Year = as.numeric(Year))
+
+# ==========================================
+# PART 2: KAGGLE DATASET (2021 - 2024)
+# ==========================================
+raw_kaggle <- read_csv("data/01_university_admissions_turkey_2019_2024.csv")
+
+clean_kaggle <- raw_kaggle %>%
+  filter(as.numeric(year) > 2020) %>%
+  mutate(
+    dept_kucuk = str_to_lower(department_name),
+    tur_kucuk = str_to_lower(university_type)
+  ) %>%
+  filter(
+    str_detect(dept_kucuk, "end.str") & str_detect(dept_kucuk, "m.hendis"),
+    !str_detect(dept_kucuk, "orman|a.a.|tasar.m|su .r.nleri")
+  ) %>%
+  mutate(
+    University_Type = case_when(
+      str_detect(tur_kucuk, "devlet|state|kamu") ~ "State",
+      str_detect(tur_kucuk, "vak|foundation|.zel|private") ~ "Foundation",
+      TRUE ~ "Other"
+    ),
+    # ==========================================
+    # KUSURSUZ (ASCII-SAFE) ÇEVİRİ MOTORU
+    # RStudio'yu çökerten tüm Türkçe harfler noktaya (.) çevrildi.
+    # (?i) komutu büyük/küçük harf ayrımını otomatik yok eder.
+    # ==========================================
+    university_name = str_replace_all(university_name, "(?i).n.vers.tes.", "UNIVERSITY"),
+    university_name = str_replace_all(university_name, "(?i)tekn.k", "TECHNICAL"),
+    university_name = str_replace_all(university_name, "(?i)enst.t.s.", "INSTITUTE"),
+    
+    faculty_name = str_replace_all(faculty_name, "(?i)m.hend.sl.k", "Engineering"),
+    faculty_name = str_replace_all(faculty_name, "(?i)fak.ltes.", "Faculty"),
+    faculty_name = str_replace_all(faculty_name, "(?i)m.marl.k", "Architecture"),
+    faculty_name = str_replace_all(faculty_name, "(?i)do.a b.l.mler.", "Natural Sciences"),
+    faculty_name = str_replace_all(faculty_name, "(?i) ve ", " and "),
+    faculty_name = str_replace_all(faculty_name, "(?i).sletme", "Business"),
+    faculty_name = str_replace_all(faculty_name, "(?i)b.l.mler.", "Sciences"),
+    
+    department_name = str_replace_all(department_name, "(?i)end.str.", "Industrial"),
+    department_name = str_replace_all(department_name, "(?i)m.hend.sl...", "Engineering"),
+    department_name = str_replace_all(department_name, "(?i).ng.l.zce", "English"),
+    department_name = str_replace_all(department_name, "(?i)burslu", "Scholarship"),
+    department_name = str_replace_all(department_name, "(?i).nd.r.ml.", "Discount"),
+    department_name = str_replace_all(department_name, "(?i).cretl.", "Paid")
+  ) %>%
+  filter(University_Type != "Other") %>%
+  select(
+    Year = year,
+    University_Type,
+    University_Name = university_name,
+    Faculty_Name = faculty_name,
+    Department_Name = department_name
+  ) %>%
+  mutate(Year = as.numeric(Year))
+
+# ==========================================
+# PART 3: MASTER COMBINED DATASET
+# ==========================================
+ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
+  mutate(
+    University_Name = str_to_title(str_squish(University_Name)),
+    Faculty_Name = str_to_title(str_squish(Faculty_Name)),
+    Department_Name = str_to_title(str_squish(Department_Name))
+  ) %>%
+  arrange(desc(Year), University_Name)
+
+# İnteraktif Tabloyu Gösterme
+datatable(
+  ie_combined, 
+  options = list(pageLength = 5, scrollX = TRUE),
+  caption = "Table 1: Integrated List of Industrial Engineering Programs (2018-2024)"
+)
+```
+
+<br>
+
+<div class="glass-card">
+## 3. Exploratory Data Analysis (EDA)
+With our seamlessly integrated master dataset, we can now visualize the structural distribution of Industrial Engineering programs. The plot below strictly isolates the most recent year (2024) to avoid duplicate time-series counting.
+</div>
+
+```{r}
+#| label: eda-visualizations
+#| message: false
+#| warning: false
+#| code-fold: true
+
+latest_year <- max(as.numeric(ie_combined$Year), na.rm = TRUE)
+
+ie_combined %>%
+  filter(Year == latest_year) %>%
+  count(University_Type) %>%
+  ggplot(aes(x = University_Type, y = n, fill = University_Type)) +
+  geom_bar(stat = "identity", width = 0.5, show.legend = FALSE, alpha = 0.9) +
+  scale_fill_manual(values = c("State" = "#38bdf8", "Foundation" = "#94a3b8")) +
+  geom_text(aes(label = n), vjust = -0.5, fontface = "bold", color = "white", size = 5) +
+  theme_minimal() +
+  labs(
+    title = paste("Distribution of IE Programs in", latest_year),
+    subtitle = "Active Programs in State vs. Foundation Universities",
+    x = "University Sector",
+    y = "Number of Active Programs",
+    caption = "Data Sources: YOK Atlas (via thestats) & Kaggle Integration" 
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, color = "#38bdf8"),
+    plot.subtitle = element_text(size = 12, color = "#cbd5e1", margin = margin(b = 15)),
+    axis.text = element_text(color = "#f8fafc", size = 11),
+    axis.title = element_text(face = "bold", color = "#f8fafc", size = 12),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_line(color = "gray", linetype = "dotted"),
+    panel.background = element_rect(fill = "transparent", color = NA),
+    plot.background = element_rect(fill = "transparent", color = NA)
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
+```
+
+---
+
+## 4. Conclusion
+By engineering a pipeline that connects historical API extraction with modern static datasets, we secured an uninterrupted analytical view from 2018 to 2024. Moving forward, we will integrate additional variables such as base scores and regional clusters.
