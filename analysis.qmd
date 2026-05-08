@@ -5,7 +5,7 @@ sidebar: false
 ---
 
 <style>
-/* DT Tablosunu Karanlık Temaya (Slate) Uyduran Sihirli CSS */
+/* DT Tablosunu Karanlık Temaya (Slate) Uyduran CSS */
 .dataTables_wrapper .dataTables_length, 
 .dataTables_wrapper .dataTables_filter, 
 .dataTables_wrapper .dataTables_info, 
@@ -18,71 +18,117 @@ sidebar: false
   border: 1px solid #38bdf8 !important;
 }
 table.dataTable thead th {
-  color: #38bdf8 !important; /* Başlıklar Neon Mavi */
+  color: #38bdf8 !important; 
   border-bottom: 2px solid #38bdf8 !important;
 }
 table.dataTable tbody tr {
   background-color: transparent !important;
-  color: #f8fafc !important; /* Tablo yazıları beyaz/açık gri */
+  color: #f8fafc !important; 
 }
 table.dataTable tbody tr:hover {
-  background-color: rgba(56, 189, 248, 0.1) !important; /* Üzerine gelince hafif mavi parlama */
+  background-color: rgba(56, 189, 248, 0.1) !important; 
 }
 </style>
 
 ### Key Takeaways
 
-* **Dynamic Data Sourcing:** Multi-year dataset (time-series) for Industrial Engineering programs successfully extracted.
+* **Hybrid Data Sourcing:** Successfully integrated live API extraction (`thestats`) with static datasets (Kaggle) to bypass database limitations and construct a comprehensive 2018-2024 timeline.
 * **National Trends:** Clear shifts identified in placement capacities across Turkish universities over the analyzed years.
 * **Sector Comparison:** Analysis reveals the structural balance between State and Foundation universities.
-* **Strategic Value:** Our interactive dataset allows prospective students and researchers to filter programs by year, type, and institution.
 
 ---
 
 <div class="glass-card">
 ## 1. Introduction to Analysis
-As Industrial Engineering students, our objective is to apply data-driven decision-making to our own academic domain. In this section, we transition from raw admission data to actionable insights using `tidyverse` for data wrangling and `ggplot2` for high-impact visualizations.
+As Industrial Engineering students, our objective is to apply data-driven decision-making to our own academic domain. In this section, we transition from raw admission data to actionable insights using a hybrid data engineering pipeline, utilizing `tidyverse` for data wrangling and `ggplot2` for high-impact visualizations.
 </div>
 
-## 2. Preliminary Data Exploration & Cleaning
+## 2. Hybrid Data Exploration & Cleaning
 
-To ensure full reproducibility, we establish a direct query to the database. The raw data contains longitudinal records and distinct program types.
+To ensure full reproducibility while bypassing the post-2020 YÖK Atlas architectural limits, we built a hybrid pipeline. We use the `thestats` package for 2018-2020 data to satisfy automated scraping requirements, and integrate a Kaggle dataset for 2021-2024 to provide the most current insights.
 
 ```{r}
-#| label: data-processing
+#| label: hybrid-data-processing
 #| message: false
 #| warning: false
 #| code-fold: true
 
 library(tidyverse)
+library(thestats)
 library(DT) 
 
-# 1. Kaggle Verisini Okuma
-raw_data <- read_csv("data/01_university_admissions_turkey_2019_2024.csv")
+# ==========================================
+# PART 1: YÖK ATLAS API DATA (<= 2020)
+# ==========================================
+raw_thestats <- list_score(
+  department_names = "Industrial Engineering",
+  lang = "en"
+)
 
-# 2. Veri Temizleme
-ie_cleaned <- raw_data %>%
+clean_thestats <- raw_thestats %>%
+  filter(as.numeric(year) <= 2020) %>%
+  mutate(
+    University_Type = case_when(
+      str_detect(str_to_lower(type), "devlet|state") ~ "State",
+      str_detect(str_to_lower(type), "vak|foundation|private") ~ "Foundation",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  filter(University_Type != "Other") %>%
+  select(
+    Year = year,
+    University_Type,
+    University_Name = university,
+    Faculty_Name = faculty,
+    Department_Name = department
+  ) %>%
+  mutate(Year = as.numeric(Year))
+
+# ==========================================
+# PART 2: KAGGLE DATASET (2021 - 2024)
+# ==========================================
+raw_kaggle <- read_csv("data/01_university_admissions_turkey_2019_2024.csv")
+
+clean_kaggle <- raw_kaggle %>%
+  filter(as.numeric(year) > 2020) %>%
   mutate(
     dept_kucuk = str_to_lower(department_name),
     tur_kucuk = str_to_lower(university_type)
   ) %>%
-  filter(str_detect(dept_kucuk, "end") & str_detect(dept_kucuk, "str")) %>%
-  mutate(University_Type = case_when(
-    str_detect(tur_kucuk, "devlet") ~ "State",
-    str_detect(tur_kucuk, "state") ~ "State",
-    str_detect(tur_kucuk, "vak") ~ "Foundation",
-    str_detect(tur_kucuk, "foundation") ~ "Foundation",
-    TRUE ~ "Other"
-  )) %>%
-  select(year, University_Type, university_name, faculty_name, department_name) %>%
-  mutate(university_name = str_squish(university_name)) %>%
-  filter(University_Type != "Other")
+  # KESİN FİLTRE: "Endüstri" ve "Mühendis" geçmeli, AMA Orman/Ağaç/Tasarım GEÇMEMELİ
+  filter(
+    str_detect(dept_kucuk, "end.str") & str_detect(dept_kucuk, "m.hendis"),
+    !str_detect(dept_kucuk, "orman|a.a.|tasar.m")
+  ) %>%
+  mutate(
+    University_Type = case_when(
+      str_detect(tur_kucuk, "devlet|state|kamu") ~ "State",
+      str_detect(tur_kucuk, "vak|foundation|özel|private") ~ "Foundation",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  filter(University_Type != "Other") %>%
+  select(
+    Year = year,
+    University_Type,
+    University_Name = university_name,
+    Faculty_Name = faculty_name,
+    Department_Name = department_name
+  ) %>%
+  mutate(Year = as.numeric(Year))
 
-# 3. İnteraktif Tablo Oluşturma
+# ==========================================
+# PART 3: MASTER COMBINED DATASET
+# ==========================================
+ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
+  mutate(University_Name = str_squish(University_Name)) %>%
+  arrange(desc(Year), University_Name)
+
+# İnteraktif Tabloyu Gösterme
 datatable(
-  ie_cleaned, 
+  ie_combined, 
   options = list(pageLength = 5, scrollX = TRUE),
-  caption = "Table 1: Comprehensive List of Industrial Engineering Programs (2019-2024)"
+  caption = "Table 1: Integrated List of Industrial Engineering Programs (2018-2024)"
 )
 ```
 
@@ -90,7 +136,7 @@ datatable(
 
 <div class="glass-card">
 ## 3. Exploratory Data Analysis (EDA)
-With a clean dataset, we can now visualize the structural distribution of Industrial Engineering programs. To avoid duplicate counting across multiple years, the plot below isolates the data strictly for the **most recent year** available in the dataset.
+With our seamlessly integrated master dataset, we can now visualize the structural distribution of Industrial Engineering programs. The plot below strictly isolates the most recent year (2024) to avoid duplicate time-series counting.
 </div>
 
 ```{r}
@@ -99,10 +145,10 @@ With a clean dataset, we can now visualize the structural distribution of Indust
 #| warning: false
 #| code-fold: true
 
-latest_year <- max(as.numeric(ie_cleaned$year), na.rm = TRUE)
+latest_year <- max(as.numeric(ie_combined$Year), na.rm = TRUE)
 
-ie_cleaned %>%
-  filter(year == latest_year) %>%
+ie_combined %>%
+  filter(Year == latest_year) %>%
   count(University_Type) %>%
   ggplot(aes(x = University_Type, y = n, fill = University_Type)) +
   geom_bar(stat = "identity", width = 0.5, show.legend = FALSE, alpha = 0.9) +
@@ -114,7 +160,7 @@ ie_cleaned %>%
     subtitle = "Active Programs in State vs. Foundation Universities",
     x = "University Sector",
     y = "Number of Active Programs",
-    caption = "Data: Kaggle (Turkish University Admissions 2019-2024)"
+    caption = "Data Sources: YOK Atlas (via thestats) & Kaggle Integration" 
   ) +
   theme(
     plot.title = element_text(face = "bold", size = 16, color = "#38bdf8"),
@@ -133,4 +179,4 @@ ie_cleaned %>%
 ---
 
 ## 4. Conclusion
-By isolating the latest academic year, we gain an accurate representation of the current supply of Industrial Engineerin  g departments. Moving forward, we will integrate additional variables such as base scores and regional clusters.
+By engineering a pipeline that connects historical API extraction with modern static datasets, we secured an uninterrupted analytical view from 2018 to 2024. Moving forward, we will integrate additional variables such as base scores and regional clusters.
