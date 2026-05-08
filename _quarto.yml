@@ -3,12 +3,9 @@ project:
   output-dir: docs
 
 website:
-  title: "Let It Happen | Decoding IE"
-  description: "A Trend Analysis of IE Programs in Turkey"
-  
+  title: "Team Let It Happen"
   navbar:
-    pinned: true
-    background: primary # Navbar'ı koyu ve profesyonel yapar
+    background: primary
     left:
       - text: "Home"
         href: index.qmd
@@ -22,15 +19,9 @@ website:
 
 format:
   html:
-    theme: 
-      dark: slate # Senin sevdiğin o modern koyu ton
-    css: styles.css
-    code-fold: true # Hocanın zorunlu tuttuğu katlanabilir kod özelliği
-    toc: true # Sağ tarafta içindekiler tablosu
-    toc-title: "Bu Sayfada"
-    number-sections: false
+    theme: slate       # Analysis sayfasında beğendiğin o modern koyu ton budur.
+    css: styles.css    # Özel cam kart efektlerin için.
+    code-fold: true
+    toc: true
+    toc-title: "İçerik"
     smooth-scroll: true
-
-# Tüm sayfalarda aynı font ve stilin korunması için
-execute:
-  freeze: auto
