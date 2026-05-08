@@ -133,4 +133,4 @@ ie_cleaned %>%
 ---
 
 ## 4. Conclusion
-By isolating the latest academic year, we gain an accurate representation of the current supply of Industrial Engineering departments. Moving forward, we will integrate additional variables such as base scores and regional clusters.
+By isolating the latest academic year, we gain an accurate representation of the current supply of Industrial Engineerin  g departments. Moving forward, we will integrate additional variables such as base scores and regional clusters.
