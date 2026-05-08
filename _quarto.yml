@@ -13,15 +13,10 @@ website:
         href: data.qmd
       - text: "Analysis"
         href: analysis.qmd
-    right:
-      - icon: github
-        href: https://github.com/emu-hacettepe-analytics/emu430-fall2024-team-letithappen
 
 format:
   html:
-    theme: slate       # Analysis sayfasında beğendiğin o modern koyu ton budur.
-    css: styles.css    # Özel cam kart efektlerin için.
+    theme: slate       # Analysis sayfasında beğendiğin o profesyonel mavi-gri tonu budur.
+    css: styles.css    # Özel stillerimizi buradan zorla uygulayacağız.
     code-fold: true
     toc: true
-    toc-title: "İçerik"
-    smooth-scroll: true

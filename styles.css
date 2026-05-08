@@ -1,40 +1,18 @@
-/* Ana Arka Plan ve Yazı Tipleri */
-body {
-  background-color: #0f172a; /* Derin uzay mavisi/siyahı */
-  color: #f8fafc;
+/* Tüm sayfa bileşenlerini tek bir renge zorla (Slate Teması Rengi) */
+html[data-bs-theme="dark"] body, 
+html[data-bs-theme="dark"] .quarto-container,
+html[data-bs-theme="dark"] main,
+html[data-bs-theme="dark"] section,
+html[data-bs-theme="dark"] .content {
+  background-color: #272B30 !important; /* Bu renk Slate temasının o hoş mavimsi tonudur */
 }
 
-/* Glass Card (Cam Kart) Efekti - Tüm sayfalarda kullanılabilir */
+/* Cam Kartlarımızı her yerde aynı yapalım */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 25px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 25px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s ease;
+  margin-bottom: 20px;
 }
-
-.glass-card:hover {
-  border: 1px solid rgba(56, 189, 248, 0.4); /* Neon mavi vurgu */
-  transform: translateY(-5px);
-}
-
-/* Başlık Renkleri */
-h1, h2, h3 {
-  color: #38bdf8; /* Modern neon mavi başlıklar */
-  font-weight: 700;
-}
-
-/* Linkler */
-a {
-  color: #7dd3fc;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #38bdf8;
-  text-decoration: underline;
-}/* css styles */
