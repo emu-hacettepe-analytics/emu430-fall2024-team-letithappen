@@ -12,5 +12,47 @@
     "title": "Decoding Higher Education",
     "section": "",
     "text": "While university placement data is public, there is a lack of analytical perspective on how factors like faculty size and location impact a department’s popularity. This project identifies the underlying drivers of success for Industrial Engineering departments in Turkey.\nTeam Name: [Let It Happen]\nTeam Members: * Yusuf Bora Çavdar\n* Onur Furkan Gök"
+  },
+  {
+    "objectID": "analysis.html",
+    "href": "analysis.html",
+    "title": "Data Analytics & Results",
+    "section": "",
+    "text": "Comprehensive Data: 2018-2025 multi-year data extracted via thestats.\nAnalytical Approach: Moving from descriptive statistics to predictive insights.\nFaculty Factor: Measuring the real impact of academic staff size on student rankings.\n#| label: load-packages #| message: false library(tidyverse) # Analiz kodları buraya gelecek ### Key Takeaways"
+  },
+  {
+    "objectID": "analysis.html#exploratory-analysis",
+    "href": "analysis.html#exploratory-analysis",
+    "title": "Data Analytics & Results",
+    "section": "Exploratory Analysis",
+    "text": "Exploratory Analysis\n(Burada harika ggplot2 grafiklerimiz ve yorumlarımız olacak)"
+  },
+  {
+    "objectID": "analysis.html#introduction-to-analysis",
+    "href": "analysis.html#introduction-to-analysis",
+    "title": "Data Analytics & Results",
+    "section": "1. Introduction to Analysis",
+    "text": "1. Introduction to Analysis\nThis section presents our exploratory data analysis and findings. By leveraging the power of tidyverse and ggplot2, we uncover the trends that define Industrial Engineering education in Turkey."
+  },
+  {
+    "objectID": "analysis.html#preliminary-data-exploration",
+    "href": "analysis.html#preliminary-data-exploration",
+    "title": "Data Analytics & Results",
+    "section": "2. Preliminary Data Exploration",
+    "text": "2. Preliminary Data Exploration\n(Buraya veri çekme ve ilk görselleştirme kodlarımızı ekleyeceğiz.)\n#| label: setup #| message: false #| warning: false #| code-fold: true\nlibrary(tidyverse) # library(thestats) # Veri çekme aşamasında aktif edilecek"
+  },
+  {
+    "objectID": "data.html",
+    "href": "data.html",
+    "title": "Data Preparation",
+    "section": "",
+    "text": "Our analysis is based on dynamic data retrieval from the YÖK Atlas system. By using the thestats package, we ensure our study is fully reproducible and updated with the latest 2025 statistics."
+  },
+  {
+    "objectID": "data.html#data-dictionary",
+    "href": "data.html#data-dictionary",
+    "title": "Data Preparation",
+    "section": "Data Dictionary",
+    "text": "Data Dictionary\n\n\n\nVariable\nDescription\n\n\n\n\nUniversity_Type\nState or Foundation\n\n\nBase_Score\nMinimum score for placement\n\n\nStaff_Count\nTotal number of academic staff\n\n\n\n(Veri temizleme adımlarını burada anlatacağız)"
   }
 ]
