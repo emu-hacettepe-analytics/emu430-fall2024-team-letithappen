@@ -30,7 +30,7 @@ Variable
 
 Description
 
-Type
+Typeaaa
 
 univ_name
 
