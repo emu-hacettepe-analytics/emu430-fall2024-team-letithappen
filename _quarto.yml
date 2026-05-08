@@ -18,4 +18,4 @@ format:
   html:
     theme: slate  # 2. fotoğraftaki o karanlık temanın adı budur
     css: styles.css
-    toc: true
+    toc: true  
