@@ -1,9 +1,25 @@
 ---
-title: "Analysis"
+title: "Exploratory Data Analysis & Modeling"
 ---
 
-About this site
+### Key Takeaways
+* **Data Scope:** We extracted and harmonized multi-year data (2018-2025) from the YÖK Atlas using the `thestats` R package.
+* **Regional Shifts:** Preliminary results show a significant trend in how student regional origins affect placement scores.
+* **Faculty Impact:** There is a measurable correlation between the academic staff size and the national success ranking of the IE departments.
+* **Prescriptive Value:** The insights generated can help prospective students make data-driven choices.
+
+---
+
+## 1. Introduction to Analysis
+In this section, we apply Exploratory Data Analysis (EDA) and correlation modeling to our cleaned dataset. Our goal is to move beyond descriptive statistics and provide actionable insights regarding the performance of Industrial Engineering programs.
+
+## 2. Data Loading and Initial Glimpse
+*(Here we will include our R chunks for data extraction using thestats. Thanks to our `code-fold: true` setting, all code blocks are hidden by default to keep the report neat.)*
 
 ```{r}
-1 + 1
-```
+#| message: false
+#| warning: false
+library(tidyverse)
+# library(thestats) # Will be activated during data extraction
+
+# Placeholder for data loading

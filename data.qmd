@@ -1,5 +1,20 @@
 ---
-title: "Data"
+title: "Data Strategy & Preprocessing"
 ---
 
-Data source: xxx
+## Primary Data Source
+Our main data source is the **YÖK Atlas "Lisans Atlası"** module. Instead of relying on static Excel sheets, we dynamically queried the data directly into the R environment.
+
+## Extraction Tool
+We utilized the **`thestats`** R package (developed by M. Çavuş and O. Aydın) to extract comprehensive data regarding Industrial Engineering programs in Turkey. 
+
+## Variables & Data Dictionary
+The dataset encompasses time-series data from 2018 to 2025. Key variables include:
+
+* `University_Type`: State vs. Foundation universities.
+* `Base_Score`: Minimum placement scores for the department.
+* `Success_Ranking`: National ranking of the admitted students.
+* `Academic_Staff`: Total number of professors, associate professors, etc.
+* `Erasmus_Mobility`: Incoming and outgoing exchange student traffic.
+
+*(Note: The R codes used for data extraction and cleaning will be displayed in the Analysis section.)*

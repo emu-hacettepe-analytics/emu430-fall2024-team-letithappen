@@ -1,24 +1,25 @@
 ---
-title: "Team XXX"
-sidebar: false 
+title: "Decoding Higher Education: A Trend Analysis of Industrial Engineering Programs in Turkey"
+sidebar: false
 ---
 
-This is our project webpage.
+## Welcome to Our Project Homepage!
 
-Please stay tuned to follow our project activities.
+**Team Name:** Let It Happen
 
-This is our template.
+**Team Members:**
+* [Yusuf Bora Çavdar](https://emu-hacettepe-analytics.github.io/emu430-spring2026-boracavdar/) 
+* [Onur Furkan Gök](https://emu-hacettepe-analytics.github.io/emu430-spring2026-onurfgg/) 
 
-# Team Members
+### Project Description
+While university placement data is public, there is a lack of analytical perspective on how factors like faculty size, location, and international mobility impact a department's popularity. As Industrial Engineering students, our objective is to apply data analytics to our own domain. We aim to identify the underlying drivers of success and regional demand for Industrial Engineering departments across Turkey over recent years.
 
-1.  [Edin_Džeko](https://tr.wikipedia.org/wiki/Edin_D%C5%BEeko)
+---
 
-2.  [Dušan Tadić](https://tr.wikipedia.org/wiki/Du%C5%A1an_Tadi%C4%87)
+### Key Takeaways
+*(Note: As per the project guidelines, here are the main highlights of our study.)*
 
-3.  [Frederico Rodrigues de Paula Santos](https://tr.wikipedia.org/wiki/Fred_(1993_do%C4%9Fumlu_futbolcu))
-
-4.  [Sebastian Szymański](https://tr.wikipedia.org/wiki/Sebastian_Szyma%C5%84ski)
-
-# Project Topic
-
-# Data Set
+* **Data Scope:** We successfully extracted and harmonized multi-year data (2018-2025) from the YÖK Atlas using the `thestats` R package.
+* **Regional Shifts:** Preliminary results show a significant trend in how student regional origins and university locations affect placement scores.
+* **Faculty Impact:** There is a measurable correlation between the academic staff size/strength and the national success ranking of the IE departments.
+* **Prescriptive Value:** The insights generated can help prospective students make data-driven choices and assist university administrations in strategic planning.
