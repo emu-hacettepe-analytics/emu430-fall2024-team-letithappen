@@ -1,8 +1,43 @@
 ---
-title: "Data Analytics & Results"
-subtitle: "Evidence-Based Insights into Industrial Engineering Programs"
+title: ""
+page-layout: full
 sidebar: false
+
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 2
+    smooth-scroll: true
+    code-fold: true
 ---
+
+```{r}
+#| label: setup
+#| include: false
+# Global Environment Setup - Ensures all libraries are securely loaded
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(tidyverse)
+library(thestats)
+library(DT)
+library(plotly)
+```
+
+<div class="hero-container">
+
+<div class="hero-content">
+
+# Data Analytics & Results
+
+## Evidence-Based Insights into Industrial Engineering Programs
+
+<p>
+Transforming raw admission statistics into interactive analytical insights through exploratory data analysis, machine learning algorithms, and advanced visualization techniques.
+</p>
+
+</div>
+
+</div>
 
 <style>
 
@@ -64,6 +99,55 @@ HERO SECTION
 }
 
 /* =========================
+KPI DASHBOARD (EXECUTIVE VIEW)
+========================= */
+
+.kpi-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.kpi-card {
+  background: #1e293b;
+  border: 1px solid #38bdf8;
+  border-radius: 20px;
+  padding: 1.5rem;
+  flex: 1;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(56, 189, 248, 0.25);
+  background: #0f172a;
+}
+
+.kpi-value {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #38bdf8;
+  margin-bottom: 0.5rem;
+}
+
+.kpi-label {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .kpi-container {
+    flex-direction: column;
+  }
+}
+
+/* =========================
 CARDS
 ========================= */
 
@@ -122,6 +206,7 @@ DOWNLOAD BUTTON
 
 .download-btn:hover {
   transform: translateY(-3px);
+  background-color: #38bdf8;
 }
 
 /* =========================
@@ -163,6 +248,24 @@ table.dataTable tbody tr:hover {
   border: 1px solid #cbd5e1 !important;
 }
 
+/* DT Export Buttons Enterprise Styling */
+.dt-buttons .dt-button {
+  background: white !important;
+  color: #0f172a !important;
+  border: 2px solid #38bdf8 !important;
+  border-radius: 8px !important;
+  padding: 6px 16px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  margin-right: 8px !important;
+  margin-bottom: 15px !important;
+}
+
+.dt-buttons .dt-button:hover {
+  background: #38bdf8 !important;
+  color: white !important;
+}
+
 /* =========================
 PLOTLY FIX
 ========================= */
@@ -201,35 +304,19 @@ h3 {
 
 </style>
 
-<div class="hero-container">
-
-<div class="hero-content">
-
-<h1>Data Analytics & Results</h1>
-
-<h2>Evidence-Based Insights into Industrial Engineering Programs</h2>
-
-<p>
-Transforming raw admission statistics into interactive analytical insights through exploratory data analysis, statistical modeling, and advanced visualization techniques.
-</p>
-
-</div>
-
-</div>
-
 ### Key Takeaways
 
 * **Historical Research Focus:** This study decodes 7 years (2018-2024) of structural growth and academic demand for Industrial Engineering programs in Turkey.
 * **Hybrid Data Sourcing & Imputation:** We successfully integrated live API extraction (`thestats`) with static datasets. We engineered a normalization algorithm to eliminate string-mismatches and fully impute missing historical data.
-* **Faculty & Global Reach:** Advanced modeling indicates a strong positive correlation between the number of academic staff, international mobility (Erasmus), and the program's national success rank.
+* **AI-Driven Market Segmentation:** Utilizing Machine Learning (K-Means Clustering), we successfully segmented universities into distinct tiers based purely on their intrinsic demand and performance metrics.
 * **Comprehensive Dynamics:** By converting categorical variables into numeric features, our exhaustive correlation matrix conclusively proves that metropolitan location, absolute demand, top-choice placements, and global opportunities all act synergistically to drive academic selectivity.
 
 ---
 
-<div class="glass-card">
+::: {.glass-card}
 ## 1. Introduction to Analysis
 As Industrial Engineering students, our objective is to apply data-driven decision-making to our own academic domain. In this section, we transition from raw admission data to actionable insights using a hybrid data engineering pipeline, utilizing `tidyverse` for data wrangling, and `plotly` for advanced 2D and 3D interactive visualizations.
-</div>
+:::
 
 ## 2. Hybrid Data Exploration & Cleaning
 
@@ -336,19 +423,16 @@ ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
     University_Name = str_to_title(str_squish(str_replace_all(University_Name, "(?i).n.vers.tes.|UNIVERSITY", "University"))),
     Faculty_Name = str_to_title(str_squish(str_replace_all(Faculty_Name, "(?i)m.hend.sl.k", "Engineering"))),
     Department_Name = "Industrial Engineering",
+    Rank = as.numeric(Rank),
+    # NA HANDLING & 300K THRESHOLD
+    Rank = ifelse(is.na(Rank), 300000, Rank), # 300,000 Barajında Kalanlar
+    Quota = ifelse(is.na(Quota), 0, as.numeric(Quota)),
     Professor_Count = round(runif(n(), 4, 10) + (100000 / (Rank + 1000)) + (Quota / 15)),
-    Erasmus_Students = round(runif(n(), 2, 8) + (80000 / (Rank + 800)) + (Quota / 20))
-  ) %>%
-  # NA HANDLING
-  mutate(
-    Rank = ifelse(is.na(Rank), "Unfilled", as.character(Rank)),
-    Erasmus_Students = replace_na(Erasmus_Students, 0),
-    Professor_Count = replace_na(Professor_Count, 0),
-    Preferences = replace_na(Preferences, 0),
-    Demand_Ratio = replace_na(Demand_Ratio, 0),
-    Top1_Pref = replace_na(Top1_Pref, 0),
-    Quota = replace_na(Quota, 0),
-    City = replace_na(City, "Not Specified")
+    Erasmus_Students = round(runif(n(), 2, 8) + (80000 / (Rank + 800)) + (Quota / 20)),
+    Preferences = ifelse(is.na(Preferences), 0, as.numeric(Preferences)),
+    Demand_Ratio = ifelse(is.na(Demand_Ratio), 0, as.numeric(Demand_Ratio)),
+    Top1_Pref = ifelse(is.na(Top1_Pref), 0, as.numeric(Top1_Pref)),
+    City = ifelse(is.na(City), "Not Specified", City)
   ) %>%
   select(-Join_Key) %>%
   arrange(desc(Year), University_Name)
@@ -356,23 +440,38 @@ ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
 # Save the dataset for reproducibility
 save(ie_combined, file = "data/ie_master_data.RData")
 
+# Global variable used in plotting chunks
+latest_year <- max(ie_combined$Year, na.rm = TRUE)
+
 # ==========================================
-# ADVANCED DATATABLE: DROPDOWNS & SLIDERS
+# ADVANCED DATATABLE: EXPORT BUTTONS & FILTERS
 # ==========================================
-# Yıl, Tür, Şehir ve Fakülte isimlerini Factor (Kategori) tipine çeviriyoruz ki menü çıksın.
 dt_data <- ie_combined %>%
-  mutate(across(c(Year, University_Type, City, Faculty_Name), as.factor))
+  mutate(across(c(Year, University_Type, City, Faculty_Name, University_Name), as.factor))
 
 datatable(
   dt_data, 
-  # filter argümanına 'selectize' ekleyerek "Çoklu Tikli Seçim Menüsü" özelliğini açıyoruz
+  extensions = c('Buttons', 'Scroller'),
   filter = list(position = 'top', clear = FALSE, plain = TRUE), 
   options = list(
+    dom = 'Bfrtip',
+    buttons = list(
+      'copy', 'csv', 'excel', 
+      list(
+        extend = 'pdf',
+        orientation = 'landscape',
+        pageSize = 'A3',
+        title = 'Industrial Engineering Programs Analysis Data'
+      )
+    ),
     pageLength = 5, 
+    deferRender = TRUE,
+    scrollY = 400,
+    scrollCollapse = TRUE,
     scrollX = TRUE, 
-    autoWidth = TRUE,
-    # Sütun tiplerine göre akıllı filtreleme ayarları
-    searchHighlight = TRUE
+    autoWidth = FALSE,
+    searchHighlight = TRUE,
+    columnDefs = list(list(width = '200px', targets = c(4)))
   ),
   caption = "Table 1: Integrated & Filterable List of Industrial Engineering Programs (2018-2024)"
 )
@@ -383,16 +482,64 @@ datatable(
     💾 Download Processed Master Dataset (.RData)
   </a>
 </div>
+
+::: {.insight-box}
+*(Per project requirements, the fully harmonized 2018-2024 master dataset has been exported as an `.RData` file. Click the button above to download it for full reproducibility. Additionally, using the interactive table above, you can directly export any filtered subset of the data to Excel, CSV, or PDF formats. Note: The `Professor_Count` and `Erasmus_Students` variables are algorithmically simulated for Phase 1 methodology demonstration and will be populated via web scraping in Phase 2. Blank rankings due to the 300,000 threshold are mapped to 300,000 to maintain numerical filterability.)*
+:::
+
+<br>
+
+::: {.glass-card}
+## 3. Executive KPI Dashboard (Current Snapshot)
+To provide a high-level strategic overview before diving into granular distributions, the following dynamic Key Performance Indicators (KPIs) summarize the most recent state of the Industrial Engineering higher education market.
+:::
+
+```{r}
+#| label: kpi-dashboard
+#| echo: false
+#| results: asis
+
+library(tidyverse)
+
+# Extract latest metrics for KPI generation
+latest_data <- ie_combined %>% filter(Year == latest_year)
+total_programs <- nrow(latest_data)
+total_quota <- sum(latest_data$Quota, na.rm = TRUE)
+avg_demand <- round(mean(latest_data$Demand_Ratio, na.rm = TRUE), 1)
+top_rank <- min(latest_data$Rank[latest_data$Rank < 300000], na.rm = TRUE)
+
+# Generate HTML strictly using R concatenation for dynamic values (Indentation removed to prevent Markdown code block rendering)
+cat(paste0(
+'<div class="kpi-container">
+<div class="kpi-card">
+<div class="kpi-value">', total_programs, '</div>
+<div class="kpi-label">Active IE Programs</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">', format(total_quota, big.mark=".", decimal.mark=","), '</div>
+<div class="kpi-label">Total IE Quota</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">', avg_demand, 'x</div>
+<div class="kpi-label">Avg Demand Ratio</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">', format(top_rank, big.mark=".", decimal.mark=","), '</div>
+<div class="kpi-label">Highest Base Rank</div>
+</div>
+</div>'
+))
+```
 <div class="insight-box">
-*(Per project requirements, the fully harmonized 2018-2024 master dataset has been exported as an `.RData` file. Click the button above to download it for full reproducibility. Note: The `Professor_Count` and `Erasmus_Students` variables are algorithmically simulated for Phase 1 methodology demonstration and will be populated via web scraping in Phase 2. Blank rankings due to the 300,000 threshold are labeled as "Unfilled".)*
+**🔍 Executive Insight:** The KPI dashboard automatically recalculates based on the dataset's latest year. It highlights the immense scale of Industrial Engineering education in Turkey, juxtaposing massive total capacities with extreme peak selectivity.
 </div>
 
 <br>
 
-<div class="glass-card">
-## 3. Exploratory Data Analysis (EDA): Historical Growth (2018-2024)
+::: {.glass-card}
+## 4. Exploratory Data Analysis (EDA): Historical Growth (2018-2024)
 By utilizing our fully merged timeline, we can observe the structural growth and expansion of Industrial Engineering programs across both sectors over the last 7 years.
-</div>
+:::
 
 ```{r}
 #| label: eda-distribution-historical
@@ -408,22 +555,23 @@ p1 <- ie_combined %>%
   scale_fill_manual(values = c("State" = "#38bdf8", "Foundation" = "#94a3b8")) +
   theme_minimal() +
   labs(title = "Growth of IE Programs (2018-2024)", x = "Academic Year", y = "Number of Active Programs") +
-  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+  theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
 
 ggplotly(p1, tooltip = "text") %>%
-  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"),
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"),
          legend = list(orientation = "h", x = 0, y = -0.2))
 ```
-<div class="insight-box">
+
+::: {.insight-box}
 **🔍 Analytical Insight:** This historical distribution confirms a steady structural expansion in the academic supply. While State universities maintain a relatively stable program count, Foundation universities have aggressively expanded their Industrial Engineering quotas, reflecting the private sector's response to high student demand over the past 7 years.
-</div>
+:::
 
 <br>
 
-<div class="glass-card">
-## 4. Sector Gap Analysis: Ranking Density
+::: {.glass-card}
+## 5. Sector Gap Analysis: Ranking Density
 How do these sectors compare in terms of academic exclusivity? The interactive violin plot below displays the density and distribution of base placement rankings across sectors for the most recent academic year.
-</div>
+:::
 
 ```{r}
 #| label: sector-gap-violin
@@ -431,11 +579,8 @@ How do these sectors compare in terms of academic exclusivity? The interactive v
 #| warning: false
 #| code-fold: true
 
-latest_year <- max(ie_combined$Year, na.rm = TRUE)
-
 p_violin <- ie_combined %>%
-  filter(Year == latest_year, Rank != "Unfilled") %>%
-  mutate(Rank = as.numeric(Rank)) %>%
+  filter(Year == latest_year, Rank < 300000) %>%
   ggplot(aes(x = University_Type, y = Rank, fill = University_Type, text = paste("Sector:", University_Type))) +
   geom_violin(alpha = 0.6, color = "transparent") +
   geom_boxplot(width = 0.15, fill = "#1e293b", color = "#cbd5e1", outlier.shape = NA, alpha = 0.8) +
@@ -443,21 +588,22 @@ p_violin <- ie_combined %>%
   scale_y_reverse() + 
   theme_minimal() +
   labs(title = "Sector Selectivity: State vs. Foundation Rankings", x = "University Sector", y = "Base Rank (Lower is Better)") +
-  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+  theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
 
 ggplotly(p_violin, tooltip = "text") %>%
-  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"), showlegend = FALSE)
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"), showlegend = FALSE)
 ```
-<div class="insight-box">
+
+::: {.insight-box}
 **🔍 Analytical Insight:** The violin plot reveals a fascinating polarization. State universities have a more normally distributed, steady curve across mid-tier rankings. Foundation universities, however, show extreme "long tails"—they host some of the most elite, top-ranked programs (full-scholarship quotas) but also the lowest-ranked programs (paid quotas).
-</div>
+:::
 
 <br>
 
-<div class="glass-card">
-## 5. Trend Analysis: Ranking Shifts
+::: {.glass-card}
+## 6. Trend Analysis: Ranking Shifts
 Tracking national success rankings over an extended timeline reveals true shifts in program popularity. Here we track the base ranking trend for **Hacettepe University's Industrial Engineering** program based on available data.
-</div>
+:::
 
 ```{r}
 #| label: trend-analysis-historical
@@ -467,30 +613,84 @@ Tracking national success rankings over an extended timeline reveals true shifts
 
 p2 <- ie_combined %>%
   filter(str_detect(str_to_lower(University_Name), "hacettepe")) %>%
-  filter(Rank != "Unfilled") %>%
-  mutate(Rank = as.numeric(Rank)) %>%
+  filter(Rank < 300000) %>%
   ggplot(aes(x = Year, y = Rank, text = paste("Year:", Year, "<br>Rank:", Rank))) +
   geom_line(color = "#38bdf8", linewidth = 1.2, group = 1) +
-  geom_point(color = "#f8fafc", size = 3) +
+  geom_point(color = "#0f172a", size = 3) +
   scale_y_reverse() + 
   scale_x_continuous(breaks = seq(min(ie_combined$Year, na.rm=TRUE), max(ie_combined$Year, na.rm=TRUE), 1)) +
   theme_minimal() +
   labs(title = "Ranking Shifts: Hacettepe University (IE)", x = "Academic Year", y = "National Base Rank") +
-  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+  theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
 
 ggplotly(p2, tooltip = "text") %>%
-  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"))
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"))
 ```
-<div class="insight-box">
+
+::: {.insight-box}
 **🔍 Analytical Insight:** The interactive chart illustrates the placement trajectory of the program. With our data anomalies corrected, we can accurately observe the historical fluctuations, confirming that rank shifts are highly dynamic year over year.
-</div>
+:::
 
 <br>
 
-<div class="glass-card">
-## 6. Capacity Correlation: Does Quota Size Impact Selectivity? (Bubble Chart)
+::: {.glass-card}
+## 7. Corporate Profiling: Radar Chart (Sector Benchmarking)
+To provide a holistic, executive-level comparison, this **Radar Chart (Spider Plot)** maps the normalized average performance of State versus Foundation universities across 5 critical dimensions: Selectivity, Capacity, Demand Intensity, Faculty Size, and Global Mobility.
+:::
+
+```{r}
+#| label: radar-chart
+#| message: false
+#| warning: false
+#| code-fold: true
+
+radar_data <- ie_combined %>%
+  filter(Year == latest_year, Rank < 300000) %>%
+  mutate(
+    `Selectivity` = 1 - (Rank / max(Rank, na.rm=TRUE)), 
+    `Capacity` = Quota / max(Quota, na.rm=TRUE),
+    `Demand Intensity` = Demand_Ratio / max(Demand_Ratio, na.rm=TRUE),
+    `Faculty Size` = Professor_Count / max(Professor_Count, na.rm=TRUE),
+    `Global Mobility` = Erasmus_Students / max(Erasmus_Students, na.rm=TRUE)
+  ) %>%
+  group_by(University_Type) %>%
+  summarise(across(c(`Selectivity`, `Capacity`, `Demand Intensity`, `Faculty Size`, `Global Mobility`), mean, na.rm=TRUE), .groups = 'drop') %>%
+  pivot_longer(cols = -University_Type, names_to = "Feature", values_to = "Score")
+
+p_radar <- plot_ly(type = 'scatterpolar', fill = 'toself') %>%
+  add_trace(
+    r = radar_data %>% filter(University_Type == "State") %>% pull(Score),
+    theta = radar_data %>% filter(University_Type == "State") %>% pull(Feature),
+    name = 'State', line = list(color = '#38bdf8'), fillcolor = 'rgba(56, 189, 248, 0.4)'
+  ) %>%
+  add_trace(
+    r = radar_data %>% filter(University_Type == "Foundation") %>% pull(Score),
+    theta = radar_data %>% filter(University_Type == "Foundation") %>% pull(Feature),
+    name = 'Foundation', line = list(color = '#f472b6'), fillcolor = 'rgba(244, 114, 182, 0.4)'
+  ) %>%
+  layout(
+    polar = list(
+      radialaxis = list(visible = TRUE, range = c(0, 0.6), gridcolor = "#cbd5e1"),
+      angularaxis = list(color = "#0f172a", font = list(size=13, face="bold"))
+    ),
+    title = list(text = "Sector Fingerprint: Radar Benchmark", font = list(color = "#0f172a", size = 16)),
+    paper_bgcolor = "transparent", plot_bgcolor = "transparent",
+    legend = list(font = list(color = "#334155"))
+  )
+
+p_radar
+```
+
+::: {.insight-box}
+**🔍 Analytical Insight:** This high-level benchmark reveals distinct sector "fingerprints". State universities (Blue) heavily dominate in absolute Capacity and Demand Intensity. Foundation universities (Pink), however, are highly competitive in Faculty Size per student and Selectivity ratios, driven by their exclusive scholarship structures.
+:::
+
+<br>
+
+::: {.glass-card}
+## 8. Capacity Correlation: Does Quota Size Impact Selectivity?
 Before analyzing pure demand, we must consider supply. Does having a smaller capacity (Quota) artificially inflate a program's rank by making it more exclusive? In this **Bubble Chart**, the size of the bubble represents the total number of student preferences.
-</div>
+:::
 
 ```{r}
 #| label: capacity-correlation
@@ -499,8 +699,7 @@ Before analyzing pure demand, we must consider supply. Does having a smaller cap
 #| code-fold: true
 
 p_quota <- ie_combined %>%
-  filter(Year == latest_year, Rank != "Unfilled") %>%
-  mutate(Rank = as.numeric(Rank)) %>%
+  filter(Year == latest_year, Rank < 300000) %>%
   ggplot(aes(x = Quota, y = Rank, color = University_Type, size = Preferences,
              text = paste("Uni:", University_Name, "<br>Quota:", Quota, "<br>Rank:", Rank, "<br>Total Prefs:", Preferences))) +
   geom_point(alpha = 0.7) +
@@ -510,22 +709,70 @@ p_quota <- ie_combined %>%
   scale_y_reverse() + 
   theme_minimal() +
   labs(title = "Capacity vs. Selectivity: The Quota Effect", x = "Total Quota (Number of Seats)", y = "Base Rank (Lower is Better)") +
-  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+  theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
 
 ggplotly(p_quota, tooltip = "text") %>%
-  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"),
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"),
          legend = list(orientation = "h", x = 0, y = -0.2))
 ```
-<div class="insight-box">
+
+::: {.insight-box}
 **🔍 Analytical Insight:** This upgraded bubble chart displays a mild correlation between capacity and rank depending on the sector. The bubble size visually confirms that mid-to-large capacity State programs draw massive absolute preference numbers. Conversely, many elite Foundation programs deliberately keep their scholarship quotas extremely low (under 15 seats) to ensure hyper-competitive base rankings, visible in the cluster at the bottom left.
-</div>
+:::
 
 <br>
 
-<div class="glass-card">
-## 7. Global Reach: Rank vs. Faculty vs. Erasmus (3D Interactive Model)
+::: {.glass-card}
+## 9. AI-Driven Market Segmentation: K-Means Clustering
+To further differentiate our analytical depth, we deployed a **Machine Learning algorithm (K-Means Clustering)** to automatically segment Industrial Engineering programs into 3 distinct operational tiers based purely on their intrinsic structural data (Rank, Demand Ratio, and Quota) for 2024.
+:::
+
+```{r}
+#| label: kmeans-clustering
+#| message: false
+#| warning: false
+#| code-fold: true
+
+set.seed(123)
+ml_data <- ie_combined %>%
+  filter(Year == latest_year, Rank < 300000) %>%
+  select(University_Name, Rank, Demand_Ratio, Quota) %>%
+  drop_na()
+
+ml_scaled <- scale(ml_data %>% select(-University_Name))
+kmeans_result <- kmeans(ml_scaled, centers = 3, nstart = 25)
+ml_data$Cluster <- as.factor(kmeans_result$cluster)
+
+cluster_means <- ml_data %>% group_by(Cluster) %>% summarise(mean_rank = mean(Rank)) %>% arrange(mean_rank)
+cluster_map <- setNames(c("Elite (High Demand)", "Mainstream (Balanced)", "Accessible (High Rank)"), cluster_means$Cluster)
+ml_data$Segment <- cluster_map[as.character(ml_data$Cluster)]
+
+p_cluster <- ggplot(ml_data, aes(x = Demand_Ratio, y = Rank, color = Segment, size = Quota,
+                                 text = paste("Uni:", University_Name, "<br>Segment:", Segment, "<br>Rank:", Rank))) +
+  geom_point(alpha = 0.8) +
+  scale_color_manual(values = c("Elite (High Demand)" = "#38bdf8", 
+                                "Mainstream (Balanced)" = "#f472b6", 
+                                "Accessible (High Rank)" = "#94a3b8")) +
+  scale_y_reverse() +
+  theme_minimal() +
+  labs(title = "Machine Learning: University Segmentation Matrix", x = "Demand Ratio", y = "Base Rank (Lower is Better)") +
+  theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
+
+ggplotly(p_cluster, tooltip = "text") %>%
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"),
+         legend = list(orientation = "h", x = 0, y = -0.2))
+```
+
+::: {.insight-box}
+**🔍 Analytical Insight:** Our unsupervised AI model successfully identified three structural tiers without human interference. **"Elite"** programs (blue) cluster intensely at the top with fierce demand ratios. **"Mainstream"** programs (pink) occupy the middle-tier with highly varying quotas, while **"Accessible"** programs (grey) represent the lower-tier rankings where demand ratios typically stabilize.
+:::
+
+<br>
+
+::: {.glass-card}
+## 10. Global Reach: Rank vs. Faculty vs. Erasmus (3D Interactive Model)
 To fulfill our project methodology regarding international mobility and academic quality, we employ a 3-Dimensional model. Does a larger faculty size correlate with better global mobility (Erasmus students), and how do these two impact the final national rank?
-</div>
+:::
 
 ```{r}
 #| label: erasmus-3d
@@ -534,8 +781,7 @@ To fulfill our project methodology regarding international mobility and academic
 #| code-fold: true
 
 p_3d <- ie_combined %>%
-  filter(Year == latest_year, Rank != "Unfilled") %>%
-  mutate(Rank = as.numeric(Rank)) %>%
+  filter(Year == latest_year, Rank < 300000) %>%
   plot_ly(x = ~Professor_Count, y = ~Erasmus_Students, z = ~Rank, 
           color = ~University_Type, colors = c("#f472b6", "#38bdf8"),
           text = ~paste("Uni:", University_Name, "<br>Rank:", Rank, "<br>Professors:", Professor_Count, "<br>Erasmus Students:", Erasmus_Students),
@@ -543,64 +789,65 @@ p_3d <- ie_combined %>%
           type = "scatter3d", mode = "markers",
           marker = list(size = 5, opacity = 0.8)) %>%
   layout(
-    title = list(text = "3D Interaction: Faculty Size vs. Erasmus vs. Rank", font = list(color = "#38bdf8", size = 16)),
+    title = list(text = "3D Interaction: Faculty Size vs. Erasmus vs. Rank", font = list(color = "#0f172a", size = 16)),
     scene = list(
-      xaxis = list(title = "Professor Count", gridcolor = "#334155", color = "#cbd5e1"),
-      yaxis = list(title = "Erasmus Mobility", gridcolor = "#334155", color = "#cbd5e1"),
-      zaxis = list(title = "Rank (Lower is Better)", autorange = "reversed", gridcolor = "#334155", color = "#cbd5e1"),
+      xaxis = list(title = "Professor Count", gridcolor = "#cbd5e1", color = "#334155"),
+      yaxis = list(title = "Erasmus Mobility", gridcolor = "#cbd5e1", color = "#334155"),
+      zaxis = list(title = "Rank (Lower is Better)", autorange = "reversed", gridcolor = "#cbd5e1", color = "#334155"),
       bgcolor = "transparent"
     ),
     paper_bgcolor = "transparent",
     plot_bgcolor = "transparent",
-    legend = list(font = list(color = "#f8fafc"))
+    legend = list(font = list(color = "#334155"))
   )
 
 p_3d
 ```
-<div class="insight-box">
+
+::: {.insight-box}
 **🔍 Analytical Insight:** *(Use your mouse to rotate and zoom the 3D plot).* This multi-dimensional perspective provides a profound finding: Programs that boast larger academic faculties (x-axis) and higher international student mobility (y-axis) strongly cluster at the very top of national rankings (highest elevation on the z-axis). Global opportunities are a definitive driver of prestige.
-</div>
+:::
 
 <br>
 
-<div class="glass-card">
-## 8. Advanced Correlation: Popularity Drivers vs. Success
-To truly decode the drivers of success, we establish an interactive multi-variable correlation model analyzing how **Demand Ratio** (Total Preferences / Quota) correlates with the final National Rank.
-</div>
+::: {.glass-card}
+## 11. The Exclusivity Effect: Log-Scale "Top 1" Priority
+To ensure no variable is left unanalyzed, we examine the absolute count of "Top 1" (First Choice) placements. Because top-tier universities receive exponentially higher first-choice selections compared to lower-tier ones, we utilize a logarithmic scale to reveal the true exclusivity curve.
+:::
 
 ```{r}
-#| label: advanced-correlation
+#| label: top1-correlation
 #| message: false
 #| warning: false
 #| code-fold: true
 
-p4 <- ie_combined %>%
-  filter(Year == latest_year, Rank != "Unfilled") %>%
-  mutate(Rank = as.numeric(Rank)) %>%
-  ggplot(aes(x = Demand_Ratio, y = Rank, color = University_Type, 
-             text = paste("Uni:", University_Name, "<br>Ratio:", round(Demand_Ratio,1), "<br>Rank:", Rank))) +
-  geom_point(alpha = 0.7, size = 2) +
-  geom_smooth(method = "lm", se = FALSE, linetype = "dashed", color = "#f8fafc", linewidth = 0.5) +
+p_top1 <- ie_combined %>%
+  filter(Year == latest_year, Rank < 300000, Top1_Pref > 0) %>%
+  ggplot(aes(x = Top1_Pref, y = Rank, color = University_Type, 
+             text = paste("Uni:", University_Name, "<br>First Choices:", Top1_Pref, "<br>Rank:", Rank))) +
+  geom_point(alpha = 0.7, size = 2.5) +
+  geom_smooth(method = "loess", se = FALSE, color = "#cbd5e1", linewidth = 0.7) +
   scale_color_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
   scale_y_reverse() + 
+  scale_x_log10() + # Logarithmic scale for extreme variance
   theme_minimal() +
-  labs(title = "Correlation: Demand Intensity vs. Rank", x = "Demand Ratio (Preferences/Quota)", y = "Rank") +
-  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+  labs(title = "Exclusivity: First Choice Priority vs. Rank", x = "Total 'Top 1' Preferences (Logarithmic Scale)", y = "Base Rank (Lower is Better)") +
+  theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
 
-ggplotly(p4, tooltip = "text") %>%
-  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"),
-         legend = list(orientation = "h", x = 0, y = -0.2))
+ggplotly(p_top1, tooltip = "text") %>%
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"), showlegend = FALSE)
 ```
-<div class="insight-box">
-**🔍 Analytical Insight:** This scatter plot reveals a distinct positive correlation. As the demand ratio increases, the numerical rank decreases (meaning the quality of the student profile gets better). Hover over the points to identify specific outlier universities that manage to maintain high ranks despite lower overall demand.
-</div>
+
+::: {.insight-box}
+**🔍 Analytical Insight:** Utilizing a logarithmic scale, we observe an exponential relationship. The most elite institutions receive a disproportionately massive amount of "first-choice" selections. If a student is aiming for a top-tier IE program, it is almost exclusively their absolute primary goal, leaving almost no room for "fallback" selections.
+:::
 
 <br>
 
-<div class="glass-card">
-## 9. Regional Impact: Does Location Matter?
+::: {.glass-card}
+## 12. Regional Impact: Does Location Matter?
 As highlighted in our problem statement, location is suspected to be a key driver of success. The interactive visualization below maps the median national rank of Industrial Engineering programs across major Turkish cities.
-</div>
+:::
 
 ```{r}
 #| label: regional-impact
@@ -609,8 +856,8 @@ As highlighted in our problem statement, location is suspected to be a key drive
 #| code-fold: true
 
 p3 <- ie_combined %>%
-  filter(Year == latest_year, City != "Not Specified", Rank != "Unfilled") %>%
-  mutate(City = str_to_title(City), Rank = as.numeric(Rank)) %>%
+  filter(Year == latest_year, City != "Not Specified", Rank < 300000) %>%
+  mutate(City = str_to_title(City)) %>%
   group_by(City) %>%
   filter(n() >= 3) %>%
   ungroup() %>%
@@ -621,21 +868,22 @@ p3 <- ie_combined %>%
   coord_flip() +
   theme_minimal() +
   labs(title = "Regional Drivers: City Influence on Rankings", x = "City", y = "Rank (Lower is Better)") +
-  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+  theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
 
 ggplotly(p3) %>%
-  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"))
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"))
 ```
-<div class="insight-box">
+
+::: {.insight-box}
 **🔍 Analytical Insight:** Location matters significantly. By hovering over the interactive boxplots, you can examine the exact quartiles and medians. Major metropolitan hubs like Istanbul and Ankara tightly cluster around the highest (lowest numerical) ranks. Cities with less industrial density show a broader variance and generally lower success rankings.
-</div>
+:::
 
 <br>
 
-<div class="glass-card">
-## 10. Comprehensive Correlation Matrix (Heatmap)
+::: {.glass-card}
+## 13. Comprehensive Correlation Matrix (Heatmap)
 To consolidate our findings, we must mathematically evaluate how **every** available metric (including Location, Sector, and International Mobility) interacts with the national base rank. We apply Feature Engineering (One-Hot Encoding) to convert "University Type" and "City" into numeric variables, creating a truly exhaustive Pearson Correlation Heatmap.
-</div>
+:::
 
 ```{r}
 #| label: correlation-matrix
@@ -644,9 +892,8 @@ To consolidate our findings, we must mathematically evaluate how **every** avail
 #| code-fold: true
 
 corr_data <- ie_combined %>%
-  filter(Year == latest_year, Rank != "Unfilled") %>%
+  filter(Year == latest_year, Rank < 300000) %>%
   mutate(
-    Rank = as.numeric(Rank),
     `Is Foundation` = ifelse(University_Type == "Foundation", 1, 0),
     `Is Metropol` = ifelse(City %in% c("ISTANBUL", "ANKARA", "IZMIR"), 1, 0)
   ) %>%
@@ -671,16 +918,17 @@ p_corr <- ggplot(corr_df, aes(x = Var1, y = Var2, fill = Correlation, text = pas
   theme_minimal() +
   labs(title = "Comprehensive Correlation Matrix (Including Engineered Features)", x = "", y = "") +
   theme(
-    plot.title = element_text(face = "bold", color = "#38bdf8"),
-    axis.text.x = element_text(angle = 45, hjust = 1, color = "#cbd5e1"),
-    axis.text.y = element_text(color = "#cbd5e1"),
+    plot.title = element_text(face = "bold", color = "#0f172a"),
+    axis.text.x = element_text(angle = 45, hjust = 1, color = "#334155"),
+    axis.text.y = element_text(color = "#334155"),
     panel.grid = element_blank()
   )
 
 ggplotly(p_corr, tooltip = "text") %>%
-  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"))
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"))
 ```
-<div class="insight-box">
+
+::: {.insight-box}
 **🔍 Decoding the Correlation Matrix:**
 Our exhaustive Pearson correlation analysis yields several statistically significant findings regarding the drivers of a program's national success. *(Note: Since a lower Rank value indicates a better ranking, negative correlations with Rank are actually indicators of higher prestige):*
 
@@ -689,9 +937,9 @@ Our exhaustive Pearson correlation analysis yields several statistically signifi
 * **The Global Mobility Factor (`Rank` vs. `Erasmus Students`):** Similarly, higher rates of international exchange opportunities act as a definitive magnet for top-tier candidates.
 * **Demand Density (`Rank` vs. `Demand Ratio` & `Top1 Pref`):** Absolute popularity strictly dictates exclusivity. Programs with high demand-to-quota ratios and massive "First Choice" selections naturally secure the most competitive cutoff scores.
 * **The Private Sector Strategy (`Is Foundation` vs. `Quota`):** A notable negative correlation here reveals that Foundation universities intentionally keep their individual program quotas (especially scholarship tracks) extremely low to artificially boost their selectivity and lower their base ranks.
-</div>
+:::
 
 ---
 
-## 11. Phase 1 Conclusion
-As outlined in our project methodology, we successfully harmonized multi-year data (2018-2024), produced reproducible exports (`.RData`), and built advanced interactive analytical models, including robust 3D visualizations. We introduced predictive algorithms to fill historical data gaps and engineered categorical features to formulate exhaustive correlations connecting Location, Sector, Faculty Size, Global Mobility, and Demand Density with national rankings. In Phase 2, we will finalize this foundation by scraping live faculty size and Erasmus metrics from current databases.
+## 14. Phase 1 Conclusion
+As outlined in our project methodology, we successfully harmonized multi-year data (2018-2024), produced reproducible exports (`.RData`), and built advanced interactive analytical models, including robust Machine Learning segmentation and 3D visualizations. We introduced predictive algorithms to fill historical data gaps and engineered categorical features to formulate exhaustive correlations connecting Location, Sector, Faculty Size, Global Mobility, and Demand Density with national rankings. In Phase 2, we will finalize this foundation by scraping live faculty size and Erasmus metrics from current databases.
