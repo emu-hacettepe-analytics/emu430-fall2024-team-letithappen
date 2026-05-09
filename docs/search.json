@@ -234,7 +234,7 @@
     "objectID": "data.html#acknowledgements-references",
     "href": "data.html#acknowledgements-references",
     "title": "Data Preparation",
-    "section": "🌟 Acknowledgements & References",
-    "text": "🌟 Acknowledgements & References\nThis project would not have been possible without the valuable open-source contributions and academic guidance of the following individuals:\n\n\n\nDr. Erdi Daşdemir\n\n\nCourse Instructor, Hacettepe Univ.\n\n\nFor providing the foundational EMU430 Data Analytics course slides, rigorous project guidelines, and the pedagogical framework that shaped this analysis.\n\n\n\n\nRamazan İzci\n\n\nData Scientist & Contributor\n\n\nSpecial thanks for compiling the comprehensive 2021-2024 Kaggle dataset. You can connect with him on LinkedIn or explore his educational platform at sinavizcisi.com.\n\n\n\n\nM. Çavuş & O. Aydın\n\n\nR Package Developers\n\n\nFor developing the thestats R package, which allowed us to seamlessly extract official YÖK Atlas placement statistics via API for historical context."
+    "section": "Acknowledgements & References",
+    "text": "Acknowledgements & References\nThis project would not have been possible without the valuable open-source contributions and academic guidance of the following individuals:\n\n\n\nDr. Erdi Daşdemir\n\n\nCourse Instructor, Hacettepe Univ.\n\n\nFor providing the foundational EMU430 Data Analytics course slides, rigorous project guidelines, and the pedagogical framework that shaped this analysis.\n\n\n\n\nRamazan İzci\n\n\nData Scientist & Contributor\n\n\nSpecial thanks for compiling the comprehensive 2021-2024 Kaggle dataset. You can connect with him on LinkedIn or explore his educational platform at sinavizcisi.com.\n\n\n\n\nM. Çavuş & O. Aydın\n\n\nR Package Developers\n\n\nFor developing the thestats R package, which allowed us to seamlessly extract official YÖK Atlas placement statistics via API for historical context."
   }
 ]
