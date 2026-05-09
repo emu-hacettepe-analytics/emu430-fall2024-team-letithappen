@@ -173,5 +173,54 @@
     "title": "Data Preparation",
     "section": "Continue Exploring",
     "text": "Continue Exploring\n\nHome Page\nAnalysis Page"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Decoding Higher Education",
+    "section": "",
+    "text": "Understanding the hidden drivers behind student demand, university prestige, and regional educational dynamics through data analytics.\n\n\n Explore Analysis \n View Dataset \n\n\n\n\nYusuf Bora Çavdar · Onur Furkan Gök"
+  },
+  {
+    "objectID": "index.html#a-trend-analysis-of-industrial-engineering-programs-in-turkey",
+    "href": "index.html#a-trend-analysis-of-industrial-engineering-programs-in-turkey",
+    "title": "Decoding Higher Education",
+    "section": "",
+    "text": "Understanding the hidden drivers behind student demand, university prestige, and regional educational dynamics through data analytics.\n\n\n Explore Analysis \n View Dataset \n\n\n\n\nYusuf Bora Çavdar · Onur Furkan Gök"
+  },
+  {
+    "objectID": "index.html#project-overview",
+    "href": "index.html#project-overview",
+    "title": "Decoding Higher Education",
+    "section": "Project Overview",
+    "text": "Project Overview\nIndustrial Engineering programs in Turkey exhibit significant differences in popularity, student demand, and ranking performance. However, raw placement statistics alone often fail to explain why certain universities consistently outperform others.\nThis project investigates the evolution of Industrial Engineering departments between 2018 and 2024 by combining official placement statistics, demand indicators, and regional characteristics.\nUsing R and Quarto, we apply data analytics techniques to explore how geographical location, quota structures, and demand intensity relate to departmental success and national visibility."
+  },
+  {
+    "objectID": "index.html#research-questions",
+    "href": "index.html#research-questions",
+    "title": "Decoding Higher Education",
+    "section": "Research Questions",
+    "text": "Research Questions\n\nWhat factors influence the popularity of Industrial Engineering departments in Turkey?\nDo metropolitan universities dominate student demand?\nHow does demand-to-quota ratio affect ranking performance?\nWhich universities demonstrate the strongest upward trends over time?\nAre regional patterns observable across the Turkish higher education landscape?"
+  },
+  {
+    "objectID": "index.html#methodology-overview",
+    "href": "index.html#methodology-overview",
+    "title": "Decoding Higher Education",
+    "section": "Methodology Overview",
+    "text": "Methodology Overview\nThis project combines modern data analytics workflows with reproducible research practices.\n\nAnalytical Pipeline\n\nData extraction using the thestats R package\nIntegration of YÖK Atlas and supplementary datasets\nData cleaning and preprocessing in R\nExploratory Data Analysis (EDA)\nCorrelation and trend analysis\nStatistical modeling and visualization through Quarto"
+  },
+  {
+    "objectID": "index.html#key-takeaways",
+    "href": "index.html#key-takeaways",
+    "title": "Decoding Higher Education",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\nMetropolitan universities consistently dominate ranking performance and student demand.\nDemand-to-quota ratio appears strongly associated with national success rankings.\nSeveral Anatolian universities demonstrate rapid upward trends after 2021.\nRegional disparities continue to shape Industrial Engineering education patterns in Turkey.\nData-driven approaches provide deeper insight beyond raw placement statistics."
+  },
+  {
+    "objectID": "index.html#explore-the-project",
+    "href": "index.html#explore-the-project",
+    "title": "Decoding Higher Education",
+    "section": "Explore the Project",
+    "text": "Explore the Project\n\nData Page\nAnalysis Page"
   }
 ]

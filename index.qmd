@@ -305,44 +305,69 @@ This project combines modern data analytics workflows with reproducible research
 
 <div class="contributors-header">
 
-<h2>Research Contributors</h2>
+<div class="contributors-tag">
+Research Team
+</div>
+
+<h2>
+Project Contributors
+</h2>
 
 <p>
-This project was developed collaboratively as part of the EMU430 Data Analytics course,
-focusing on reproducible research, statistical modeling, and interactive analytical reporting.
+This project was developed collaboratively as part of EMU430 Data Analytics,
+focusing on reproducible research, statistical exploration,
+and higher education trend analysis.
 </p>
 
 </div>
 
-<div class="contributors-table">
+<div class="contributors-wrapper">
 
 <div class="contributor-row">
 
-<div class="contributor-name">
-<a href="https://emu-hacettepe-analytics.github.io/emu430-spring2026-boracavdar/"
-target="_blank">
-Yusuf Bora Çavdar
-</a>
-</div>
+<div class="contributor-info">
+
+<h3>Yusuf Bora Çavdar</h3>
 
 <div class="contributor-role">
-Data Engineering · Visualization · Statistical Analysis
+Lead Data Analysis · Visualization · Modeling
 </div>
 
 </div>
+
+<a
+href="https://github.com/"
+target="_blank"
+class="github-button">
+
+GitHub →
+
+</a>
+
+</div>
+
+<div class="row-divider"></div>
 
 <div class="contributor-row">
 
-<div class="contributor-name">
-<a href="https://emu-hacettepe-analytics.github.io/emu430-spring2026-onurfgg/"
-target="_blank">
-Onur Furkan Gök
-</a>
-</div>
+<div class="contributor-info">
+
+<h3>Onur Furkan Gök</h3>
 
 <div class="contributor-role">
-Research Design · Data Processing · Methodological Development
+Research Design · Data Processing · Methodology
 </div>
+
+</div>
+
+<a
+href="https://github.com/"
+target="_blank"
+class="github-button">
+
+GitHub →
+
+</a>
 
 </div>
 
@@ -354,119 +379,189 @@ Research Design · Data Processing · Methodological Development
 
 .contributors-section {
 
-  margin-top: 6rem;
-  margin-bottom: 5rem;
-
-  padding-top: 3rem;
-
-  border-top:
-    1px solid rgba(15,23,42,0.08);
+  margin-top: 7rem;
+  margin-bottom: 6rem;
 }
 
 .contributors-header {
 
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
+
+  max-width: 760px;
+}
+
+.contributors-tag {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 8px 18px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(14,165,233,0.08);
+
+  color:
+    #0284c7;
+
+  font-size: .8rem;
+
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+
+  text-transform: uppercase;
+
+  margin-bottom: 1.2rem;
 }
 
 .contributors-header h2 {
 
-  font-size: 2.2rem;
+  font-size: 2.6rem;
+
   font-weight: 800;
 
   color: #0f172a;
 
-  margin-bottom: 1rem;
+  margin-bottom: 1.4rem;
 }
 
 .contributors-header p {
 
-  max-width: 780px;
+  font-size: 1.08rem;
+
+  line-height: 2;
 
   color: #64748b;
-
-  line-height: 1.9;
-
-  font-size: 1.05rem;
 }
 
-.contributors-table {
+.contributors-wrapper {
 
   background: white;
 
-  border-radius: 28px;
+  border-radius: 32px;
 
   overflow: hidden;
 
-  box-shadow:
-    0 12px 35px rgba(15,23,42,0.05);
-
   border:
-    1px solid rgba(15,23,42,0.05);
+    1px solid rgba(148,163,184,0.10);
+
+  box-shadow:
+    0 14px 35px rgba(15,23,42,0.04);
 }
 
 .contributor-row {
 
-  display: grid;
-
-  grid-template-columns: 1fr 2fr;
-
-  gap: 2rem;
-
-  padding: 2rem 2.5rem;
+  display: flex;
 
   align-items: center;
 
-  transition:
-    background 0.3s ease;
-}
+  justify-content: space-between;
 
-.contributor-row:not(:last-child) {
+  padding: 2.6rem 3rem;
 
-  border-bottom:
-    1px solid rgba(15,23,42,0.06);
+  transition: .3s ease;
 }
 
 .contributor-row:hover {
 
   background:
-    rgba(56,189,248,0.04);
+    rgba(248,250,252,0.7);
 }
 
-.contributor-name a {
+.contributor-info h3 {
 
-  text-decoration: none;
-
-  color: #0f172a;
-
-  font-size: 1.15rem;
+  font-size: 1.45rem;
 
   font-weight: 700;
 
-  transition:
-    color 0.3s ease;
-}
+  color: #0f172a;
 
-.contributor-name a:hover {
-
-  color: #38bdf8;
+  margin-bottom: .55rem;
 }
 
 .contributor-role {
 
-  color: #475569;
+  color: #64748b;
+
+  font-size: 1rem;
 
   line-height: 1.8;
 }
 
+.github-button {
+
+  text-decoration: none;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding:
+    14px 22px;
+
+  border-radius: 14px;
+
+  background:
+    #0f172a;
+
+  color: white;
+
+  font-weight: 700;
+
+  font-size: .95rem;
+
+  transition:
+    transform .25s ease,
+    background .25s ease;
+}
+
+.github-button:hover {
+
+  background:
+    #0284c7;
+
+  transform:
+    translateY(-2px);
+}
+
+.row-divider {
+
+  height: 1px;
+
+  background:
+    rgba(148,163,184,0.14);
+
+  margin:
+    0 3rem;
+}
+
 @media (max-width: 768px) {
+
+  .contributors-header h2 {
+
+    font-size: 2rem;
+  }
 
   .contributor-row {
 
-    grid-template-columns: 1fr;
+    flex-direction: column;
 
-    gap: 1rem;
+    align-items: flex-start;
+
+    gap: 1.5rem;
+
+    padding: 2rem;
   }
 
+  .row-divider {
+
+    margin: 0 2rem;
+  }
 }
 
 </style>
