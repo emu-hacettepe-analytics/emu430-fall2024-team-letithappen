@@ -194,6 +194,16 @@ pre {
   font-weight: 800;
 }
 
+.reference-item h3 a {
+  color: #0f172a;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.reference-item h3 a:hover {
+  color: #38bdf8;
+}
+
 .reference-role {
   color: #0ea5e9;
   font-size: 0.9rem;
@@ -210,7 +220,7 @@ pre {
   margin-bottom: 0;
 }
 
-.reference-item a {
+.reference-item p a {
   color: #0f172a;
   font-weight: 700;
   text-decoration: none;
@@ -218,8 +228,33 @@ pre {
   transition: color 0.3s;
 }
 
-.reference-item a:hover {
+.reference-item p a:hover {
   color: #38bdf8;
+}
+
+/* TECH STACK PILLS */
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+
+.tech-pill {
+  background: #e2e8f0;
+  color: #0f172a;
+  padding: 6px 16px;
+  border-radius: 99px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.tech-pill:hover {
+  background: #0f172a;
+  color: white;
+  transform: translateY(-2px);
 }
 
 /* NAVIGATION */
@@ -269,7 +304,6 @@ To analyze long-term trends in Industrial Engineering education across Turkey, w
 ### Primary Sources
 
 -   **YÖK Atlas Data (2018–2020)** We used the `thestats` R package developed by M. Çavuş and O. Aydın to extract official placement statistics directly into R.
-
 -   **Kaggle Dataset (2021–2024)** To enrich the analysis with more recent information, we integrated a Kaggle dataset containing quota sizes, city information, total preference counts, and additional admission statistics.
 
 This hybrid approach allowed us to construct a broader and more consistent analytical timeline.
@@ -447,14 +481,14 @@ save(ie_combined, file = "data/ie_master_data.RData")
 ```
 :::
 
-:::::::::: content-card
+::::::::::::: content-card
 ## Acknowledgements & References
 
-This project would not have been possible without the valuable open-source contributions and academic guidance of the following individuals:
+This project would not have been possible without the valuable open-source contributions and academic guidance of the following individuals and technologies:
 
-::::::::: reference-grid
+::::::::::: reference-grid
 :::: reference-item
-<h3>Dr. Erdi Daşdemir</h3>
+<h3><a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank">**Dr. Erdi Daşdemir**</a></h3>
 
 ::: reference-role
 Course Instructor, Hacettepe Univ.
@@ -482,8 +516,34 @@ R Package Developers
 
 <p>For developing the <code>thestats</code> R package, which allowed us to seamlessly extract official YÖK Atlas placement statistics via API for historical context.</p>
 ::::
-:::::::::
-::::::::::
+
+:::: reference-item
+<h3>Gemini Pro (Google AI)</h3>
+
+::: reference-role
+AI Coding Assistant & Copilot
+:::
+
+<p>Acknowledging the use of Gemini Pro as an advanced AI copilot for executing complex data wrangling scripts, CSS/HTML dashboard design, and structural K-Means machine learning algorithms.</p>
+::::
+:::::::::::
+
+<h3 style="margin-top: 3rem; margin-bottom: 0.5rem; color: #0f172a;">
+
+Core Technology Stack
+
+</h3>
+
+<p style="color: #64748b; font-size: 0.95rem;">
+
+The following R libraries formed the backbone of our data extraction, manipulation, and interactive visualization pipeline:
+
+</p>
+
+::: tech-stack
+[tidyverse]{.tech-pill} [dplyr]{.tech-pill} [ggplot2]{.tech-pill} [plotly]{.tech-pill} [leaflet]{.tech-pill} [DT (DataTables)]{.tech-pill} [thestats]{.tech-pill} [stringr]{.tech-pill} [magrittr]{.tech-pill} [Quarto]{.tech-pill}
+:::
+:::::::::::::
 
 :::: {.content-card style="text-align: center; padding: 2rem;"}
 ## Continue Exploring

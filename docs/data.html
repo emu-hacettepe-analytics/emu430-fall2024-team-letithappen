@@ -348,6 +348,16 @@ pre {
   font-weight: 800;
 }
 
+.reference-item h3 a {
+  color: #0f172a;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.reference-item h3 a:hover {
+  color: #38bdf8;
+}
+
 .reference-role {
   color: #0ea5e9;
   font-size: 0.9rem;
@@ -364,7 +374,7 @@ pre {
   margin-bottom: 0;
 }
 
-.reference-item a {
+.reference-item p a {
   color: #0f172a;
   font-weight: 700;
   text-decoration: none;
@@ -372,8 +382,33 @@ pre {
   transition: color 0.3s;
 }
 
-.reference-item a:hover {
+.reference-item p a:hover {
   color: #38bdf8;
+}
+
+/* TECH STACK PILLS */
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+
+.tech-pill {
+  background: #e2e8f0;
+  color: #0f172a;
+  padding: 6px 16px;
+  border-radius: 99px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.tech-pill:hover {
+  background: #0f172a;
+  color: white;
+  transform: translateY(-2px);
 }
 
 /* NAVIGATION */
@@ -420,8 +455,8 @@ This page documents the complete data sourcing, cleaning, preprocessing, and int
 <section id="primary-sources" class="level3">
 <h3 class="anchored" data-anchor-id="primary-sources">Primary Sources</h3>
 <ul>
-<li><p><strong>YÖK Atlas Data (2018–2020)</strong> We used the <code>thestats</code> R package developed by M. Çavuş and O. Aydın to extract official placement statistics directly into R.</p></li>
-<li><p><strong>Kaggle Dataset (2021–2024)</strong> To enrich the analysis with more recent information, we integrated a Kaggle dataset containing quota sizes, city information, total preference counts, and additional admission statistics.</p></li>
+<li><strong>YÖK Atlas Data (2018–2020)</strong> We used the <code>thestats</code> R package developed by M. Çavuş and O. Aydın to extract official placement statistics directly into R.</li>
+<li><strong>Kaggle Dataset (2021–2024)</strong> To enrich the analysis with more recent information, we integrated a Kaggle dataset containing quota sizes, city information, total preference counts, and additional admission statistics.</li>
 </ul>
 <p>This hybrid approach allowed us to construct a broader and more consistent analytical timeline.</p>
 </section>
@@ -626,11 +661,11 @@ This page documents the complete data sourcing, cleaning, preprocessing, and int
 </section>
 <section id="acknowledgements-references" class="level2 content-card">
 <h2 class="anchored" data-anchor-id="acknowledgements-references">Acknowledgements &amp; References</h2>
-<p>This project would not have been possible without the valuable open-source contributions and academic guidance of the following individuals:</p>
+<p>This project would not have been possible without the valuable open-source contributions and academic guidance of the following individuals and technologies:</p>
 <div class="reference-grid">
 <div class="reference-item">
 <h3 class="anchored">
-Dr.&nbsp;Erdi Daşdemir
+<a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank"><strong>Dr.&nbsp;Erdi Daşdemir</strong></a>
 </h3>
 <div class="reference-role">
 <p>Course Instructor, Hacettepe Univ.</p>
@@ -661,6 +696,26 @@ M. Çavuş &amp; O. Aydın
 For developing the <code>thestats</code> R package, which allowed us to seamlessly extract official YÖK Atlas placement statistics via API for historical context.
 </p>
 </div>
+<div class="reference-item">
+<h3 class="anchored">
+Gemini Pro (Google AI)
+</h3>
+<div class="reference-role">
+<p>AI Coding Assistant &amp; Copilot</p>
+</div>
+<p>
+Acknowledging the use of Gemini Pro as an advanced AI copilot for executing complex data wrangling scripts, CSS/HTML dashboard design, and structural K-Means machine learning algorithms.
+</p>
+</div>
+</div>
+<h3 style="margin-top: 3rem; margin-bottom: 0.5rem; color: #0f172a;" class="anchored">
+<p>Core Technology Stack</p>
+</h3>
+<p style="color: #64748b; font-size: 0.95rem;">
+</p><p>The following R libraries formed the backbone of our data extraction, manipulation, and interactive visualization pipeline:</p>
+<p></p>
+<div class="tech-stack">
+<p><span class="tech-pill">tidyverse</span> <span class="tech-pill">dplyr</span> <span class="tech-pill">ggplot2</span> <span class="tech-pill">plotly</span> <span class="tech-pill">leaflet</span> <span class="tech-pill">DT (DataTables)</span> <span class="tech-pill">thestats</span> <span class="tech-pill">stringr</span> <span class="tech-pill">magrittr</span> <span class="tech-pill">Quarto</span></p>
 </div>
 </section>
 <section id="continue-exploring" class="level2 content-card" style="text-align: center; padding: 2rem;">
