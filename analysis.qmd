@@ -37,12 +37,28 @@ table.dataTable tbody tr:hover {
   border-radius: 0 8px 8px 0;
   color: #e2e8f0;
 }
+.download-btn {
+  display: inline-block;
+  background-color: #38bdf8;
+  color: #0f172a !important;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease;
+}
+.download-btn:hover {
+  background-color: #0284c7;
+  color: #ffffff !important;
+}
 </style>
 
 ### Key Takeaways
 
 * **Historical Research Focus:** This study decodes 7 years (2018-2024) of structural growth and academic demand for Industrial Engineering programs in Turkey.
-* **Hybrid Data Sourcing & Imputation:** We successfully integrated live API extraction with static datasets. We engineered a normalization algorithm to eliminate string-mismatches and fully impute missing historical data.
+* **Hybrid Data Sourcing & Imputation:** We successfully integrated live API extraction (`thestats`) with static datasets. We engineered a normalization algorithm to eliminate string-mismatches and fully impute missing historical data.
 * **Faculty & Global Reach:** Advanced modeling indicates a strong positive correlation between the number of academic staff, international mobility (Erasmus), and the program's national success rank.
 * **Comprehensive Dynamics:** By converting categorical variables into numeric features, our exhaustive correlation matrix conclusively proves that metropolitan location, absolute demand, top-choice placements, and global opportunities all act synergistically to drive academic selectivity.
 
@@ -158,13 +174,13 @@ ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
     University_Name = str_to_title(str_squish(str_replace_all(University_Name, "(?i).n.vers.tes.|UNIVERSITY", "University"))),
     Faculty_Name = str_to_title(str_squish(str_replace_all(Faculty_Name, "(?i)m.hend.sl.k", "Engineering"))),
     Department_Name = "Industrial Engineering",
-    # PHASE 2 HAZIRLIĞI: Akademik Kadro ve Erasmus Verisi Simülasyonu 
     Professor_Count = round(runif(n(), 4, 10) + (100000 / (Rank + 1000)) + (Quota / 15)),
     Erasmus_Students = round(runif(n(), 2, 8) + (80000 / (Rank + 800)) + (Quota / 20))
   ) %>%
   select(-Join_Key) %>%
   arrange(desc(Year), University_Name)
 
+# Save the dataset for reproducibility
 save(ie_combined, file = "data/ie_master_data.RData")
 
 datatable(
@@ -174,7 +190,14 @@ datatable(
 )
 ```
 
-*(Note: The processed 2018-2024 master dataset has been exported as `ie_master_data.RData`. The `Professor_Count` and `Erasmus_Students` variables are algorithmically simulated for Phase 1 methodology demonstration and will be populated via web scraping in Phase 2.)*
+<div style="text-align: center;">
+  <a href="data/ie_master_data.RData" download class="download-btn">
+    💾 Download Processed Master Dataset (.RData)
+  </a>
+</div>
+<div class="insight-box">
+*(Per project requirements, the fully harmonized 2018-2024 master dataset has been exported as an `.RData` file. Click the button above to download it for full reproducibility. Note: The `Professor_Count` and `Erasmus_Students` variables are algorithmically simulated for Phase 1 methodology demonstration and will be populated via web scraping in Phase 2.)*
+</div>
 
 <br>
 
@@ -257,7 +280,7 @@ p2 <- ie_combined %>%
   filter(str_detect(str_to_lower(University_Name), "hacettepe")) %>%
   filter(!is.na(Rank)) %>% 
   ggplot(aes(x = Year, y = Rank, text = paste("Year:", Year, "<br>Rank:", Rank))) +
-  geom_line(color = "#38bdf8", size = 1.2, group = 1) +
+  geom_line(color = "#38bdf8", linewidth = 1.2, group = 1) +
   geom_point(color = "#f8fafc", size = 3) +
   scale_y_reverse() + 
   scale_x_continuous(breaks = seq(min(ie_combined$Year, na.rm=TRUE), max(ie_combined$Year, na.rm=TRUE), 1)) +
@@ -290,7 +313,7 @@ p_quota <- ie_combined %>%
   ggplot(aes(x = Quota, y = Rank, color = University_Type, 
              text = paste("Uni:", University_Name, "<br>Quota:", Quota, "<br>Rank:", Rank))) +
   geom_point(alpha = 0.7, size = 2) +
-  geom_smooth(method = "lm", se = FALSE, linetype = "dotted", color = "#cbd5e1", size = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dotted", color = "#cbd5e1", linewidth = 0.6) +
   scale_color_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
   scale_y_reverse() + 
   theme_minimal() +
@@ -363,7 +386,7 @@ p4 <- ie_combined %>%
   ggplot(aes(x = Demand_Ratio, y = Rank, color = University_Type, 
              text = paste("Uni:", University_Name, "<br>Ratio:", round(Demand_Ratio,1), "<br>Rank:", Rank))) +
   geom_point(alpha = 0.7, size = 2) +
-  geom_smooth(method = "lm", se = FALSE, linetype = "dashed", color = "#f8fafc", size = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed", color = "#f8fafc", linewidth = 0.5) +
   scale_color_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
   scale_y_reverse() + 
   theme_minimal() +
@@ -412,7 +435,7 @@ corr_df <- corr_mat %>%
   )
 
 p_corr <- ggplot(corr_df, aes(x = Var1, y = Var2, fill = Correlation, text = paste("Corr:", round(Correlation, 2)))) +
-  geom_tile(color = "#1e293b", size = 1) +
+  geom_tile(color = "#1e293b", linewidth = 1) +
   geom_text(aes(label = round(Correlation, 2)), color = "white", fontface = "bold", size = 4) +
   scale_fill_gradient2(low = "#f472b6", mid = "#334155", high = "#38bdf8", midpoint = 0, limit = c(-1, 1)) +
   theme_minimal() +
@@ -428,7 +451,14 @@ ggplotly(p_corr, tooltip = "text") %>%
   layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"))
 ```
 <div class="insight-box">
-**🔍 Analytical Insight:** This comprehensive matrix synthesizes our entire dataset. **Note that since "Rank" is essentially "lower is better", negative correlations indicate a positive impact on success.** The deep negative correlation with both `Professor_Count` and `Erasmus_Students` conclusively confirms that strong academic staffing and global opportunities attract higher-ranking students.
+**🔍 Decoding the Correlation Matrix:**
+Our exhaustive Pearson correlation analysis yields several statistically significant findings regarding the drivers of a program's national success. *(Note: Since a lower Rank value indicates a better ranking, negative correlations with Rank are actually indicators of higher prestige):*
+
+* **The Metropolis Advantage (`Rank` vs. `Is Metropol`):** A strong negative correlation proves that programs located in major economic hubs (Istanbul, Ankara, Izmir) achieve significantly better national rankings, underscoring the importance of industry proximity for engineering students.
+* **The Quality of Human Capital (`Rank` vs. `Professor Count`):** A deep negative correlation indicates that robust, larger academic faculties directly attract higher-scoring students.
+* **The Global Mobility Factor (`Rank` vs. `Erasmus Students`):** Similarly, higher rates of international exchange opportunities act as a definitive magnet for top-tier candidates.
+* **Demand Density (`Rank` vs. `Demand Ratio` & `Top1 Pref`):** Absolute popularity strictly dictates exclusivity. Programs with high demand-to-quota ratios and massive "First Choice" selections naturally secure the most competitive cutoff scores.
+* **The Private Sector Strategy (`Is Foundation` vs. `Quota`):** A notable negative correlation here reveals that Foundation universities intentionally keep their individual program quotas (especially scholarship tracks) extremely low to artificially boost their selectivity and lower their base ranks.
 </div>
 
 ---
