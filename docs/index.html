@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.30">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Team Let It Happen</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -32,15 +35,14 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b6a8276bf55561bdbc268162d41bd1f7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-466483732dcb0cea7139c1eae81929d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-f9da83f35c8a9777c3928170ebd7038e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -81,8 +83,6 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Team Let It Happen</span>
     </a>
@@ -125,31 +125,55 @@ ul.task-list li input[type="checkbox"] {
 
 <style>
 
-/* GENERAL */
+/* =========================
+   GENERAL & ANIMATIONS
+========================= */
 
 body {
   background-color: #f8fafc;
   font-family: "Segoe UI", sans-serif;
+  overflow-x: hidden;
 }
 
-/* HERO SECTION */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.3s; }
+.delay-3 { animation-delay: 0.5s; }
+
+/* =========================
+   HERO SECTION
+========================= */
 
 .hero-container {
-  height: 90vh;
+  height: 85vh;
   border-radius: 30px;
   overflow: hidden;
   margin-bottom: 4rem;
-
   background:
-    linear-gradient(rgba(15,23,42,0.82), rgba(15,23,42,0.82)),
+    linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)),
     url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop");
-
   background-size: cover;
   background-position: center;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
 .hero-content {
@@ -161,135 +185,347 @@ body {
 
 .hero-content h1 {
   font-size: 5rem;
-  font-weight: 800;
+  font-weight: 900;
   margin-bottom: 1rem;
+  background: linear-gradient(to right, #ffffff, #e2e8f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -1px;
 }
 
 .hero-content h2 {
   font-size: 2rem;
   font-weight: 300;
   margin-bottom: 2rem;
+  color: #38bdf8;
 }
 
 .hero-content p {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   line-height: 1.8;
   opacity: 0.9;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 .hero-buttons {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .hero-btn {
-  display: inline-block;
-  padding: 14px 28px;
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 32px;
   border-radius: 14px;
   background: white;
-  color: #0f172a;
+  color: #0f172a !important;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 10px;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .hero-btn:hover {
   transform: translateY(-4px);
+  background: #f8fafc;
+  box-shadow: 0 10px 20px rgba(255,255,255,0.2);
 }
 
 .secondary-btn {
   background: transparent;
-  border: 2px solid white;
-  color: white;
+  border: 2px solid rgba(255,255,255,0.6);
+  color: white !important;
 }
 
-/* STATS SECTION */
+.secondary-btn:hover {
+  background: white;
+  color: #0f172a !important;
+}
+
+/* =========================
+   STATS SECTION (GLASSMORPHISM)
+========================= */
 
 .stats-section {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
-  margin-bottom: 4rem;
+  margin-bottom: 5rem;
+  padding: 0 1rem;
 }
 
 .stat-box {
-  background: white;
-  padding: 2rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 2.5rem 1rem;
   border-radius: 24px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(56,189,248,0.15);
+  border-color: #38bdf8;
 }
 
 .stat-number {
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-size: 3rem;
+  font-weight: 900;
   color: #0f172a;
+  line-height: 1;
 }
 
 .stat-label {
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   color: #64748b;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* CONTENT CARDS */
+/* =========================
+   BENTO GRID CARDS
+========================= */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.full-width-card {
+  grid-column: 1 / -1;
+}
 
 .content-card {
   background: white;
-  padding: 3rem;
+  padding: 3.5rem;
   border-radius: 28px;
-  margin-bottom: 3rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  border: 1px solid #f1f5f9;
+  transition: transform 0.3s ease;
+}
+
+.content-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
 }
 
 .content-card h2 {
   margin-bottom: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #0f172a;
+  font-size: 2rem;
 }
 
 .content-card p,
 .content-card li {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   line-height: 1.9;
-  color: #334155;
+  color: #475569;
 }
 
-/* DARK SECTION */
+.content-card li {
+  margin-bottom: 0.8rem;
+}
+
+/* =========================
+   DARK SECTION (TAKEAWAYS)
+========================= */
 
 .dark-section {
   background: #0f172a;
   color: white;
-  padding: 3rem;
+  padding: 4rem;
   border-radius: 28px;
-  margin-bottom: 3rem;
+  margin-bottom: 5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(15,23,42,0.2);
+}
+
+.dark-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
 }
 
 .dark-section h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 800;
 }
 
 .dark-section li {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
+  margin-bottom: 1.2rem;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #e2e8f0;
 }
 
-/* FOOTER NAVIGATION */
+/* =========================
+   CONTRIBUTORS SECTION
+========================= */
 
-.nav-links {
-  text-align: center;
-  margin-top: 2rem;
+.contributors-section {
+  margin-top: 5rem;
+  margin-bottom: 6rem;
 }
 
-.nav-links a {
-  text-decoration: none;
-  font-weight: 600;
-  margin: 0 1rem;
+.contributors-header {
+  margin-bottom: 3.5rem;
+  max-width: 760px;
+}
+
+.contributors-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(14,165,233,0.08);
+  color: #0284c7;
+  font-size: .85rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.contributors-header h2 {
+  font-size: 2.8rem;
+  font-weight: 900;
   color: #0f172a;
+  margin-bottom: 1.4rem;
+  letter-spacing: -0.5px;
+}
+
+.contributors-header p {
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: #64748b;
+}
+
+.contributors-wrapper {
+  background: white;
+  border-radius: 32px;
+  overflow: hidden;
+  border: 1px solid rgba(148,163,184,0.15);
+  box-shadow: 0 20px 40px rgba(15,23,42,0.06);
+}
+
+.contributor-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3rem 4rem;
+  transition: background 0.3s ease;
+}
+
+.contributor-row:hover {
+  background: rgba(248,250,252,0.8);
+}
+
+.contributor-info h3 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: .6rem;
+}
+
+.contributor-role {
+  color: #64748b;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.social-group {
+  display: flex;
+  gap: 16px;
+}
+
+.profile-btn {
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.linkedin-btn {
+  background: #0a66c2;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(10, 102, 194, 0.2);
+}
+
+.linkedin-btn:hover {
+  background: #004182;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(10, 102, 194, 0.3);
+}
+
+.github-btn {
+  background: #0f172a;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+}
+
+.github-btn:hover {
+  background: #334155;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(15, 23, 42, 0.3);
+}
+
+.row-divider {
+  height: 1px;
+  background: rgba(148,163,184,0.2);
+  margin: 0 4rem;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+@media (max-width: 992px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+  .stats-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 { font-size: 3.5rem; }
+  .contributor-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 2.5rem;
+  }
+  .social-group {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .profile-btn {
+    flex: 1;
+    text-align: center;
+  }
+  .row-divider { margin: 0 2.5rem; }
 }
 
 </style>
-<div class="hero-container">
+<div class="hero-container animate-fade-up">
 <section id="decoding-higher-education" class="level1 hero-content">
 
 <section id="a-trend-analysis-of-industrial-engineering-programs-in-turkey" class="level2">
@@ -298,63 +534,62 @@ body {
 Understanding the hidden drivers behind student demand, university prestige, and regional educational dynamics through data analytics.
 </p>
 <div class="hero-buttons">
-<p><a href="analysis.html" class="hero-btn"> Explore Analysis </a></p>
-<p><a href="data.html" class="hero-btn secondary-btn"> View Dataset </a></p>
+<p><a href="analysis.html" class="hero-btn">Explore Analysis </a> <a href="data.html" class="hero-btn secondary-btn">View Dataset </a></p>
 </div>
 <p><br><br></p>
-<section id="team-let-it-happen" class="level3">
-<h3 class="anchored" data-anchor-id="team-let-it-happen">Team Let It Happen</h3>
-<p>Yusuf Bora Çavdar · Onur Furkan Gök</p>
+<h3 style="color: white; font-weight: 300; opacity: 0.9;" class="anchored">
+<p>Team Let It Happen</p>
+</h3>
 </section>
 </section>
-</section>
 </div>
-<div class="stats-section">
+<div class="stats-section animate-fade-up delay-1">
 <div class="stat-box">
 <div class="stat-number">
-2018–2024
+<p>2018–2024</p>
 </div>
 <div class="stat-label">
-Years Analyzed
-</div>
-</div>
-<div class="stat-box">
-<div class="stat-number">
-100+
-</div>
-<div class="stat-label">
-IE Programs
+<p>Years Analyzed</p>
 </div>
 </div>
 <div class="stat-box">
 <div class="stat-number">
-81
+<p>100+</p>
 </div>
 <div class="stat-label">
-Cities Covered
+<p>IE Programs</p>
 </div>
 </div>
 <div class="stat-box">
 <div class="stat-number">
-Multi
+<p>81</p>
 </div>
 <div class="stat-label">
-Integrated Sources
+<p>Cities Covered</p>
+</div>
+</div>
+<div class="stat-box">
+<div class="stat-number">
+<p>Multi</p>
+</div>
+<div class="stat-label">
+<p>Integrated Sources</p>
 </div>
 </div>
 </div>
-<section id="project-overview" class="level2 content-card">
+<div class="bento-grid animate-fade-up delay-2">
+<section id="project-overview" class="level2 content-card full-width-card">
 <h2 class="anchored" data-anchor-id="project-overview">Project Overview</h2>
 <p>Industrial Engineering programs in Turkey exhibit significant differences in popularity, student demand, and ranking performance. However, raw placement statistics alone often fail to explain why certain universities consistently outperform others.</p>
 <p>This project investigates the evolution of Industrial Engineering departments between 2018 and 2024 by combining official placement statistics, demand indicators, and regional characteristics.</p>
 <p>Using R and Quarto, we apply data analytics techniques to explore how geographical location, quota structures, and demand intensity relate to departmental success and national visibility.</p>
 </section>
-<section id="research-questions" class="level2 dark-section">
+<section id="research-questions" class="level2 content-card">
 <h2 class="anchored" data-anchor-id="research-questions">Research Questions</h2>
 <ul>
 <li>What factors influence the popularity of Industrial Engineering departments in Turkey?</li>
 <li>Do metropolitan universities dominate student demand?</li>
-<li>How does demand-to-quota ratio affect ranking performance?</li>
+<li>How does the demand-to-quota ratio affect ranking performance?</li>
 <li>Which universities demonstrate the strongest upward trends over time?</li>
 <li>Are regional patterns observable across the Turkish higher education landscape?</li>
 </ul>
@@ -362,36 +597,20 @@ Integrated Sources
 <section id="methodology-overview" class="level2 content-card">
 <h2 class="anchored" data-anchor-id="methodology-overview">Methodology Overview</h2>
 <p>This project combines modern data analytics workflows with reproducible research practices.</p>
-<section id="analytical-pipeline" class="level3">
-<h3 class="anchored" data-anchor-id="analytical-pipeline">Analytical Pipeline</h3>
-<ul>
-<li>Data extraction using the <code>thestats</code> R package</li>
-<li>Integration of YÖK Atlas and supplementary datasets</li>
-<li>Data cleaning and preprocessing in R</li>
-<li>Exploratory Data Analysis (EDA)</li>
-<li>Correlation and trend analysis</li>
-<li>Statistical modeling and visualization through Quarto</li>
-</ul>
+<p><strong>Analytical Pipeline:</strong> - Data extraction using the <code>thestats</code> R package - Integration of YÖK Atlas and supplementary Kaggle datasets - Data cleaning and preprocessing in R - Exploratory Data Analysis (EDA) - Machine Learning &amp; Correlation Analysis - Statistical modeling and visualization through Quarto</p>
 </section>
-</section>
-<section id="key-takeaways" class="level2 content-card">
+</div>
+<section id="key-takeaways" class="level2 dark-section animate-fade-up delay-3">
 <h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
 <ul>
-<li>Metropolitan universities consistently dominate ranking performance and student demand.</li>
-<li>Demand-to-quota ratio appears strongly associated with national success rankings.</li>
-<li>Several Anatolian universities demonstrate rapid upward trends after 2021.</li>
-<li>Regional disparities continue to shape Industrial Engineering education patterns in Turkey.</li>
-<li>Data-driven approaches provide deeper insight beyond raw placement statistics.</li>
+<li><strong>Metropolitan Dominance:</strong> Universities in major economic hubs consistently dominate ranking performance and student demand.</li>
+<li><strong>Demand Exclusivity:</strong> The demand-to-quota ratio is strictly associated with national success rankings and top-tier placements.</li>
+<li><strong>Upward Trends:</strong> Several Anatolian universities demonstrate rapid upward academic trends after 2021.</li>
+<li><strong>Sector Strategies:</strong> Foundation universities actively manipulate low scholarship quotas to artificially boost their selectivity metrics.</li>
+<li><strong>Data-Driven Clarity:</strong> Combining Machine Learning with EDA provides a profound operational view beyond raw placement statistics.</li>
 </ul>
 </section>
-<section id="explore-the-project" class="level2 content-card">
-<h2 class="anchored" data-anchor-id="explore-the-project">Explore the Project</h2>
-<div class="nav-links">
-<p><a href="data.html">Data Page</a></p>
-<p><a href="analysis.html">Analysis Page</a></p>
-</div>
-</section>
-<div class="contributors-section">
+<div class="contributors-section animate-fade-up delay-3">
 <div class="contributors-header">
 <div class="contributors-tag">
 <p>Research Team</p>
@@ -413,9 +632,9 @@ Yusuf Bora Çavdar
 <p>Lead Data Analysis · Visualization · Modeling</p>
 </div>
 </div>
-<p><a href="https://github.com/" target="_blank" class="github-button"></a></p><a href="https://github.com/" target="_blank" class="github-button">
-<p>GitHub →</p>
-</a><p><a href="https://github.com/" target="_blank" class="github-button"></a></p>
+<div class="social-group">
+<p><a href="https://www.linkedin.com/in/yusuf-bora-cavdar/" target="_blank" class="profile-btn linkedin-btn">LinkedIn →</a> <a href="https://emu-hacettepe-analytics.github.io/emu430-spring2026-boracavdar/" target="_blank" class="profile-btn github-btn">GitHub Repo →</a></p>
+</div>
 </div>
 <div class="row-divider">
 
@@ -429,202 +648,12 @@ Onur Furkan Gök
 <p>Research Design · Data Processing · Methodology</p>
 </div>
 </div>
-<p><a href="https://github.com/" target="_blank" class="github-button"></a></p><a href="https://github.com/" target="_blank" class="github-button">
-<p>GitHub →</p>
-</a><p><a href="https://github.com/" target="_blank" class="github-button"></a></p>
+<div class="social-group">
+<p><a href="https://www.linkedin.com/in/onurfurkan/" target="_blank" class="profile-btn linkedin-btn">LinkedIn →</a> <a href="https://emu-hacettepe-analytics.github.io/emu430-spring2026-onurfgg/" target="_blank" class="profile-btn github-btn">GitHub Repo →</a></p>
 </div>
 </div>
 </div>
-<style>
-
-.contributors-section {
-
-  margin-top: 7rem;
-  margin-bottom: 6rem;
-}
-
-.contributors-header {
-
-  margin-bottom: 3.5rem;
-
-  max-width: 760px;
-}
-
-.contributors-tag {
-
-  display: inline-flex;
-
-  align-items: center;
-
-  padding: 8px 18px;
-
-  border-radius: 999px;
-
-  background:
-    rgba(14,165,233,0.08);
-
-  color:
-    #0284c7;
-
-  font-size: .8rem;
-
-  font-weight: 700;
-
-  letter-spacing: 1.2px;
-
-  text-transform: uppercase;
-
-  margin-bottom: 1.2rem;
-}
-
-.contributors-header h2 {
-
-  font-size: 2.6rem;
-
-  font-weight: 800;
-
-  color: #0f172a;
-
-  margin-bottom: 1.4rem;
-}
-
-.contributors-header p {
-
-  font-size: 1.08rem;
-
-  line-height: 2;
-
-  color: #64748b;
-}
-
-.contributors-wrapper {
-
-  background: white;
-
-  border-radius: 32px;
-
-  overflow: hidden;
-
-  border:
-    1px solid rgba(148,163,184,0.10);
-
-  box-shadow:
-    0 14px 35px rgba(15,23,42,0.04);
-}
-
-.contributor-row {
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding: 2.6rem 3rem;
-
-  transition: .3s ease;
-}
-
-.contributor-row:hover {
-
-  background:
-    rgba(248,250,252,0.7);
-}
-
-.contributor-info h3 {
-
-  font-size: 1.45rem;
-
-  font-weight: 700;
-
-  color: #0f172a;
-
-  margin-bottom: .55rem;
-}
-
-.contributor-role {
-
-  color: #64748b;
-
-  font-size: 1rem;
-
-  line-height: 1.8;
-}
-
-.github-button {
-
-  text-decoration: none;
-
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  padding:
-    14px 22px;
-
-  border-radius: 14px;
-
-  background:
-    #0f172a;
-
-  color: white;
-
-  font-weight: 700;
-
-  font-size: .95rem;
-
-  transition:
-    transform .25s ease,
-    background .25s ease;
-}
-
-.github-button:hover {
-
-  background:
-    #0284c7;
-
-  transform:
-    translateY(-2px);
-}
-
-.row-divider {
-
-  height: 1px;
-
-  background:
-    rgba(148,163,184,0.14);
-
-  margin:
-    0 3rem;
-}
-
-@media (max-width: 768px) {
-
-  .contributors-header h2 {
-
-    font-size: 2rem;
-  }
-
-  .contributor-row {
-
-    flex-direction: column;
-
-    align-items: flex-start;
-
-    gap: 1.5rem;
-
-    padding: 2rem;
-  }
-
-  .row-divider {
-
-    margin: 0 2rem;
-  }
-}
-
-</style>
+</div>
 
 
 

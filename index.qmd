@@ -7,35 +7,63 @@ format:
     theme: flatly
     toc: false
     smooth-scroll: true
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
+```{=html}
 <style>
 
-/* GENERAL */
+/* =========================
+   GENERAL & ANIMATIONS
+========================= */
 
 body {
   background-color: #f8fafc;
   font-family: "Segoe UI", sans-serif;
+  overflow-x: hidden;
 }
 
-/* HERO SECTION */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.3s; }
+.delay-3 { animation-delay: 0.5s; }
+
+/* =========================
+   HERO SECTION
+========================= */
 
 .hero-container {
-  height: 90vh;
+  height: 85vh;
   border-radius: 30px;
   overflow: hidden;
   margin-bottom: 4rem;
-
   background:
-    linear-gradient(rgba(15,23,42,0.82), rgba(15,23,42,0.82)),
+    linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)),
     url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop");
-
   background-size: cover;
   background-position: center;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
 .hero-content {
@@ -47,521 +75,525 @@ body {
 
 .hero-content h1 {
   font-size: 5rem;
-  font-weight: 800;
+  font-weight: 900;
   margin-bottom: 1rem;
+  background: linear-gradient(to right, #ffffff, #e2e8f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -1px;
 }
 
 .hero-content h2 {
   font-size: 2rem;
   font-weight: 300;
   margin-bottom: 2rem;
+  color: #38bdf8;
 }
 
 .hero-content p {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   line-height: 1.8;
   opacity: 0.9;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 .hero-buttons {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .hero-btn {
-  display: inline-block;
-  padding: 14px 28px;
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 32px;
   border-radius: 14px;
   background: white;
-  color: #0f172a;
+  color: #0f172a !important;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 10px;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .hero-btn:hover {
   transform: translateY(-4px);
+  background: #f8fafc;
+  box-shadow: 0 10px 20px rgba(255,255,255,0.2);
 }
 
 .secondary-btn {
   background: transparent;
-  border: 2px solid white;
-  color: white;
+  border: 2px solid rgba(255,255,255,0.6);
+  color: white !important;
 }
 
-/* STATS SECTION */
+.secondary-btn:hover {
+  background: white;
+  color: #0f172a !important;
+}
+
+/* =========================
+   STATS SECTION (GLASSMORPHISM)
+========================= */
 
 .stats-section {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
-  margin-bottom: 4rem;
+  margin-bottom: 5rem;
+  padding: 0 1rem;
 }
 
 .stat-box {
-  background: white;
-  padding: 2rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 2.5rem 1rem;
   border-radius: 24px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(56,189,248,0.15);
+  border-color: #38bdf8;
 }
 
 .stat-number {
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-size: 3rem;
+  font-weight: 900;
   color: #0f172a;
+  line-height: 1;
 }
 
 .stat-label {
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   color: #64748b;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* CONTENT CARDS */
+/* =========================
+   BENTO GRID CARDS
+========================= */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.full-width-card {
+  grid-column: 1 / -1;
+}
 
 .content-card {
   background: white;
-  padding: 3rem;
+  padding: 3.5rem;
   border-radius: 28px;
-  margin-bottom: 3rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  border: 1px solid #f1f5f9;
+  transition: transform 0.3s ease;
+}
+
+.content-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
 }
 
 .content-card h2 {
   margin-bottom: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #0f172a;
+  font-size: 2rem;
 }
 
 .content-card p,
 .content-card li {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   line-height: 1.9;
-  color: #334155;
+  color: #475569;
 }
 
-/* DARK SECTION */
+.content-card li {
+  margin-bottom: 0.8rem;
+}
+
+/* =========================
+   DARK SECTION (TAKEAWAYS)
+========================= */
 
 .dark-section {
   background: #0f172a;
   color: white;
-  padding: 3rem;
+  padding: 4rem;
   border-radius: 28px;
-  margin-bottom: 3rem;
+  margin-bottom: 5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(15,23,42,0.2);
+}
+
+.dark-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
 }
 
 .dark-section h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 800;
 }
 
 .dark-section li {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
+  margin-bottom: 1.2rem;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #e2e8f0;
 }
 
-/* FOOTER NAVIGATION */
-
-.nav-links {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.nav-links a {
-  text-decoration: none;
-  font-weight: 600;
-  margin: 0 1rem;
-  color: #0f172a;
-}
-
-</style>
-
-<div class="hero-container">
-
-<div class="hero-content">
-
-# Decoding Higher Education
-
-## A Trend Analysis of Industrial Engineering Programs in Turkey
-
-<p>
-Understanding the hidden drivers behind student demand, university prestige, and regional educational dynamics through data analytics.
-</p>
-
-<div class="hero-buttons">
-
-<a href="analysis.html" class="hero-btn">
-Explore Analysis
-</a>
-
-<a href="data.html" class="hero-btn secondary-btn">
-View Dataset
-</a>
-
-</div>
-
-<br><br>
-
-### Team Let It Happen
-
-Yusuf Bora Çavdar · Onur Furkan Gök
-
-</div>
-
-</div>
-
-<div class="stats-section">
-
-<div class="stat-box">
-<div class="stat-number">2018–2024</div>
-<div class="stat-label">Years Analyzed</div>
-</div>
-
-<div class="stat-box">
-<div class="stat-number">100+</div>
-<div class="stat-label">IE Programs</div>
-</div>
-
-<div class="stat-box">
-<div class="stat-number">81</div>
-<div class="stat-label">Cities Covered</div>
-</div>
-
-<div class="stat-box">
-<div class="stat-number">Multi</div>
-<div class="stat-label">Integrated Sources</div>
-</div>
-
-</div>
-
-<div class="content-card">
-
-## Project Overview
-
-Industrial Engineering programs in Turkey exhibit significant differences in popularity, student demand, and ranking performance. However, raw placement statistics alone often fail to explain why certain universities consistently outperform others.
-
-This project investigates the evolution of Industrial Engineering departments between 2018 and 2024 by combining official placement statistics, demand indicators, and regional characteristics.
-
-Using R and Quarto, we apply data analytics techniques to explore how geographical location, quota structures, and demand intensity relate to departmental success and national visibility.
-
-</div>
-
-<div class="dark-section">
-
-## Research Questions
-
-- What factors influence the popularity of Industrial Engineering departments in Turkey?
-- Do metropolitan universities dominate student demand?
-- How does demand-to-quota ratio affect ranking performance?
-- Which universities demonstrate the strongest upward trends over time?
-- Are regional patterns observable across the Turkish higher education landscape?
-
-</div>
-
-<div class="content-card">
-
-## Methodology Overview
-
-This project combines modern data analytics workflows with reproducible research practices.
-
-### Analytical Pipeline
-
-- Data extraction using the `thestats` R package
-- Integration of YÖK Atlas and supplementary datasets
-- Data cleaning and preprocessing in R
-- Exploratory Data Analysis (EDA)
-- Correlation and trend analysis
-- Statistical modeling and visualization through Quarto
-
-</div>
-
-<div class="content-card">
-
-## Key Takeaways
-
-- Metropolitan universities consistently dominate ranking performance and student demand.
-- Demand-to-quota ratio appears strongly associated with national success rankings.
-- Several Anatolian universities demonstrate rapid upward trends after 2021.
-- Regional disparities continue to shape Industrial Engineering education patterns in Turkey.
-- Data-driven approaches provide deeper insight beyond raw placement statistics.
-
-</div>
-
-<div class="content-card">
-
-## Explore the Project
-
-<div class="nav-links">
-
-<a href="data.html">Data Page</a>
-
-<a href="analysis.html">Analysis Page</a>
-
-</div>
-
-</div>
-
-<div class="contributors-section">
-
-<div class="contributors-header">
-
-<div class="contributors-tag">
-Research Team
-</div>
-
-<h2>
-Project Contributors
-</h2>
-
-<p>
-This project was developed collaboratively as part of EMU430 Data Analytics,
-focusing on reproducible research, statistical exploration,
-and higher education trend analysis.
-</p>
-
-</div>
-
-<div class="contributors-wrapper">
-
-<div class="contributor-row">
-
-<div class="contributor-info">
-
-<h3>Yusuf Bora Çavdar</h3>
-
-<div class="contributor-role">
-Lead Data Analysis · Visualization · Modeling
-</div>
-
-</div>
-
-<a
-href="https://github.com/"
-target="_blank"
-class="github-button">
-
-GitHub →
-
-</a>
-
-</div>
-
-<div class="row-divider"></div>
-
-<div class="contributor-row">
-
-<div class="contributor-info">
-
-<h3>Onur Furkan Gök</h3>
-
-<div class="contributor-role">
-Research Design · Data Processing · Methodology
-</div>
-
-</div>
-
-<a
-href="https://github.com/"
-target="_blank"
-class="github-button">
-
-GitHub →
-
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-<style>
+/* =========================
+   CONTRIBUTORS SECTION
+========================= */
 
 .contributors-section {
-
-  margin-top: 7rem;
+  margin-top: 5rem;
   margin-bottom: 6rem;
 }
 
 .contributors-header {
-
   margin-bottom: 3.5rem;
-
   max-width: 760px;
 }
 
 .contributors-tag {
-
   display: inline-flex;
-
   align-items: center;
-
   padding: 8px 18px;
-
   border-radius: 999px;
-
-  background:
-    rgba(14,165,233,0.08);
-
-  color:
-    #0284c7;
-
-  font-size: .8rem;
-
-  font-weight: 700;
-
+  background: rgba(14,165,233,0.08);
+  color: #0284c7;
+  font-size: .85rem;
+  font-weight: 800;
   letter-spacing: 1.2px;
-
   text-transform: uppercase;
-
   margin-bottom: 1.2rem;
 }
 
 .contributors-header h2 {
-
-  font-size: 2.6rem;
-
-  font-weight: 800;
-
+  font-size: 2.8rem;
+  font-weight: 900;
   color: #0f172a;
-
   margin-bottom: 1.4rem;
+  letter-spacing: -0.5px;
 }
 
 .contributors-header p {
-
-  font-size: 1.08rem;
-
-  line-height: 2;
-
+  font-size: 1.15rem;
+  line-height: 1.9;
   color: #64748b;
 }
 
 .contributors-wrapper {
-
   background: white;
-
   border-radius: 32px;
-
   overflow: hidden;
-
-  border:
-    1px solid rgba(148,163,184,0.10);
-
-  box-shadow:
-    0 14px 35px rgba(15,23,42,0.04);
+  border: 1px solid rgba(148,163,184,0.15);
+  box-shadow: 0 20px 40px rgba(15,23,42,0.06);
 }
 
 .contributor-row {
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
-  padding: 2.6rem 3rem;
-
-  transition: .3s ease;
+  padding: 3rem 4rem;
+  transition: background 0.3s ease;
 }
 
 .contributor-row:hover {
-
-  background:
-    rgba(248,250,252,0.7);
+  background: rgba(248,250,252,0.8);
 }
 
 .contributor-info h3 {
-
-  font-size: 1.45rem;
-
-  font-weight: 700;
-
+  font-size: 1.6rem;
+  font-weight: 800;
   color: #0f172a;
-
-  margin-bottom: .55rem;
+  margin-bottom: .6rem;
 }
 
 .contributor-role {
-
   color: #64748b;
-
-  font-size: 1rem;
-
-  line-height: 1.8;
+  font-size: 1.05rem;
+  font-weight: 500;
 }
 
-.github-button {
+.social-group {
+  display: flex;
+  gap: 16px;
+}
 
-  text-decoration: none;
-
+.profile-btn {
+  text-decoration: none !important;
   display: inline-flex;
-
   align-items: center;
-
   justify-content: center;
-
-  padding:
-    14px 22px;
-
+  padding: 14px 24px;
   border-radius: 14px;
-
-  background:
-    #0f172a;
-
-  color: white;
-
   font-weight: 700;
-
-  font-size: .95rem;
-
-  transition:
-    transform .25s ease,
-    background .25s ease;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
 }
 
-.github-button:hover {
+.linkedin-btn {
+  background: #0a66c2;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(10, 102, 194, 0.2);
+}
 
-  background:
-    #0284c7;
+.linkedin-btn:hover {
+  background: #004182;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(10, 102, 194, 0.3);
+}
 
-  transform:
-    translateY(-2px);
+.github-btn {
+  background: #0f172a;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+}
+
+.github-btn:hover {
+  background: #334155;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(15, 23, 42, 0.3);
 }
 
 .row-divider {
-
   height: 1px;
+  background: rgba(148,163,184,0.2);
+  margin: 0 4rem;
+}
 
-  background:
-    rgba(148,163,184,0.14);
-
-  margin:
-    0 3rem;
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+@media (max-width: 992px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+  .stats-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-
-  .contributors-header h2 {
-
-    font-size: 2rem;
-  }
-
+  .hero-content h1 { font-size: 3.5rem; }
   .contributor-row {
-
     flex-direction: column;
-
     align-items: flex-start;
-
     gap: 1.5rem;
-
-    padding: 2rem;
+    padding: 2.5rem;
   }
-
-  .row-divider {
-
-    margin: 0 2rem;
+  .social-group {
+    flex-wrap: wrap;
+    width: 100%;
   }
+  .profile-btn {
+    flex: 1;
+    text-align: center;
+  }
+  .row-divider { margin: 0 2.5rem; }
 }
 
 </style>
+```
+
+::::: {.hero-container .animate-fade-up}
+:::: hero-content
+# Decoding Higher Education
+
+## A Trend Analysis of Industrial Engineering Programs in Turkey
+
+<p>Understanding the hidden drivers behind student demand, university
+prestige, and regional educational dynamics through data analytics.</p>
+
+::: hero-buttons
+<a href="analysis.html" class="hero-btn">Explore Analysis </a>
+<a href="data.html" class="hero-btn secondary-btn">View Dataset </a>
+:::
+
+<br><br>
+
+<h3 style="color: white; font-weight: 300; opacity: 0.9;">
+
+Team Let It Happen
+
+</h3>
+::::
+:::::
+
+::::::::::::::: {.stats-section .animate-fade-up .delay-1}
+::::: stat-box
+::: stat-number
+2018–2024
+:::
+
+::: stat-label
+Years Analyzed
+:::
+:::::
+
+::::: stat-box
+::: stat-number
+100+
+:::
+
+::: stat-label
+IE Programs
+:::
+:::::
+
+::::: stat-box
+::: stat-number
+81
+:::
+
+::: stat-label
+Cities Covered
+:::
+:::::
+
+::::: stat-box
+::: stat-number
+Multi
+:::
+
+::: stat-label
+Integrated Sources
+:::
+:::::
+:::::::::::::::
+
+:::::: {.bento-grid .animate-fade-up .delay-2}
+::: {.content-card .full-width-card}
+## Project Overview
+
+Industrial Engineering programs in Turkey exhibit significant
+differences in popularity, student demand, and ranking performance.
+However, raw placement statistics alone often fail to explain why
+certain universities consistently outperform others.
+
+This project investigates the evolution of Industrial Engineering
+departments between 2018 and 2024 by combining official placement
+statistics, demand indicators, and regional characteristics.
+
+Using R and Quarto, we apply data analytics techniques to explore how
+geographical location, quota structures, and demand intensity relate to
+departmental success and national visibility.
+:::
+
+::: content-card
+## Research Questions
+
+-   What factors influence the popularity of Industrial Engineering
+    departments in Turkey?
+-   Do metropolitan universities dominate student demand?
+-   How does the demand-to-quota ratio affect ranking performance?
+-   Which universities demonstrate the strongest upward trends over
+    time?
+-   Are regional patterns observable across the Turkish higher education
+    landscape?
+:::
+
+::: content-card
+## Methodology Overview
+
+This project combines modern data analytics workflows with reproducible
+research practices.
+
+**Analytical Pipeline:** - Data extraction using the `thestats` R
+package - Integration of YÖK Atlas and supplementary Kaggle datasets -
+Data cleaning and preprocessing in R - Exploratory Data Analysis (EDA) -
+Machine Learning & Correlation Analysis - Statistical modeling and
+visualization through Quarto
+:::
+::::::
+
+::: {.dark-section .animate-fade-up .delay-3}
+## Key Takeaways
+
+-   **Metropolitan Dominance:** Universities in major economic hubs
+    consistently dominate ranking performance and student demand.
+-   **Demand Exclusivity:** The demand-to-quota ratio is strictly
+    associated with national success rankings and top-tier placements.
+-   **Upward Trends:** Several Anatolian universities demonstrate rapid
+    upward academic trends after 2021.
+-   **Sector Strategies:** Foundation universities actively manipulate
+    low scholarship quotas to artificially boost their selectivity
+    metrics.
+-   **Data-Driven Clarity:** Combining Machine Learning with EDA
+    provides a profound operational view beyond raw placement
+    statistics.
+:::
+
+::::::::::::::: {.contributors-section .animate-fade-up .delay-3}
+:::: contributors-header
+::: contributors-tag
+Research Team
+:::
+
+<h2>Project Contributors</h2>
+
+<p>This project was developed collaboratively as part of EMU430 Data
+Analytics, focusing on reproducible research, statistical exploration,
+and higher education trend analysis.</p>
+::::
+
+:::::::::::: contributors-wrapper
+:::::: contributor-row
+:::: contributor-info
+<h3>Yusuf Bora Çavdar</h3>
+
+::: contributor-role
+Lead Data Analysis · Visualization · Modeling
+:::
+::::
+
+::: social-group
+<a href="https://www.linkedin.com/in/yusuf-bora-cavdar/" target="_blank" class="profile-btn linkedin-btn">LinkedIn
+→</a>
+<a href="https://emu-hacettepe-analytics.github.io/emu430-spring2026-boracavdar/" target="_blank" class="profile-btn github-btn">GitHub
+Repo →</a>
+:::
+::::::
+
+::: row-divider
+:::
+
+:::::: contributor-row
+:::: contributor-info
+<h3>Onur Furkan Gök</h3>
+
+::: contributor-role
+Research Design · Data Processing · Methodology
+:::
+::::
+
+::: social-group
+<a href="https://www.linkedin.com/in/onurfurkan/" target="_blank" class="profile-btn linkedin-btn">LinkedIn
+→</a>
+<a href="https://emu-hacettepe-analytics.github.io/emu430-spring2026-onurfgg/" target="_blank" class="profile-btn github-btn">GitHub
+Repo →</a>
+:::
+::::::
+::::::::::::
+:::::::::::::::
