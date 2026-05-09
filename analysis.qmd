@@ -1,8 +1,32 @@
 ---
-title: "Data Analytics & Results"
-subtitle: "Evidence-Based Insights into Industrial Engineering Programs"
+title: ""
+page-layout: full
 sidebar: false
+
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 2
+    smooth-scroll: true
+    code-fold: true
 ---
+
+<div class="hero-container">
+
+<div class="hero-content">
+
+# Data Analytics & Results
+
+## Evidence-Based Insights into Industrial Engineering Programs
+
+<p>
+Transforming raw admission statistics into interactive analytical insights through exploratory data analysis, statistical modeling, and advanced visualization techniques.
+</p>
+
+</div>
+
+</div>
 
 <style>
 
