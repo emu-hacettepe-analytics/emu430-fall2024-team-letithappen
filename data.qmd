@@ -1,70 +1,444 @@
 ---
-title: "Data"
-subtitle: "How We Prepared Our Dataset"
+title: ""
+page-layout: full
+sidebar: false
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 2
+    smooth-scroll: true
+    code-fold: true
 ---
 
-## 1. Where We Got Our Data
+<style>
 
-To analyze the trends of Industrial Engineering programs in Turkey, our team combined two different data sources. We wanted to see the changes over a long period (2018-2024).
+/* GENERAL */
 
--   **YÖK Atlas Data (2018-2020):** We used the `thestats` R package created by M. Çavuş and O. Aydın. It helped us pull the official placement data directly into R.
--   **Kaggle Dataset (2021-2024):** To get more recent data and extra details like total preference counts and city information, we downloaded a dataset from Kaggle.
+body {
+  background-color: #f8fafc;
+  font-family: "Segoe UI", sans-serif;
+}
 
-## 2. Data Cleaning and Wrangling
+/* HERO SECTION */
 
-Raw admission data is usually messy. University names change or contain typos, and there are many unrelated departments with "Engineering" in their name. We used `tidyverse` for data manipulation:
+.hero-container {
+  height: 65vh;
+  border-radius: 30px;
+  overflow: hidden;
+  margin-bottom: 4rem;
 
--   **Filtering:** We only kept Industrial Engineering departments. We had to specifically remove "Woodworking" or "Forestry" engineering programs that popped up in our search.
--   **Fixing Names:** We changed Turkish characters and standard words (like converting "Üniversitesi" to "UNIVERSITY") so we could join the two datasets properly.
--   **Creating New Variables:** We calculated a `Demand_Ratio` by dividing Total Preferences by Quota. This helps us see how popular a program really is.
--   **Grouping:** We separated universities into "State" and "Foundation" to compare them later in our EDA.
+  background:
+    linear-gradient(rgba(15,23,42,0.84), rgba(15,23,42,0.84)),
+    url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop");
 
-## 3. Data Dictionary
+  background-size: cover;
+  background-position: center;
 
-Here are the most important columns in our final merged dataset:
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-| Variable | Meaning |
-|:-----------------------------------|:-----------------------------------|
-| **Year** | Academic year (from 2018 to 2024) |
-| **University_Name** | Standardized name of the university |
-| **Rank** | National base placement rank (lower number is better) |
-| **Demand_Ratio** | Preferences / Quota (How many students applied per seat) |
-| **Top1_Pref** | How many students put this department as their first choice |
+.hero-content {
+  max-width: 900px;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
 
-## 4. Final Dataset
+.hero-content h1 {
+  font-size: 4.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
 
-As requested in the project guidelines, we saved our final merged data as an `.RData` file. You can download it below to reproduce our analysis.
+.hero-content h2 {
+  font-size: 1.8rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
 
-[**Download Final Processed Data (.RData)**](data/ie_combined_final.RData)
+.hero-content p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  opacity: 0.92;
+}
 
-------------------------------------------------------------------------
+/* SECTION CARDS */
 
-## 5. Our R Code
+.content-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 28px;
+  margin-bottom: 3rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
 
-Below is the code we wrote to pull the data, clean it, and merge it together.
+.content-card h2 {
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
 
-\`\`\`{r} #\| label: data-cleaning #\| message: false #\| warning: false #\| code-fold: true
+.content-card p,
+.content-card li {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #334155;
+}
 
-# We need these libraries first
+/* DARK SECTION */
 
-library(tidyverse) library(thestats)
+.dark-section {
+  background: #0f172a;
+  color: white;
+  padding: 3rem;
+  border-radius: 28px;
+  margin-bottom: 3rem;
+}
 
-# --- Step 1: Get YÖK Atlas Data (2018-2020) ---
+.dark-section h2 {
+  margin-bottom: 1.5rem;
+}
 
-raw_thestats \<- list_score(department_names = "Industrial Engineering", lang = "en")
+.dark-section li {
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
 
-clean_thestats \<- raw_thestats %\>% filter(as.numeric(year) \<= 2020) %\>% \# Removing unrelated engineering programs that have similar names filter(!str_detect(str_to_lower(department), "woodworking\|fisheries\|aquaculture\|forest\|design")) %\>% mutate(University_Type = case_when( str_detect(str_to_lower(type), "devlet\|state") \~ "State", str_detect(str_to_lower(type), "vak\|foundation\|private") \~ "Foundation", TRUE \~ "Other")) %\>% filter(University_Type != "Other") %\>% select(Year = year, University_Type, University_Name = university, Faculty_Name = faculty, Department_Name = department) %\>% mutate(Year = as.numeric(Year))
+/* DATA TABLE */
 
-# --- Step 2: Get Kaggle Data (2021-2024) ---
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
 
-raw_kaggle \<- read_csv("data/01_university_admissions_turkey_2019_2024.csv")
+table th {
+  background: #0f172a;
+  color: white;
+  padding: 14px;
+  text-align: left;
+}
 
-clean_kaggle \<- raw_kaggle %\>% filter(as.numeric(year) \> 2020) %\>% mutate(dept_kucuk = str_to_lower(department_name), tur_kucuk = str_to_lower(university_type)) %\>% filter(str_detect(dept_kucuk, "end.str") & str_detect(dept_kucuk, "m.hendis"), !str_detect(dept_kucuk, "orman\|a.a.\|tasar.m\|su .r.nleri")) %\>% \# Standardizing names so we can join data frames later mutate(University_Type = case_when( str_detect(tur_kucuk, "devlet\|state\|kamu") \~ "State", str_detect(tur_kucuk, "vak\|foundation\|.zel\|private") \~ "Foundation", TRUE \~ "Other"), university_name = str_replace_all(university_name, "(?i).n.vers.tes.", "UNIVERSITY"), faculty_name = str_replace_all(faculty_name, "(?i)m.hend.sl.k", "Engineering"), department_name = str_replace_all(department_name, "(?i)end.str.", "Industrial")) %\>% filter(University_Type != "Other") %\>% select(Year = year, City = city, University_Type, University_Name = university_name, Faculty_Name = faculty_name, Department_Name = department_name, Rank = final_rank_012, Quota = total_quota, Preferences = total_preferences, Demand_Ratio = demand_per_quota, Top1_Pref = top_1_pref_count) %\>% mutate(across(c(Year, Rank, Quota, Preferences, Demand_Ratio, Top1_Pref), as.numeric))
+table td {
+  padding: 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
 
-# --- Step 3: Combine and Save ---
+/* DOWNLOAD BUTTON */
 
-ie_combined \<- bind_rows(clean_thestats, clean_kaggle) %\>% mutate(across(c(University_Name, Faculty_Name, Department_Name), \~str_to_title(str_squish(.)))) %\>% arrange(desc(Year), University_Name)
+.download-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 14px;
+  background: #0f172a;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: 0.3s ease;
+}
 
-# Save to data folder so we can use it in our analysis page
+.download-btn:hover {
+  transform: translateY(-3px);
+}
 
-save(ie_combined, file = "data/ie_combined_final.RData")
+/* CODE BLOCK */
+
+pre {
+  border-radius: 18px !important;
+  padding: 1rem !important;
+}
+
+/* NAVIGATION */
+
+.nav-links {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: 600;
+  margin: 0 1rem;
+  color: #0f172a;
+}
+
+</style>
+
+<div class="hero-container">
+
+<div class="hero-content">
+
+# Data Preparation
+
+## Building a Unified Dataset for Industrial Engineering Programs in Turkey
+
+<p>
+This page documents the complete data sourcing, cleaning, preprocessing, and integration pipeline used throughout our project.
+</p>
+
+</div>
+
+</div>
+
+<div class="content-card">
+
+## Where We Got Our Data
+
+To analyze long-term trends in Industrial Engineering education across Turkey, we combined multiple datasets covering the years between 2018 and 2024.
+
+### Primary Sources
+
+- **YÖK Atlas Data (2018–2020)**  
+  We used the `thestats` R package developed by M. Çavuş and O. Aydın to extract official placement statistics directly into R.
+
+- **Kaggle Dataset (2021–2024)**  
+  To enrich the analysis with more recent information, we integrated a Kaggle dataset containing quota sizes, city information, total preference counts, and additional admission statistics.
+
+This hybrid approach allowed us to construct a broader and more consistent analytical timeline.
+
+</div>
+
+<div class="dark-section">
+
+## Data Cleaning and Wrangling
+
+Raw admission datasets often contain inconsistent naming conventions, irrelevant department matches, and formatting issues. To ensure analytical consistency, we applied several preprocessing steps using the `tidyverse` ecosystem.
+
+### Main Cleaning Steps
+
+- Filtered only Industrial Engineering departments
+- Removed unrelated engineering programs
+- Standardized university and faculty names
+- Fixed Turkish character inconsistencies
+- Created derived analytical variables
+- Grouped universities into State and Foundation categories
+- Combined multiple datasets into a unified structure
+
+### Derived Variables
+
+- **Demand_Ratio** = Total Preferences / Total Quota
+- Used as a normalized indicator of student demand intensity
+
+</div>
+
+<div class="content-card">
+
+## Data Dictionary
+
+Below are the most important variables included in our final merged dataset.
+
+| Variable | Description |
+|---|---|
+| **Year** | Academic year between 2018 and 2024 |
+| **University_Name** | Standardized university name |
+| **University_Type** | State or Foundation university |
+| **Rank** | National placement ranking |
+| **Quota** | Total student quota |
+| **Preferences** | Total number of student preferences |
+| **Demand_Ratio** | Preferences divided by quota |
+| **Top1_Pref** | Number of first-choice preferences |
+| **City** | City where the university is located |
+
+</div>
+
+<div class="content-card">
+
+## Final Dataset
+
+As required in the project guidelines, the final merged dataset was saved as an `.RData` file to ensure reproducibility and transparency.
+
+<a href="data/ie_combined_final.RData" class="download-btn">
+Download Final Processed Dataset
+</a>
+
+</div>
+
+<div class="content-card">
+
+## Data Processing Pipeline in R
+
+The following code block contains the complete workflow used to extract, clean, merge, and save the final dataset.
+
+```{r}
+#| label: data-cleaning
+#| message: false
+#| warning: false
+#| code-fold: true
+
+# Load libraries
+
+library(tidyverse)
+library(thestats)
+
+# -----------------------------
+# STEP 1 — YÖK Atlas Data
+# -----------------------------
+
+raw_thestats <- list_score(
+  department_names = "Industrial Engineering",
+  lang = "en"
+)
+
+clean_thestats <- raw_thestats %>%
+  
+  filter(as.numeric(year) <= 2020) %>%
+  
+  filter(
+    !str_detect(
+      str_to_lower(department),
+      "woodworking|fisheries|aquaculture|forest|design"
+    )
+  ) %>%
+  
+  mutate(
+    University_Type = case_when(
+      str_detect(str_to_lower(type), "devlet|state") ~ "State",
+      str_detect(str_to_lower(type), "vak|foundation|private") ~ "Foundation",
+      TRUE ~ "Other"
+    )
+  ) %>%
+  
+  filter(University_Type != "Other") %>%
+  
+  select(
+    Year = year,
+    University_Type,
+    University_Name = university,
+    Faculty_Name = faculty,
+    Department_Name = department
+  ) %>%
+  
+  mutate(Year = as.numeric(Year))
+
+# -----------------------------
+# STEP 2 — Kaggle Data
+# -----------------------------
+
+raw_kaggle <- read_csv(
+  "data/01_university_admissions_turkey_2019_2024.csv"
+)
+
+clean_kaggle <- raw_kaggle %>%
+  
+  filter(as.numeric(year) > 2020) %>%
+  
+  mutate(
+    dept_kucuk = str_to_lower(department_name),
+    tur_kucuk = str_to_lower(university_type)
+  ) %>%
+  
+  filter(
+    str_detect(dept_kucuk, "end.str") &
+    str_detect(dept_kucuk, "m.hendis"),
+    
+    !str_detect(
+      dept_kucuk,
+      "orman|a.a.|tasar.m|su .r.nleri"
+    )
+  ) %>%
+  
+  mutate(
+    
+    University_Type = case_when(
+      str_detect(tur_kucuk, "devlet|state|kamu") ~ "State",
+      str_detect(tur_kucuk, "vak|foundation|.zel|private") ~ "Foundation",
+      TRUE ~ "Other"
+    ),
+    
+    university_name = str_replace_all(
+      university_name,
+      "(?i).n.vers.tes.",
+      "UNIVERSITY"
+    ),
+    
+    faculty_name = str_replace_all(
+      faculty_name,
+      "(?i)m.hend.sl.k",
+      "Engineering"
+    ),
+    
+    department_name = str_replace_all(
+      department_name,
+      "(?i)end.str.",
+      "Industrial"
+    )
+  ) %>%
+  
+  filter(University_Type != "Other") %>%
+  
+  select(
+    Year = year,
+    City = city,
+    University_Type,
+    University_Name = university_name,
+    Faculty_Name = faculty_name,
+    Department_Name = department_name,
+    Rank = final_rank_012,
+    Quota = total_quota,
+    Preferences = total_preferences,
+    Demand_Ratio = demand_per_quota,
+    Top1_Pref = top_1_pref_count
+  ) %>%
+  
+  mutate(
+    across(
+      c(
+        Year,
+        Rank,
+        Quota,
+        Preferences,
+        Demand_Ratio,
+        Top1_Pref
+      ),
+      as.numeric
+    )
+  )
+
+# -----------------------------
+# STEP 3 — Merge and Save
+# -----------------------------
+
+ie_combined <- bind_rows(
+  clean_thestats,
+  clean_kaggle
+) %>%
+  
+  mutate(
+    across(
+      c(
+        University_Name,
+        Faculty_Name,
+        Department_Name
+      ),
+      ~str_to_title(str_squish(.))
+    )
+  ) %>%
+  
+  arrange(desc(Year), University_Name)
+
+save(
+  ie_combined,
+  file = "data/ie_combined_final.RData"
+)
+```
+
+</div>
+
+<div class="content-card">
+
+## Continue Exploring
+
+<div class="nav-links">
+
+<a href="index.html">Home Page</a>
+
+<a href="analysis.html">Analysis Page</a>
+
+</div>
+
+</div>

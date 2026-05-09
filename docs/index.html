@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Decoding Higher Education – Team Let It Happen</title>
+<title>Team Let It Happen</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -37,10 +37,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-707d8167ce6003fca903bfe2be84ab7f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0beff70ece8962be7af54e7b3e9a01c9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-466483732dcb0cea7139c1eae81929d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,6 +68,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -112,66 +113,286 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#welcome-to-our-project" id="toc-welcome-to-our-project" class="nav-link active" data-scroll-target="#welcome-to-our-project">Welcome to Our Project</a></li>
-  <li><a href="#project-overview" id="toc-project-overview" class="nav-link" data-scroll-target="#project-overview">Project Overview</a></li>
-  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">Decoding Higher Education</h1></header>
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Decoding Higher Education</h1>
-<p class="subtitle lead">A Trend Analysis of Industrial Engineering Programs in Turkey</p>
+
+
+
+<style>
+
+/* GENERAL */
+
+body {
+  background-color: #f8fafc;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* HERO SECTION */
+
+.hero-container {
+  height: 90vh;
+  border-radius: 30px;
+  overflow: hidden;
+  margin-bottom: 4rem;
+
+  background:
+    linear-gradient(rgba(15,23,42,0.82), rgba(15,23,42,0.82)),
+    url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop");
+
+  background-size: cover;
+  background-position: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  max-width: 900px;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-content h1 {
+  font-size: 5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.hero-content h2 {
+  font-size: 2rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  opacity: 0.9;
+}
+
+.hero-buttons {
+  margin-top: 2rem;
+}
+
+.hero-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 14px;
+  background: white;
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 600;
+  margin: 0 10px;
+  transition: 0.3s ease;
+}
+
+.hero-btn:hover {
+  transform: translateY(-4px);
+}
+
+.secondary-btn {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+/* STATS SECTION */
+
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.stat-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.stat-label {
+  margin-top: 0.5rem;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+/* CONTENT CARDS */
+
+.content-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 28px;
+  margin-bottom: 3rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.content-card h2 {
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.content-card p,
+.content-card li {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #334155;
+}
+
+/* DARK SECTION */
+
+.dark-section {
+  background: #0f172a;
+  color: white;
+  padding: 3rem;
+  border-radius: 28px;
+  margin-bottom: 3rem;
+}
+
+.dark-section h2 {
+  margin-bottom: 1.5rem;
+}
+
+.dark-section li {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+/* FOOTER NAVIGATION */
+
+.nav-links {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: 600;
+  margin: 0 1rem;
+  color: #0f172a;
+}
+
+</style>
+<div class="hero-container">
+<section id="decoding-higher-education" class="level1 hero-content">
+
+<section id="a-trend-analysis-of-industrial-engineering-programs-in-turkey" class="level2">
+<h2 class="anchored" data-anchor-id="a-trend-analysis-of-industrial-engineering-programs-in-turkey">A Trend Analysis of Industrial Engineering Programs in Turkey</h2>
+<p>
+Understanding the hidden drivers behind student demand, university prestige, and regional educational dynamics through data analytics.
+</p>
+<div class="hero-buttons">
+<p><a href="analysis.html" class="hero-btn"> Explore Analysis </a></p>
+<p><a href="data.html" class="hero-btn secondary-btn"> View Dataset </a></p>
 </div>
-
-
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="welcome-to-our-project" class="level2 glass-card">
-<h2 class="anchored" data-anchor-id="welcome-to-our-project">Welcome to Our Project</h2>
-<p><strong>Team Name:</strong> Let It Happen</p>
-<p><strong>Team Members:</strong> * <a href="https://yusufboracavdar.github.io">Yusuf Bora Çavdar</a><br>
-* <a href="https://onurfgg.github.io">Onur Furkan Gök</a></p>
+<p><br><br></p>
+<section id="team-let-it-happen" class="level3">
+<h3 class="anchored" data-anchor-id="team-let-it-happen">Team Let It Happen</h3>
+<p>Yusuf Bora Çavdar · Onur Furkan Gök</p>
 </section>
-<p><br></p>
-<section id="project-overview" class="level2 glass-card">
+</section>
+</section>
+</div>
+<div class="stats-section">
+<div class="stat-box">
+<div class="stat-number">
+2018–2024
+</div>
+<div class="stat-label">
+Years Analyzed
+</div>
+</div>
+<div class="stat-box">
+<div class="stat-number">
+100+
+</div>
+<div class="stat-label">
+IE Programs
+</div>
+</div>
+<div class="stat-box">
+<div class="stat-number">
+81
+</div>
+<div class="stat-label">
+Cities Covered
+</div>
+</div>
+<div class="stat-box">
+<div class="stat-number">
+Multi
+</div>
+<div class="stat-label">
+Integrated Sources
+</div>
+</div>
+</div>
+<section id="project-overview" class="level2 content-card">
 <h2 class="anchored" data-anchor-id="project-overview">Project Overview</h2>
-<p>While university placement data is public, there is often a lack of analytical perspective on how factors like geographic location, quota sizes, and demand density impact a department’s popularity. As Industrial Engineering students, our objective is to apply data analytics to our own domain.</p>
-<p>We aim to identify the underlying drivers of success and regional demand for Industrial Engineering departments across Turkey between 2018 and 2024. By integrating official placement statistics with comprehensive demand metrics, this project decodes the real factors that elevate an engineering program to the top tiers.</p>
+<p>Industrial Engineering programs in Turkey exhibit significant differences in popularity, student demand, and ranking performance. However, raw placement statistics alone often fail to explain why certain universities consistently outperform others.</p>
+<p>This project investigates the evolution of Industrial Engineering departments between 2018 and 2024 by combining official placement statistics, demand indicators, and regional characteristics.</p>
+<p>Using R and Quarto, we apply data analytics techniques to explore how geographical location, quota structures, and demand intensity relate to departmental success and national visibility.</p>
 </section>
-<p><br></p>
-<section id="key-takeaways" class="level3">
-<h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h3>
+<section id="research-questions" class="level2 dark-section">
+<h2 class="anchored" data-anchor-id="research-questions">Research Questions</h2>
 <ul>
-<li><strong>Hybrid Data Sourcing:</strong> Successfully integrated live API extraction (<code>thestats</code>) with static datasets (Kaggle) to construct a comprehensive timeline.</li>
-<li><strong>National Trends:</strong> Clear shifts identified in placement capacities and base rankings across Turkish universities.</li>
-<li><strong>Regional &amp; Demand Correlations:</strong> Advanced modeling reveals strong relationships between a program’s geographical location, its demand-to-quota ratio, and its ultimate national success ranking.</li>
+<li>What factors influence the popularity of Industrial Engineering departments in Turkey?</li>
+<li>Do metropolitan universities dominate student demand?</li>
+<li>How does demand-to-quota ratio affect ranking performance?</li>
+<li>Which universities demonstrate the strongest upward trends over time?</li>
+<li>Are regional patterns observable across the Turkish higher education landscape?</li>
 </ul>
-
-
 </section>
+<section id="methodology-overview" class="level2 content-card">
+<h2 class="anchored" data-anchor-id="methodology-overview">Methodology Overview</h2>
+<p>This project combines modern data analytics workflows with reproducible research practices.</p>
+<section id="analytical-pipeline" class="level3">
+<h3 class="anchored" data-anchor-id="analytical-pipeline">Analytical Pipeline</h3>
+<ul>
+<li>Data extraction using the <code>thestats</code> R package</li>
+<li>Integration of YÖK Atlas and supplementary datasets</li>
+<li>Data cleaning and preprocessing in R</li>
+<li>Exploratory Data Analysis (EDA)</li>
+<li>Correlation and trend analysis</li>
+<li>Statistical modeling and visualization through Quarto</li>
+</ul>
+</section>
+</section>
+<section id="key-takeaways" class="level2 content-card">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li>Metropolitan universities consistently dominate ranking performance and student demand.</li>
+<li>Demand-to-quota ratio appears strongly associated with national success rankings.</li>
+<li>Several Anatolian universities demonstrate rapid upward trends after 2021.</li>
+<li>Regional disparities continue to shape Industrial Engineering education patterns in Turkey.</li>
+<li>Data-driven approaches provide deeper insight beyond raw placement statistics.</li>
+</ul>
+</section>
+<section id="explore-the-project" class="level2 content-card">
+<h2 class="anchored" data-anchor-id="explore-the-project">Explore the Project</h2>
+<div class="nav-links">
+<p><a href="data.html">Data Page</a></p>
+<p><a href="analysis.html">Analysis Page</a></p>
+</div>
+</section>
+
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -579,4 +800,5 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
