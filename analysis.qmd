@@ -1,32 +1,8 @@
 ---
-title: ""
-page-layout: full
+title: "Data Analytics & Results"
+subtitle: "Evidence-Based Insights into Industrial Engineering Programs"
 sidebar: false
-
-format:
-  html:
-    theme: flatly
-    toc: true
-    toc-depth: 2
-    smooth-scroll: true
-    code-fold: true
 ---
-
-<div class="hero-container">
-
-<div class="hero-content">
-
-# Data Analytics & Results
-
-## Evidence-Based Insights into Industrial Engineering Programs
-
-<p>
-Transforming raw admission statistics into interactive analytical insights through exploratory data analysis, statistical modeling, and advanced visualization techniques.
-</p>
-
-</div>
-
-</div>
 
 <style>
 
@@ -149,7 +125,7 @@ DOWNLOAD BUTTON
 }
 
 /* =========================
-DATATABLES
+DATATABLES (ADVANCED FIXES)
 ========================= */
 
 .dataTables_wrapper .dataTables_length,
@@ -179,6 +155,12 @@ table.dataTable tbody tr {
 
 table.dataTable tbody tr:hover {
   background-color: rgba(56, 189, 248, 0.08) !important;
+}
+
+/* Make Dropdown Selects Look Clean */
+.selectize-input {
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
 }
 
 /* =========================
@@ -357,9 +339,7 @@ ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
     Professor_Count = round(runif(n(), 4, 10) + (100000 / (Rank + 1000)) + (Quota / 15)),
     Erasmus_Students = round(runif(n(), 2, 8) + (80000 / (Rank + 800)) + (Quota / 20))
   ) %>%
-  # ----------------------------------------------------
-  # NA HANDLING: Filling Empty Boxes & Threshold Failures
-  # ----------------------------------------------------
+  # NA HANDLING
   mutate(
     Rank = ifelse(is.na(Rank), "Unfilled", as.character(Rank)),
     Erasmus_Students = replace_na(Erasmus_Students, 0),
@@ -376,10 +356,25 @@ ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
 # Save the dataset for reproducibility
 save(ie_combined, file = "data/ie_master_data.RData")
 
+# ==========================================
+# ADVANCED DATATABLE: DROPDOWNS & SLIDERS
+# ==========================================
+# Yıl, Tür, Şehir ve Fakülte isimlerini Factor (Kategori) tipine çeviriyoruz ki menü çıksın.
+dt_data <- ie_combined %>%
+  mutate(across(c(Year, University_Type, City, Faculty_Name), as.factor))
+
 datatable(
-  ie_combined, 
-  options = list(pageLength = 5, scrollX = TRUE),
-  caption = "Table 1: Integrated List of Industrial Engineering Programs (2018-2024)"
+  dt_data, 
+  # filter argümanına 'selectize' ekleyerek "Çoklu Tikli Seçim Menüsü" özelliğini açıyoruz
+  filter = list(position = 'top', clear = FALSE, plain = TRUE), 
+  options = list(
+    pageLength = 5, 
+    scrollX = TRUE, 
+    autoWidth = TRUE,
+    # Sütun tiplerine göre akıllı filtreleme ayarları
+    searchHighlight = TRUE
+  ),
+  caption = "Table 1: Integrated & Filterable List of Industrial Engineering Programs (2018-2024)"
 )
 ```
 
@@ -493,8 +488,8 @@ ggplotly(p2, tooltip = "text") %>%
 <br>
 
 <div class="glass-card">
-## 6. Capacity Correlation: Does Quota Size Impact Selectivity?
-Before analyzing pure demand, we must consider supply. Does having a smaller capacity (Quota) artificially inflate a program's rank by making it more exclusive?
+## 6. Capacity Correlation: Does Quota Size Impact Selectivity? (Bubble Chart)
+Before analyzing pure demand, we must consider supply. Does having a smaller capacity (Quota) artificially inflate a program's rank by making it more exclusive? In this **Bubble Chart**, the size of the bubble represents the total number of student preferences.
 </div>
 
 ```{r}
@@ -506,11 +501,12 @@ Before analyzing pure demand, we must consider supply. Does having a smaller cap
 p_quota <- ie_combined %>%
   filter(Year == latest_year, Rank != "Unfilled") %>%
   mutate(Rank = as.numeric(Rank)) %>%
-  ggplot(aes(x = Quota, y = Rank, color = University_Type, 
-             text = paste("Uni:", University_Name, "<br>Quota:", Quota, "<br>Rank:", Rank))) +
-  geom_point(alpha = 0.7, size = 2) +
+  ggplot(aes(x = Quota, y = Rank, color = University_Type, size = Preferences,
+             text = paste("Uni:", University_Name, "<br>Quota:", Quota, "<br>Rank:", Rank, "<br>Total Prefs:", Preferences))) +
+  geom_point(alpha = 0.7) +
   geom_smooth(method = "lm", se = FALSE, linetype = "dotted", color = "#cbd5e1", linewidth = 0.6) +
   scale_color_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
+  scale_size_continuous(range = c(2, 12)) + 
   scale_y_reverse() + 
   theme_minimal() +
   labs(title = "Capacity vs. Selectivity: The Quota Effect", x = "Total Quota (Number of Seats)", y = "Base Rank (Lower is Better)") +
@@ -521,7 +517,7 @@ ggplotly(p_quota, tooltip = "text") %>%
          legend = list(orientation = "h", x = 0, y = -0.2))
 ```
 <div class="insight-box">
-**🔍 Analytical Insight:** The scatter plot displays a mild correlation between capacity and rank depending on the sector. Many elite Foundation programs deliberately keep their scholarship quotas extremely low (under 15 seats) to ensure hyper-competitive base rankings, visible in the cluster at the bottom left.
+**🔍 Analytical Insight:** This upgraded bubble chart displays a mild correlation between capacity and rank depending on the sector. The bubble size visually confirms that mid-to-large capacity State programs draw massive absolute preference numbers. Conversely, many elite Foundation programs deliberately keep their scholarship quotas extremely low (under 15 seats) to ensure hyper-competitive base rankings, visible in the cluster at the bottom left.
 </div>
 
 <br>
@@ -602,7 +598,42 @@ ggplotly(p4, tooltip = "text") %>%
 <br>
 
 <div class="glass-card">
-## 9. Comprehensive Correlation Matrix (Heatmap)
+## 9. Regional Impact: Does Location Matter?
+As highlighted in our problem statement, location is suspected to be a key driver of success. The interactive visualization below maps the median national rank of Industrial Engineering programs across major Turkish cities.
+</div>
+
+```{r}
+#| label: regional-impact
+#| message: false
+#| warning: false
+#| code-fold: true
+
+p3 <- ie_combined %>%
+  filter(Year == latest_year, City != "Not Specified", Rank != "Unfilled") %>%
+  mutate(City = str_to_title(City), Rank = as.numeric(Rank)) %>%
+  group_by(City) %>%
+  filter(n() >= 3) %>%
+  ungroup() %>%
+  ggplot(aes(x = reorder(City, -Rank, FUN = median, na.rm = TRUE), y = Rank, fill = City)) +
+  geom_boxplot(alpha = 0.8, show.legend = FALSE, color = "#94a3b8") +
+  scale_fill_viridis_d(option = "mako") +
+  scale_y_reverse() +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Regional Drivers: City Influence on Rankings", x = "City", y = "Rank (Lower is Better)") +
+  theme(plot.title = element_text(face = "bold", color = "#38bdf8"), axis.text = element_text(color = "#f8fafc"))
+
+ggplotly(p3) %>%
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#f8fafc"))
+```
+<div class="insight-box">
+**🔍 Analytical Insight:** Location matters significantly. By hovering over the interactive boxplots, you can examine the exact quartiles and medians. Major metropolitan hubs like Istanbul and Ankara tightly cluster around the highest (lowest numerical) ranks. Cities with less industrial density show a broader variance and generally lower success rankings.
+</div>
+
+<br>
+
+<div class="glass-card">
+## 10. Comprehensive Correlation Matrix (Heatmap)
 To consolidate our findings, we must mathematically evaluate how **every** available metric (including Location, Sector, and International Mobility) interacts with the national base rank. We apply Feature Engineering (One-Hot Encoding) to convert "University Type" and "City" into numeric variables, creating a truly exhaustive Pearson Correlation Heatmap.
 </div>
 
@@ -662,5 +693,5 @@ Our exhaustive Pearson correlation analysis yields several statistically signifi
 
 ---
 
-## 10. Phase 1 Conclusion
+## 11. Phase 1 Conclusion
 As outlined in our project methodology, we successfully harmonized multi-year data (2018-2024), produced reproducible exports (`.RData`), and built advanced interactive analytical models, including robust 3D visualizations. We introduced predictive algorithms to fill historical data gaps and engineered categorical features to formulate exhaustive correlations connecting Location, Sector, Faculty Size, Global Mobility, and Demand Density with national rankings. In Phase 2, we will finalize this foundation by scraping live faculty size and Erasmus metrics from current databases.
