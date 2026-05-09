@@ -2,16 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.30">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Team Let It Happen</title>
 <style>
-/* Default styles provided by pandoc.
-** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -35,14 +32,15 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-b6a8276bf55561bdbc268162d41bd1f7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f9da83f35c8a9777c3928170ebd7038e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-466483732dcb0cea7139c1eae81929d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -83,6 +81,8 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Team Let It Happen</span>
     </a>
@@ -391,6 +391,154 @@ Integrated Sources
 <p><a href="analysis.html">Analysis Page</a></p>
 </div>
 </section>
+<div class="contributors-section">
+<div class="contributors-header">
+<h2 class="anchored">
+Research Contributors
+</h2>
+<p>
+This project was developed collaboratively as part of the EMU430 Data Analytics course, focusing on reproducible research, statistical modeling, and interactive analytical reporting.
+</p>
+</div>
+<div class="contributors-table">
+<div class="contributor-row">
+<div class="contributor-name">
+<p><a href="https://emu-hacettepe-analytics.github.io/emu430-spring2026-boracavdar/" target="_blank"> Yusuf Bora Çavdar </a></p>
+</div>
+<div class="contributor-role">
+<p>Data Engineering · Visualization · Statistical Analysis</p>
+</div>
+</div>
+<div class="contributor-row">
+<div class="contributor-name">
+<p><a href="https://emu-hacettepe-analytics.github.io/emu430-spring2026-onurfgg/" target="_blank"> Onur Furkan Gök </a></p>
+</div>
+<div class="contributor-role">
+<p>Research Design · Data Processing · Methodological Development</p>
+</div>
+</div>
+</div>
+</div>
+<style>
+
+.contributors-section {
+
+  margin-top: 6rem;
+  margin-bottom: 5rem;
+
+  padding-top: 3rem;
+
+  border-top:
+    1px solid rgba(15,23,42,0.08);
+}
+
+.contributors-header {
+
+  margin-bottom: 3rem;
+}
+
+.contributors-header h2 {
+
+  font-size: 2.2rem;
+  font-weight: 800;
+
+  color: #0f172a;
+
+  margin-bottom: 1rem;
+}
+
+.contributors-header p {
+
+  max-width: 780px;
+
+  color: #64748b;
+
+  line-height: 1.9;
+
+  font-size: 1.05rem;
+}
+
+.contributors-table {
+
+  background: white;
+
+  border-radius: 28px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 12px 35px rgba(15,23,42,0.05);
+
+  border:
+    1px solid rgba(15,23,42,0.05);
+}
+
+.contributor-row {
+
+  display: grid;
+
+  grid-template-columns: 1fr 2fr;
+
+  gap: 2rem;
+
+  padding: 2rem 2.5rem;
+
+  align-items: center;
+
+  transition:
+    background 0.3s ease;
+}
+
+.contributor-row:not(:last-child) {
+
+  border-bottom:
+    1px solid rgba(15,23,42,0.06);
+}
+
+.contributor-row:hover {
+
+  background:
+    rgba(56,189,248,0.04);
+}
+
+.contributor-name a {
+
+  text-decoration: none;
+
+  color: #0f172a;
+
+  font-size: 1.15rem;
+
+  font-weight: 700;
+
+  transition:
+    color 0.3s ease;
+}
+
+.contributor-name a:hover {
+
+  color: #38bdf8;
+}
+
+.contributor-role {
+
+  color: #475569;
+
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+
+  .contributor-row {
+
+    grid-template-columns: 1fr;
+
+    gap: 1rem;
+  }
+
+}
+
+</style>
 
 
 
