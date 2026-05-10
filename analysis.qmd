@@ -2,7 +2,6 @@
 title: "Data Analytics & Results"
 page-layout: full
 sidebar: false
-
 format:
   html:
     theme: flatly
@@ -15,7 +14,7 @@ format:
 ```{r setup, include=FALSE}
 # Global Environment Setup & Scientific Notation Disable
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-options(scipen = 999) # Bilimsel "e" notasyonunu tamamen kapatır
+options(scipen = 999) # Disables scientific notation entirely
 library(magrittr)
 library(tidyverse)
 library(thestats)
@@ -308,7 +307,7 @@ PLOTLY & MAP
   border-radius: 24px;
   padding: 1rem;
   box-shadow: 0 10px 25px rgba(0,0,0,0.04);
-  margin-bottom: 0.5rem; /* Panellere yakın olsun diye daraltıldı */
+  margin-bottom: 0.5rem; 
 }
 
 .leaflet-container {
@@ -356,13 +355,13 @@ document.addEventListener('DOMContentLoaded', function() {
           
           var btn = document.createElement('button');
           btn.className = 'chart-download-btn';
-          // Cleaned SVG without automatic markdown links
+          // Cleaned SVG
           btn.innerHTML = '<svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16" style="margin-right:6px;"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg> High-Res Export (PNG)';
           
           btn.onclick = function(e) {
             e.preventDefault();
             
-            // UI Feedback Animation
+            // UI Feedback
             var originalText = btn.innerHTML;
             btn.innerHTML = '⏳ Downloading...';
             
@@ -622,8 +621,13 @@ cat(paste0(
 ))
 ```
 
-::: insight-box
-**🔍 Executive Insight:** The KPI dashboard automatically recalculates based on the dataset's latest year. It highlights the immense scale of Industrial Engineering education in Turkey, juxtaposing massive total capacities with extreme peak selectivity.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Dashboard: Methodology & Findings
+
+* **What:** A dynamic Key Performance Indicator (KPI) dashboard offering a macro-level executive summary of the current academic year.
+* **How:** Developed using embedded R logic (`results: asis`) within HTML/CSS containers. The metrics are dynamically calculated by filtering the `ie_combined` dataset for `latest_year` and utilizing fundamental aggregation functions (`sum()`, `mean()`, `min()`).
+* **Why:** To establish context regarding the massive scale of the Turkish Industrial Engineering education market prior to granular visual analysis.
+* **Finding:** The dashboard highlights a stark dichotomy: Despite a massive overall capacity (Total Quota), the average program handles extreme preference competition, leading to intense selectivity at the peak (Highest Base Rank).
 :::
 
 <br>
