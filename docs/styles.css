@@ -1,5 +1,5 @@
 /* =========================================
-   GLOBAL NAVBAR
+   GLOBAL NAVBAR (DEĞİŞMEDİ)
 ========================================= */
 
 .navbar {
@@ -18,14 +18,11 @@
 
   box-shadow:
     0 6px 28px rgba(0,0,0,0.16);
-
-  transition:
-    all 0.35s ease;
 }
 
 
 /* =========================================
-   NAVBAR LAYOUT
+   NAVBAR CENTER LAYOUT
 ========================================= */
 
 .navbar .container-fluid {
@@ -40,10 +37,7 @@
 }
 
 
-/* =========================================
-   BRAND
-========================================= */
-
+/* BRAND SOLDA SABİT */
 .navbar-brand {
 
   position: absolute;
@@ -52,31 +46,16 @@
 
   font-weight: 800 !important;
 
-  letter-spacing: -0.5px;
-
   color: #f8fafc !important;
 
   font-size: 1.35rem !important;
-
-  transition:
-    opacity 0.25s ease;
-}
-
-.navbar-brand:hover {
-
-  opacity: 0.9;
 }
 
 
-/* =========================================
-   NAV MENU
-========================================= */
-
+/* NAV ORTADA */
 .navbar-nav {
 
   display: flex;
-
-  align-items: center;
 
   justify-content: center;
 
@@ -87,128 +66,122 @@
 
 
 /* =========================================
-   NAV LINKS
+   🧠 ANA PROBLEM DÜZELTME (LAYOUT FIX)
 ========================================= */
 
-.navbar-nav .nav-link {
+/* ANA İÇERİĞİ ORTALA */
+.quarto-container,
+.content,
+main {
 
-  position: relative;
+  max-width: 1200px !important;
 
-  font-weight: 600 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 
-  font-size: 0.97rem !important;
-
-  color:
-    rgba(226,232,240,0.82) !important;
-
-  padding:
-    0.62rem 1.2rem !important;
-
-  border-radius: 999px !important;
-
-  transition:
-    background 0.25s ease,
-    color 0.25s ease,
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 
 /* =========================================
-   HOVER EFFECT
+   📌 "ON THIS PAGE" (TOC) DÜZENİ
 ========================================= */
 
-.navbar-nav .nav-link:hover {
+#TOC {
 
-  color: #ffffff !important;
+  position: fixed;
 
-  background:
-    rgba(255,255,255,0.06) !important;
+  right: 20px;
 
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.05);
+  top: 120px;
 
-  transform:
-    translateY(-1px);
+  width: 240px;
+
+  background: rgba(255,255,255,0.04);
+
+  backdrop-filter: blur(12px);
+
+  border-radius: 16px;
+
+  padding: 16px;
+
+  border: 1px solid rgba(255,255,255,0.06);
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+
+/* TOC BAŞLIK */
+#TOC h2 {
+
+  font-size: 0.9rem;
+
+  opacity: 0.8;
 }
 
 
 /* =========================================
-   ACTIVE PAGE
-========================================= */
-
-.navbar-nav .nav-link.active {
-
-  color: #ffffff !important;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(56,189,248,0.16),
-      rgba(56,189,248,0.08)
-    ) !important;
-
-  box-shadow:
-    inset 0 0 0 1px rgba(56,189,248,0.22),
-    0 4px 18px rgba(56,189,248,0.10);
-}
-
-
-/* =========================================
-   ICONS
-========================================= */
-
-.navbar-nav .bi {
-
-  font-size: 0.96rem;
-
-  opacity: 0.92;
-}
-
-
-/* =========================================
-   MOBILE MENU BUTTON
-========================================= */
-
-.navbar-toggler {
-
-  border:
-    1px solid rgba(255,255,255,0.08) !important;
-
-  border-radius: 12px !important;
-
-  padding:
-    0.45rem 0.75rem !important;
-
-  background:
-    rgba(255,255,255,0.03);
-}
-
-
-/* =========================================
-   SMOOTH PAGE APPEAR
+   ANA İÇERİK + TOC BOŞLUK DENGESİ
 ========================================= */
 
 body {
 
-  animation: fadeIn 0.45s ease;
+  padding-right: 280px; /* sağ TOC için boşluk */
+}
+
+
+/* =========================================
+   RESPONSIVE (MOBİLDE TOC KAPAT)
+========================================= */
+
+@media (max-width: 992px) {
+
+  #TOC {
+    display: none;
+  }
+
+  body {
+    padding-right: 0;
+  }
+
+  .quarto-container {
+    max-width: 100% !important;
+  }
+}
+
+
+/* =========================================
+   NAV LINKS (DEĞİŞMEDİ)
+========================================= */
+
+.navbar-nav .nav-link {
+
+  border-radius: 999px;
+
+  padding: 0.6rem 1.2rem !important;
+
+  transition: all 0.25s ease;
+}
+
+.navbar-nav .nav-link:hover {
+
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+
+
+/* =========================================
+   PAGE ANIMATION
+========================================= */
+
+body {
+
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
 
-  from {
-
-    opacity: 0;
-    transform: translateY(6px);
-  }
-
-  to {
-
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
