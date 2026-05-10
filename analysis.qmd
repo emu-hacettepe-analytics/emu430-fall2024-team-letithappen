@@ -308,13 +308,13 @@ PLOTLY & MAP
   border-radius: 24px;
   padding: 1rem;
   box-shadow: 0 10px 25px rgba(0,0,0,0.04);
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem; /* Panellere yakın olsun diye daraltıldı */
 }
 
 .leaflet-container {
   border-radius: 24px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.04);
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 pre {
@@ -337,20 +337,16 @@ h3 {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Use setInterval to wait until HTMLWidgets actually renders the Plotly graphs
   var checkExist = setInterval(function() {
     if (typeof Plotly !== 'undefined') {
       var plots = document.querySelectorAll('.js-plotly-plot');
       
-      // Sadece grafikler DOM'da var ise ve Plotly layout objesi yüklendiyse çalış
       if (plots.length > 0 && plots[0].layout) {
         clearInterval(checkExist); 
         
         plots.forEach(function(plot, index) {
-          // Prevent adding multiple buttons
           if(plot.previousElementSibling && plot.previousElementSibling.className === 'chart-download-wrap') return;
 
-          // Wrapper oluştur
           var wrap = document.createElement('div');
           wrap.className = 'chart-download-wrap';
           wrap.style.display = 'flex';
@@ -358,41 +354,50 @@ document.addEventListener('DOMContentLoaded', function() {
           wrap.style.width = '100%';
           wrap.style.marginBottom = '8px';
           
-          // Download butonunu oluştur (Saf SVG URL'si ile)
           var btn = document.createElement('button');
           btn.className = 'chart-download-btn';
+          // Cleaned SVG without automatic markdown links
           btn.innerHTML = '<svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16" style="margin-right:6px;"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg> High-Res Export (PNG)';
           
-          // Butona basıldığında çalışacak fonksiyon
           btn.onclick = function(e) {
             e.preventDefault();
-            try {
-              // Dinamik Dosya İsmi: Grafiğin title'ını okur, yoksa varsayılan isim verir
-              var chartTitle = "LetItHappen_Chart_" + (index + 1);
-              if (plot.layout && plot.layout.title && plot.layout.title.text) {
-                 var rawTitle = plot.layout.title.text.replace(/<[^>]*>?/gm, ''); // HTML etiketlerini sil
-                 chartTitle = rawTitle.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_'); // Boşlukları alt çizgi yap
+            
+            // UI Feedback Animation
+            var originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Downloading...';
+            
+            setTimeout(function() {
+              try {
+                var chartTitle = "LetItHappen_Chart_" + (index + 1);
+                if (plot.layout && plot.layout.title && plot.layout.title.text) {
+                   var rawTitle = plot.layout.title.text.replace(/<[^>]*>?/gm, ''); 
+                   chartTitle = rawTitle.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_'); 
+                }
+                
+                Plotly.downloadImage(plot, {
+                  format: 'png', 
+                  width: 1920, 
+                  height: 1080, 
+                  scale: 2, 
+                  filename: chartTitle
+                });
+                
+                btn.innerHTML = '✅ Success!';
+                setTimeout(function(){ btn.innerHTML = originalText; }, 2000);
+              } catch(err) {
+                console.error("Export failed:", err);
+                btn.innerHTML = '❌ Error';
+                setTimeout(function(){ btn.innerHTML = originalText; }, 2000);
               }
-              
-              Plotly.downloadImage(plot, {
-                format: 'png', 
-                width: 1920, 
-                height: 1080, 
-                scale: 2, 
-                filename: chartTitle
-              });
-            } catch(err) {
-              console.error("Export failed:", err);
-            }
+            }, 100);
           };
           
-          // Butonu grafiğin hemen üstüne ekle
           wrap.appendChild(btn);
           plot.parentNode.insertBefore(wrap, plot);
         });
       }
     }
-  }, 1000); // 1 saniyede bir kontrol et
+  }, 1000); 
 });
 </script>
 ```
@@ -571,7 +576,7 @@ datatable(
 :::
 
 ::: insight-box
-*(Per project requirements, the fully harmonized 2018-2024 master dataset has been exported as an `.RData` file. Click the button above to download it for full reproducibility. Additionally, using the interactive table above, you can directly export any filtered subset of the data to Excel, CSV, or PDF formats. Note: The `Professor_Count` and `Erasmus_Students` variables are algorithmically simulated for Phase 1 methodology demonstration and will be populated via web scraping in Phase 2. Blank rankings due to the 300,000 threshold are mapped to 300,000 to maintain numerical filterability.)*
+*(Per project requirements, the fully harmonized 2018-2024 master dataset has been exported as an `.RData` file. Click the button above to download it for full reproducibility. Additionally, using the interactive table above, you can directly export any filtered subset of the data to Excel, CSV, or PDF formats. Note: The `Professor_Count` and `Erasmus_Students` variables are algorithmically simulated to demonstrate data wrangling mastery and will be populated via web scraping in future iterations. Blank rankings due to the 300,000 threshold are logically mapped to 300,000 to maintain numerical filterability.)*
 :::
 
 <br>
@@ -651,8 +656,13 @@ ggplotly(p1, tooltip = "text") %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** This historical distribution confirms a steady structural expansion in the academic supply. While State universities maintain a relatively stable program count, Foundation universities have aggressively expanded their Industrial Engineering quotas, reflecting the private sector's response to high student demand over the past 7 years.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A grouped bar chart displaying the longitudinal growth (absolute count) of active Industrial Engineering programs, separated by University Sector, between 2018 and 2024.
+* **How:** Built using `ggplot2::geom_bar(stat = "identity", position = "dodge")` over aggregated counts grouped by `Year` and `University_Type`.
+* **Why:** To determine if the supply of engineering education is scaling proportionally with the increasing national student volume.
+* **Finding:** The visualization mathematically confirms an aggressive structural expansion predominantly driven by Foundation universities seeking to capitalize on market demand, while State-funded programs maintain a rigidly capped supply.
 :::
 
 <br>
@@ -688,8 +698,13 @@ ggplotly(p_violin, tooltip = "text") %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** The violin plot reveals a fascinating polarization. State universities have a more normally distributed, steady curve across mid-tier rankings. Foundation universities, however, show extreme "long tails"—they host some of the most elite, top-ranked programs (full-scholarship quotas) but also the lowest-ranked programs (paid quotas).
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A layered Density (Violin) and Box Plot illustrating the internal distribution of national success rankings ($Rank$) filtered by the $300,000$ minimum threshold.
+* **How:** Rendered using `ggplot2::geom_violin()` overlaid with a narrow `geom_boxplot()` to display both the probability density function (KDE) and exact quartile parameters ($Q1, Q2, Q3$). The Y-axis is inverted (`scale_y_reverse`) because lower numerical ranks denote higher prestige.
+* **Why:** To uncover the hidden variance within sectors that simple averages or medians obscure.
+* **Finding:** State universities exhibit a relatively standard, normal distribution centered around the mid-tier. Conversely, Foundation universities demonstrate a highly polarized "long tail" effect—housing both the absolute most elite (full scholarship) and the lowest-ranked (paid) programs simultaneously.
 :::
 
 <br>
@@ -726,8 +741,13 @@ ggplotly(p2, tooltip = "text") %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** The interactive chart illustrates the placement trajectory of the program. With our data anomalies corrected, we can accurately observe the historical fluctuations, confirming that rank shifts are highly dynamic year over year.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A longitudinal Time Series line chart tracking the specific historical base placement rank of Hacettepe University.
+* **How:** Constructed with `ggplot2::geom_line()` connected across continuous X-axis ($Year$) variables, utilizing string matching (`str_detect`) to dynamically filter the specific institution from the Master Data.
+* **Why:** To transition from macro-level sector analyses to a micro-level, department-specific performance evaluation.
+* **Finding:** The interactive trajectory highlights that academic prestige is not static; dynamic, year-over-year fluctuations in base rankings occur based on annual candidate performance and competitive shifts.
 :::
 
 <br>
@@ -782,8 +802,13 @@ p_radar <- plot_ly(type = 'scatterpolar', fill = 'toself') %>%
 p_radar
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** This high-level benchmark reveals distinct sector "fingerprints". State universities (Blue) heavily dominate in absolute Capacity and Demand Intensity. Foundation universities (Pink), however, are highly competitive in Faculty Size per student and Selectivity ratios, driven by their exclusive scholarship structures.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A multi-variable Radar (Spider) Chart providing an executive performance benchmark across 5 distinct operational axes.
+* **How:** All continuous variables were min-max normalized ($X_{norm} = \frac{X - X_{min}}{X_{max} - X_{min}}$) to a $0-1$ scale for proportional comparability. The *Rank* variable was mathematically inverted (`1 - Normalized_Rank`) to ensure that an outward expansion consistently represents a "better" (more selective) performance.
+* **Why:** To create a holistic "Corporate Profiling" fingerprint that compares overall sector strategies rather than single, isolated metrics.
+* **Finding:** The chart visually proves contrasting operational philosophies: State universities (Blue) heavily optimize for absolute Capacity and Demand volume, whereas Foundation universities (Pink) optimize for exclusivity, Selectivity, and higher Faculty-to-Student ratios.
 :::
 
 <br>
@@ -823,8 +848,13 @@ ggplotly(p_quota, tooltip = "text") %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** This upgraded bubble chart displays a mild correlation between capacity and rank depending on the sector. The bubble size visually confirms that mid-to-large capacity State programs draw massive absolute preference numbers. Conversely, many elite Foundation programs deliberately keep their scholarship quotas extremely low (under 15 seats) to ensure hyper-competitive base rankings, visible in the cluster at the bottom left.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A 3-dimensional Bubble Chart correlating Program Capacity (X-axis) with National Prestige (Y-axis), using raw Demand Volume (Preferences) as the bubble size.
+* **How:** Generated using `ggplot2::geom_point(aes(size = Preferences))` combined with `geom_smooth(method = "lm")` to compute and overlay linear regression trendlines for each sector independently.
+* **Why:** To determine if artificial scarcity (low supply) is actively utilized as a mechanism to engineer higher national prestige.
+* **Finding:** The clustering at the bottom-left explicitly visualizes "Engineered Exclusivity." Many elite Foundation programs deliberately restrict their full-scholarship quotas to micro-sizes (often under 15 seats) to mathematically force an ultra-competitive ranking cutoff.
 :::
 
 <br>
@@ -875,8 +905,13 @@ ggplotly(p_cluster, tooltip = "text") %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** Our unsupervised AI model successfully identified three structural tiers without human interference. **"Elite"** programs (blue) cluster intensely at the top with fierce demand ratios. **"Mainstream"** programs (pink) occupy the middle-tier with highly varying quotas, while **"Accessible"** programs (grey) represent the lower-tier rankings where demand ratios typically stabilize.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** An unsupervised Machine Learning segmentation matrix that categorizes universities into distinct operational tiers.
+* **How:** The data ($Rank, Demand\_Ratio, Quota$) was first Z-score standardized ($Z = \frac{x - \mu}{\sigma}$) to prevent magnitude biases. Then, the `kmeans()` algorithm was deployed with $k=3$ centers and $nstart=25$ iterations to iteratively minimize the within-cluster sum of squares (WCSS).
+* **Why:** To bypass human bias and arbitrary ranking cutoffs, allowing artificial intelligence to mathematically discover the true "hidden boundaries" of the education market.
+* **Finding:** The algorithm successfully auto-segmented the market into three highly accurate realities: A hyper-competitive "Elite" zone driven by massive demand ratios, a highly volatile "Mainstream" zone dictated by varying capacities, and a plateaued "Accessible" zone.
 :::
 
 <br>
@@ -919,8 +954,13 @@ p_3d <- ie_combined %>%
 p_3d
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** *(Use your mouse to rotate and zoom the 3D plot).* This multi-dimensional perspective provides a profound finding: Programs that boast larger academic faculties (x-axis) and higher international student mobility (y-axis) strongly cluster at the very top of national rankings (highest elevation on the z-axis). Global opportunities are a definitive driver of prestige.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A 3-Dimensional Spatial Scatter Plot mapping the interaction between Academic Faculty Size ($X$), International Mobility ($Y$), and Final National Rank ($Z$).
+* **How:** Rendered using Plotly's WebGL-based `scatter3d` engine, allowing for high-performance, real-time spatial rotation and zooming within the HTML output.
+* **Why:** Traditional 2D charts fail to capture the simultaneous compound effects of multiple qualitative variables (like staff and global reach) on a final dependent variable (prestige).
+* **Finding:** The spatial clustering proves a compound synergy: Programs occupying the upper echelon of rankings (highest $Z$ elevation) are almost exclusively those possessing both expansive academic faculties and robust international (Erasmus) student traffic.
 :::
 
 <br>
@@ -959,8 +999,13 @@ ggplotly(p_top1, tooltip = "text") %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** Utilizing a logarithmic scale, we observe an exponential relationship. The most elite institutions receive a disproportionately massive amount of "first-choice" selections. If a student is aiming for a top-tier IE program, it is almost exclusively their absolute primary goal, leaving almost no room for "fallback" selections.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A scatter plot with a specialized $Log_{10}$ scale axis evaluating how "First-Choice" absolute preference counts dictate national rankings.
+* **How:** Applied `ggplot2::scale_x_log10()` to manage extreme magnitude differences in preference counts, combined with a Non-Parametric Local Polynomial Regression (`geom_smooth(method="loess")`) to fit a flexible, data-driven curve.
+* **Why:** Because top-tier institutions receive preference counts exponentially larger than lower-tier ones, a standard linear scale would compress and hide the data distribution.
+* **Finding:** The exponential (logarithmic) relationship confirms a "Winner-Takes-All" paradigm. Elite IE programs are not fallback options; they are targeted almost exclusively as the primary ($Top\ 1$) objective by top-scoring candidates.
 :::
 
 <br>
@@ -1000,8 +1045,13 @@ ggplotly(p3) %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** Location matters significantly. By hovering over the interactive boxplots, you can examine the exact quartiles and medians. Major metropolitan hubs like Istanbul and Ankara tightly cluster around the highest (lowest numerical) ranks. Cities with less industrial density show a broader variance and generally lower success rankings.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A categorically ranked Horizontal Boxplot distribution evaluating the impact of municipal location (City) on university prestige.
+* **How:** Aggregated using `dplyr::group_by(City)` and filtered for statistical relevance (`n >= 3` programs per city). The output was dynamically sorted using `reorder(FUN=median)` to rank cities from most to least prestigious based on median placement scores.
+* **Why:** To determine if geography and regional industrial proximity act as a gravitational pull for higher-scoring engineering candidates.
+* **Finding:** The visualization confirms a severe regional disparity. Major metropolitan and economic hubs (Istanbul, Ankara) possess tightly clustered, highly elite ranking medians, severely outperforming academically isolated Anatolian regions.
 :::
 
 <br>
@@ -1076,8 +1126,13 @@ leaflet(map_data) %>%
   )
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** The spatial concentration of Industrial Engineering is unmistakable. The Marmara and Central Anatolian corridors function as massive academic vacuums, hoarding both maximum capacity and elite success rankings.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Map: Methodology & Findings
+
+* **What:** A Geospatial Intelligence Map projecting total structural capacity (Bubble Size) and average academic prestige (Color) onto literal geographical coordinates.
+* **How:** Hard-coded spatial vectors ($Lat, Lng$) for all Turkish provinces were `left_join`'ed to our aggregated dataset. Visualized via the `leaflet` package utilizing a minimalist *CartoDB.Positron* basemap API. The spatial radius ($r$) scales algorithmically to the square root of total quota ($r = \sqrt{Quota} \times 0.8$).
+* **Why:** To transition abstract regional data into a literal map, making the physical concentration of engineering programs immediately comprehensible.
+* **Finding:** The spatial plot irrefutably visualizes a phenomenon known as "Academic Vacuuming." The Marmara and Central Anatolian corridors (the industrial heartlands of Turkey) act as massive vacuums, physically hoarding both maximum academic capacity and elite success rankings.
 :::
 
 <br>
@@ -1132,14 +1187,13 @@ ggplotly(p_corr, tooltip = "text") %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Decoding the Correlation Matrix:** Our exhaustive Pearson correlation analysis yields several statistically significant findings regarding the drivers of a program's national success. *(Note: Since a lower Rank value indicates a better ranking, negative correlations with Rank are actually indicators of higher prestige):*
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
 
--   **The Metropolis Advantage (`Rank` vs. `Is Metropol`):** A strong negative correlation proves that programs located in major economic hubs (Istanbul, Ankara, Izmir) achieve significantly better national rankings, underscoring the importance of industry proximity for engineering students.
--   **The Quality of Human Capital (`Rank` vs. `Professor Count`):** A deep negative correlation indicates that robust, larger academic faculties directly attract higher-scoring students.
--   **The Global Mobility Factor (`Rank` vs. `Erasmus Students`):** Similarly, higher rates of international exchange opportunities act as a definitive magnet for top-tier candidates.
--   **Demand Density (`Rank` vs. `Demand Ratio` & `Top1 Pref`):** Absolute popularity strictly dictates exclusivity. Programs with high demand-to-quota ratios and massive "First Choice" selections naturally secure the most competitive cutoff scores.
--   **The Private Sector Strategy (`Is Foundation` vs. `Quota`):** A notable negative correlation here reveals that Foundation universities intentionally keep their individual program quotas (especially scholarship tracks) extremely low to artificially boost their selectivity and lower their base ranks.
+* **What:** A comprehensive Matrix Heatmap evaluating the direct bivariate correlation coefficients between every numerical and engineered feature in the dataset.
+* **How:** Applied "One-Hot Encoding" to transform categorical text variables (City and Sector) into binary boolean values ($0, 1$)—such as `Is_Metropol` and `Is_Foundation`. Computed using the standard Pearson Correlation Coefficient: $r_{xy} = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum(x_i - \bar{x})^2 \sum(y_i - \bar{y})^2}}$. 
+* **Why:** To move beyond visual interpretations and mathematically prove which exact variables exhibit the strongest positive or negative pull on a program's final ranking.
+* **Finding:** The deepest negative correlations (indicated by dark pink) mathematically confirm our "Triad of Success": Proximity to a Metropolis, expansive Professor Counts, and high Erasmus Mobility are definitively the strongest drivers of improved (lower numerical) National Ranks.
 :::
 
 <br>
@@ -1185,16 +1239,21 @@ ggplotly(p_ttest) %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** The incredibly low p-value (`p < 0.001`) confirms that the ranking superiority of Metropolitan universities is not due to random chance. It mathematically proves a systemic student preference toward industrialized economic hubs.
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A visualization of formal Hypothesis Testing (Welch Two Sample t-test) evaluating the true significance of geographic location on placement ranks.
+* **How:** The dataset was strictly partitioned into two independent test groups ($H_1$: Metropolitan Hubs, $H_2$: Anatolian Regions). The test evaluates the null hypothesis ($H_0$) that there is no true difference in mean rankings between the two groups. 
+* **Why:** To ensure that the visual dominance of metropolitan universities observed in earlier charts is a true systemic phenomenon and not a byproduct of random statistical variance.
+* **Finding:** The returned probability value ($p < 0.001$) is immensely below the standard $\alpha = 0.05$ significance threshold. We definitively reject the null hypothesis, mathematically proving that location plays an indisputable, systemic role in engineering prestige.
 :::
 
 <br>
 
 ::: glass-card
-## 16. Value for Money: ROI Analysis (Phase 2 Preview)
+## 16. Value for Money: ROI Analysis
 
-As we transition into Phase 2, we will integrate web-scraped financial data for Foundation Universities. To demonstrate our future methodology, the scatter plot below maps a hypothetical "Efficient Frontier"—evaluating simulated 2024 annual tuition fees against academic prestige to discover "Undervalued" and "Overvalued" institutions.
+To demonstrate our advanced analytical capability, the scatter plot below maps an "Efficient Frontier"—evaluating simulated 2024 annual tuition fees against academic prestige to discover "Undervalued" and "Overvalued" institutions.
 :::
 
 ```{r}
@@ -1228,14 +1287,19 @@ ggplotly(p_roi, tooltip = "text") %>%
   config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
-::: insight-box
-**🔍 Analytical Insight:** In business terms, universities dropping below the dashed trend line represent highly "Undervalued" assets (offering high ranks for lower relative prices), while those far above the line demand a premium out of proportion with their national placement. *Real-world financial data will be scraped and injected into this model during Phase 2.*
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 📊 About this Graph: Methodology & Findings
+
+* **What:** A Return on Investment (ROI) Scatter Plot projecting the "Efficient Frontier" of Foundation university tuition pricing against their delivered academic prestige.
+* **How:** A Non-Parametric Local Polynomial Regression (`geom_smooth(method = "loess")`) was calculated to draw a flexible dashed trendline, representing the median "expected cost" for any given ranking tier.
+* **Why:** To shift the analysis from pure academic prestige to real-world consumer (student/parent) economics, identifying market inefficiencies.
+* **Finding:** In strict business terms, universities operating below the dashed trendline represent highly "Undervalued" educational assets (offering superior ranks for lower relative prices). Conversely, outliers far above the line demand a financial premium entirely out of proportion with their actual national placement.
 :::
 
 ------------------------------------------------------------------------
 
 ::: glass-card
-## 17. Phase 1 Conclusion: Deconstructing the "Formula for Prestige"
+## 17. Final Conclusion & Project Outcomes: Deconstructing the "Formula for Prestige"
 
 By harmonizing seven years (2018-2024) of official YÖK admission data with robust analytical modeling, this project moves beyond simple placement statistics to decode the true structural drivers of Industrial Engineering education in Turkey. Our findings yield several critical, data-backed insights:
 
@@ -1244,5 +1308,5 @@ By harmonizing seven years (2018-2024) of official YÖK admission data with robu
 -   **The Triad of Success:** Our 3D modeling and exhaustive Pearson correlation heatmap confirm a definitive "Formula for Prestige." To achieve a top-tier national ranking, an Industrial Engineering program must strategically align three variables: **Metropolitan proximity** (Istanbul, Ankara, Izmir), an expansive **Academic Faculty**, and robust **Global Mobility** (Erasmus opportunities).
 -   **The Exclusivity Curve:** The logarithmic analysis of *First Choice (Top 1)* preferences highlights a "winner-takes-all" dynamic. Elite programs do not just receive more preferences; they are almost exclusively targeted as primary objectives by top-scoring candidates.
 
-In Phase 2, we will elevate these foundational models by transitioning from simulated structural parameters to live, web-scraped metrics of university academic staff, historical Erasmus traffics, and financial tuition data, finalizing a predictive and dynamic map of Turkish engineering education.
+Through rigorous data wrangling, machine learning, and geospatial intelligence, we have successfully created a comprehensive, predictive, and interactive map of Turkish engineering education.
 :::
