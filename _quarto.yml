@@ -3,19 +3,25 @@ project:
   output-dir: docs
 
 website:
-  title: "Team Let It Happen"
+  title: "Let It Happen"
+
   navbar:
-    background: primary
+    pinned: true
+
     left:
       - text: "Home"
+        icon: house-door
         href: index.qmd
-      - text: "Data"
+
+      - text: "Data Pipeline"
+        icon: database-gear
         href: data.qmd
-      - text: "Analysis"
+
+      - text: "Analytics & Results"
+        icon: bar-chart-fill
         href: analysis.qmd
 
 format:
   html:
-    theme: slate  # 2. fotoğraftaki o karanlık temanın adı budur
+    theme: flatly
     css: styles.css
-    toc: true
