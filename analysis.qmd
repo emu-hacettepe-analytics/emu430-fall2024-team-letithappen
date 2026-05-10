@@ -41,8 +41,8 @@ library(leaflet)
 GLOBAL SELECTION (HIGHLIGHT) FIX
 ========================= */
 ::selection {
-  background-color: #38bdf8 !important; /* Seçilen metnin arka planı gökyüzü mavisi */
-  color: #ffffff !important; /* Seçilen metnin rengi KUSURSUZ BEYAZ */
+  background-color: #38bdf8 !important; 
+  color: #ffffff !important; 
 }
 ::-moz-selection {
   background-color: #38bdf8 !important;
@@ -336,32 +336,63 @@ h3 {
 </style>
 
 <script>
-window.addEventListener('load', function() {
-  setTimeout(function() {
-    var plots = document.querySelectorAll('.js-plotly-plot');
-    plots.forEach(function(plot, i) {
-      // Create a wrapper for the button
-      var wrap = document.createElement('div');
-      wrap.style.display = 'flex';
-      wrap.style.justifyContent = 'flex-end';
-      wrap.style.width = '100%';
-      wrap.style.marginBottom = '5px';
+document.addEventListener('DOMContentLoaded', function() {
+  // Use setInterval to wait until HTMLWidgets actually renders the Plotly graphs
+  var checkExist = setInterval(function() {
+    if (typeof Plotly !== 'undefined') {
+      var plots = document.querySelectorAll('.js-plotly-plot');
       
-      // Create the explicit download button
-      var btn = document.createElement('button');
-      btn.className = 'chart-download-btn';
-      btn.innerHTML = '<svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16" style="margin-right:6px;"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg> Download Chart as PNG';
-      
-      // Wire up the button to Plotly's native High-Res download API
-      btn.onclick = function() {
-        Plotly.downloadImage(plot, {format: 'png', width: 1920, height: 1080, scale: 2, filename: 'LetItHappen_Analytics_Chart_' + (i+1)});
-      };
-      
-      // Insert button right above the plot
-      wrap.appendChild(btn);
-      plot.parentNode.insertBefore(wrap, plot);
-    });
-  }, 2500); // Wait 2.5 seconds to ensure htmlwidgets are fully rendered
+      // Sadece grafikler DOM'da var ise ve Plotly layout objesi yüklendiyse çalış
+      if (plots.length > 0 && plots[0].layout) {
+        clearInterval(checkExist); 
+        
+        plots.forEach(function(plot, index) {
+          // Prevent adding multiple buttons
+          if(plot.previousElementSibling && plot.previousElementSibling.className === 'chart-download-wrap') return;
+
+          // Wrapper oluştur
+          var wrap = document.createElement('div');
+          wrap.className = 'chart-download-wrap';
+          wrap.style.display = 'flex';
+          wrap.style.justifyContent = 'flex-end';
+          wrap.style.width = '100%';
+          wrap.style.marginBottom = '8px';
+          
+          // Download butonunu oluştur (Saf SVG URL'si ile)
+          var btn = document.createElement('button');
+          btn.className = 'chart-download-btn';
+          btn.innerHTML = '<svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16" style="margin-right:6px;"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg> High-Res Export (PNG)';
+          
+          // Butona basıldığında çalışacak fonksiyon
+          btn.onclick = function(e) {
+            e.preventDefault();
+            try {
+              // Dinamik Dosya İsmi: Grafiğin title'ını okur, yoksa varsayılan isim verir
+              var chartTitle = "LetItHappen_Chart_" + (index + 1);
+              if (plot.layout && plot.layout.title && plot.layout.title.text) {
+                 var rawTitle = plot.layout.title.text.replace(/<[^>]*>?/gm, ''); // HTML etiketlerini sil
+                 chartTitle = rawTitle.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_'); // Boşlukları alt çizgi yap
+              }
+              
+              Plotly.downloadImage(plot, {
+                format: 'png', 
+                width: 1920, 
+                height: 1080, 
+                scale: 2, 
+                filename: chartTitle
+              });
+            } catch(err) {
+              console.error("Export failed:", err);
+            }
+          };
+          
+          // Butonu grafiğin hemen üstüne ekle
+          wrap.appendChild(btn);
+          plot.parentNode.insertBefore(wrap, plot);
+        });
+      }
+    }
+  }, 1000); // 1 saniyede bir kontrol et
 });
 </script>
 ```
@@ -616,7 +647,8 @@ p1 <- ie_combined %>%
 
 ggplotly(p1, tooltip = "text") %>%
   layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"),
-         legend = list(orientation = "h", x = 0, y = -0.2))
+         legend = list(orientation = "h", x = 0, y = -0.2)) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
@@ -652,7 +684,8 @@ ggplotly(p_violin, tooltip = "text") %>%
   layout(
     separators = ".,",
     yaxis = list(tickformat = ","),
-    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"), showlegend = FALSE)
+    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"), showlegend = FALSE) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
@@ -689,7 +722,8 @@ ggplotly(p2, tooltip = "text") %>%
   layout(
     separators = ".,",
     yaxis = list(tickformat = ","),
-    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"))
+    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155")) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
@@ -742,7 +776,8 @@ p_radar <- plot_ly(type = 'scatterpolar', fill = 'toself') %>%
     title = list(text = "Sector Fingerprint: Radar Benchmark", font = list(color = "#0f172a", size = 16)),
     paper_bgcolor = "transparent", plot_bgcolor = "transparent",
     legend = list(font = list(color = "#334155"))
-  )
+  ) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 
 p_radar
 ```
@@ -784,7 +819,8 @@ ggplotly(p_quota, tooltip = "text") %>%
     yaxis = list(tickformat = ","),
     xaxis = list(tickformat = ","),
     plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"),
-    legend = list(orientation = "h", x = 0, y = -0.2))
+    legend = list(orientation = "h", x = 0, y = -0.2)) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
@@ -835,7 +871,8 @@ ggplotly(p_cluster, tooltip = "text") %>%
     separators = ".,",
     yaxis = list(tickformat = ","),
     plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"),
-    legend = list(orientation = "h", x = 0, y = -0.2))
+    legend = list(orientation = "h", x = 0, y = -0.2)) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
@@ -876,7 +913,8 @@ p_3d <- ie_combined %>%
     paper_bgcolor = "transparent",
     plot_bgcolor = "transparent",
     legend = list(font = list(color = "#334155"))
-  )
+  ) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 
 p_3d
 ```
@@ -917,7 +955,8 @@ ggplotly(p_top1, tooltip = "text") %>%
     separators = ".,",
     yaxis = list(tickformat = ","),
     xaxis = list(tickformat = ","),
-    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"), showlegend = FALSE)
+    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"), showlegend = FALSE) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
@@ -957,7 +996,8 @@ ggplotly(p3) %>%
   layout(
     separators = ".,",
     yaxis = list(tickformat = ","),
-    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"))
+    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155")) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
@@ -1088,7 +1128,8 @@ p_corr <- ggplot(corr_df, aes(x = Var1, y = Var2, fill = Correlation, text = pas
   )
 
 ggplotly(p_corr, tooltip = "text") %>%
-  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"))
+  layout(plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155")) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
@@ -1140,7 +1181,8 @@ ggplotly(p_ttest) %>%
   layout(
     separators = ".,",
     yaxis = list(tickformat = ","),
-    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"))
+    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155")) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
@@ -1182,7 +1224,8 @@ ggplotly(p_roi, tooltip = "text") %>%
     separators = ".,",
     yaxis = list(tickformat = ","),
     xaxis = list(tickformat = ","),
-    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155"))
+    plot_bgcolor = "transparent", paper_bgcolor = "transparent", font = list(color = "#334155")) %>%
+  config(displayModeBar = FALSE, displaylogo = FALSE)
 ```
 
 ::: insight-box
