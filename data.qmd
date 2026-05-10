@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Data Preparation"
 page-layout: full
 sidebar: false
 format:
@@ -9,6 +9,9 @@ format:
     toc-depth: 2
     smooth-scroll: true
     code-fold: true
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -292,36 +295,51 @@ pre {
 
 ## Building a Unified Dataset for Industrial Engineering Programs in Turkey
 
-<p>This page documents the complete data sourcing, cleaning, preprocessing, and integration pipeline used throughout our project.</p>
+<p>This page documents the complete data sourcing, cleaning,
+preprocessing, and integration pipeline used throughout our project.</p>
 :::
 ::::
 
 ::: content-card
 ## Where We Got Our Data
 
-To analyze long-term trends in Industrial Engineering education across Turkey, we combined multiple datasets covering the years between 2018 and 2024.
+To analyze long-term trends in Industrial Engineering education across
+Turkey, we combined multiple datasets covering the years between 2018
+and 2024.
 
 ### Primary Sources
 
--   **YÖK Atlas Data (2018–2020)** We used the `thestats` R package developed by M. Çavuş and O. Aydın to extract official placement statistics directly into R.
--   **Kaggle Dataset (2021–2024)** To enrich the analysis with more recent information, we integrated a Kaggle dataset containing quota sizes, city information, total preference counts, and additional admission statistics.
+-   **YÖK Atlas Data (2018–2020)** We used the `thestats` R package
+    developed by M. Çavuş and O. Aydın to extract official placement
+    statistics directly into R.
+-   **Kaggle Dataset (2021–2024)** To enrich the analysis with more
+    recent information, we integrated a Kaggle dataset containing quota
+    sizes, city information, total preference counts, and additional
+    admission statistics.
 
-This hybrid approach allowed us to construct a broader and more consistent analytical timeline.
+This hybrid approach allowed us to construct a broader and more
+consistent analytical timeline.
 :::
 
 ::: dark-section
 ## Data Cleaning and Wrangling
 
-Raw admission datasets often contain inconsistent naming conventions, irrelevant department matches, and formatting issues. To ensure analytical consistency, we applied several preprocessing steps using the `tidyverse` ecosystem.
+Raw admission datasets often contain inconsistent naming conventions,
+irrelevant department matches, and formatting issues. To ensure
+analytical consistency, we applied several preprocessing steps using the
+`tidyverse` ecosystem.
 
 ### Main Cleaning Steps
 
 -   Filtered only Industrial Engineering departments
 -   Removed unrelated engineering programs
 -   Standardized university and faculty names
--   Engineered a Unicode-safe normalization algorithm for perfect dataset merging
--   Simulated missing Phase 2 variables (Faculty Size and Erasmus traffic) based on robust performance weights
--   Resolved missing data (NA) cases, logically mapping unfilled quota rankings to the 300,000 threshold to maintain numerical integrity.
+-   Engineered a Unicode-safe normalization algorithm for perfect
+    dataset merging
+-   Simulated missing Phase 2 variables (Faculty Size and Erasmus
+    traffic) based on robust performance weights
+-   Resolved missing data (NA) cases, logically mapping unfilled quota
+    rankings to the 300,000 threshold to maintain numerical integrity.
 
 ### Derived Variables
 
@@ -329,36 +347,11 @@ Raw admission datasets often contain inconsistent naming conventions, irrelevant
 -   Used as a normalized indicator of student demand intensity
 :::
 
-::: content-card
-## Data Dictionary
-
-Below are the most important variables included in our final merged dataset.
-
-| Variable | Description |
-|----|----|
-| **Year** | Academic year between 2018 and 2024 |
-| **University_Name** | Standardized university name |
-| **University_Type** | State or Foundation university |
-| **Rank** | National placement ranking (Unfilled mapped to 300,000) |
-| **Quota** | Total student quota |
-| **Preferences** | Total number of student preferences |
-| **Demand_Ratio** | Preferences divided by quota |
-| **Top1_Pref** | Number of first-choice preferences |
-| **City** | City where the university is located |
-:::
-
-::: content-card
-## Final Dataset
-
-As required in the project guidelines, the final merged dataset was saved as an `.RData` file to ensure reproducibility and transparency.
-
-<a href="data/ie_master_data.RData" class="download-btn"> 💾 Download Final Processed Dataset (.RData) </a>
-:::
-
-::: content-card
+:::: content-card
 ## Data Processing Pipeline in R
 
-The following code block contains the complete workflow used to extract, clean, impute, merge, and save the final master dataset.
+The following code block contains the complete workflow used to extract,
+clean, impute, merge, and save the final master dataset.
 
 ```{r}
 #| label: data-cleaning
@@ -479,22 +472,86 @@ ie_combined <- bind_rows(clean_thestats, clean_kaggle) %>%
 # Save the master dataset for downstream analysis
 save(ie_combined, file = "data/ie_master_data.RData")
 ```
+
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 🛠️ About this Data Processing: Methodology & Workflow
+
+-   **What:** A hybrid data extraction, normalization, and imputation
+    pipeline that constructs a flawless, multi-year (2018-2024) master
+    dataset.
+-   **How:** 1. **Extraction:** Historical data (\<=2020) was pulled
+    dynamically via the YÖK Atlas API using the `thestats` R package.
+    Recent data (2021-2024) was imported from a comprehensive Kaggle
+    CSV.
+    2.  **Normalization:** A custom string manipulation function
+        (`normalize_name()`) utilizing regular expressions
+        (`str_replace_all`) was engineered. This algorithm completely
+        neutralizes Turkish/English character discrepancies (e.g.,
+        "Üniversitesi" vs "University") to create a perfect `Join_Key`.
+    3.  **Imputation:** To prevent data loss (NAs) causing algorithmic
+        failure downstream, unfilled program capacities were logically
+        mapped to the maximum competitive threshold ($300,000$). Missing
+        geographical markers were backfilled
+        (`fill(.direction="updown")`) utilizing the normalized keys.
+-   **Why:** Raw public datasets contain immense formatting
+    inconsistencies and structural gaps. Direct analysis without this
+    extensive wrangling phase would yield mathematically corrupt
+    correlations and distorted visual outputs.
+-   **Finding/Outcome:** The resulting output is a mathematically
+    continuous, robust data frame containing exactly merged time series
+    data, fully stabilized and ready for unsupervised Machine Learning
+    and Pearson Correlation testing.
+:::
+::::
+
+::: content-card
+## Data Dictionary
+
+Below are the most important variables included in our final merged
+dataset.
+
+| Variable | Description |
+|----|----|
+| **Year** | Academic year between 2018 and 2024 |
+| **University_Name** | Standardized university name |
+| **University_Type** | State or Foundation university |
+| **Rank** | National placement ranking (Unfilled mapped to 300,000) |
+| **Quota** | Total student quota |
+| **Preferences** | Total number of student preferences |
+| **Demand_Ratio** | Preferences divided by quota |
+| **Top1_Pref** | Number of first-choice preferences |
+| **City** | City where the university is located |
+:::
+
+::: content-card
+## Final Dataset
+
+As required in the project guidelines, the final merged dataset was
+saved as an `.RData` file to ensure reproducibility and transparency.
+
+<a href="data/ie_master_data.RData" class="download-btn"> 💾 Download
+Final Processed Dataset (.RData) </a>
 :::
 
 ::::::::::::: content-card
 ## Acknowledgements & References
 
-This project would not have been possible without the valuable open-source contributions and academic guidance of the following individuals and technologies:
+This project would not have been possible without the valuable
+open-source contributions and academic guidance of the following
+individuals and technologies:
 
 ::::::::::: reference-grid
 :::: reference-item
-<h3><a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank">**Dr. Erdi Daşdemir**</a></h3>
+<h3><a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank">Dr.
+Erdi Daşdemir</a></h3>
 
 ::: reference-role
 Course Instructor, Hacettepe Univ.
 :::
 
-<p>For providing the foundational EMU430 Data Analytics course slides, rigorous project guidelines, and the pedagogical framework that shaped this analysis.</p>
+<p>For providing the foundational EMU430 Data Analytics course slides,
+rigorous project guidelines, and the pedagogical framework that shaped
+this analysis.</p>
 ::::
 
 :::: reference-item
@@ -504,7 +561,11 @@ Course Instructor, Hacettepe Univ.
 Data Scientist & Contributor
 :::
 
-<p>Special thanks for compiling the comprehensive 2021-2024 Kaggle dataset. You can connect with him on <a href="https://www.linkedin.com/in/ramazanizci/" target="_blank">LinkedIn</a> or explore his educational platform at <a href="https://sinavizcisi.com" target="_blank">sinavizcisi.com</a>.</p>
+<p>Special thanks for compiling the comprehensive 2021-2024 Kaggle
+dataset. You can connect with him on
+<a href="https://www.linkedin.com/in/ramazanizci/" target="_blank">LinkedIn</a>
+or explore his educational platform at
+<a href="https://sinavizcisi.com" target="_blank">sinavizcisi.com</a>.</p>
 ::::
 
 :::: reference-item
@@ -514,7 +575,9 @@ Data Scientist & Contributor
 R Package Developers
 :::
 
-<p>For developing the <code>thestats</code> R package, which allowed us to seamlessly extract official YÖK Atlas placement statistics via API for historical context.</p>
+<p>For developing the <code>thestats</code> R package, which allowed us
+to seamlessly extract official YÖK Atlas placement statistics via API
+for historical context.</p>
 ::::
 
 :::: reference-item
@@ -524,7 +587,9 @@ R Package Developers
 AI Coding Assistant & Copilot
 :::
 
-<p>Acknowledging the use of Gemini Pro as an advanced AI copilot for executing complex data wrangling scripts, CSS/HTML dashboard design, and structural K-Means machine learning algorithms.</p>
+<p>Acknowledging the use of Gemini Pro as an advanced AI copilot for
+executing complex data wrangling scripts, CSS/HTML dashboard design, and
+structural K-Means machine learning algorithms.</p>
 ::::
 :::::::::::
 
@@ -536,12 +601,16 @@ Core Technology Stack
 
 <p style="color: #64748b; font-size: 0.95rem;">
 
-The following R libraries formed the backbone of our data extraction, manipulation, and interactive visualization pipeline:
+The following R libraries formed the backbone of our data extraction,
+manipulation, and interactive visualization pipeline:
 
 </p>
 
 ::: tech-stack
-[tidyverse]{.tech-pill} [dplyr]{.tech-pill} [ggplot2]{.tech-pill} [plotly]{.tech-pill} [leaflet]{.tech-pill} [DT (DataTables)]{.tech-pill} [thestats]{.tech-pill} [stringr]{.tech-pill} [magrittr]{.tech-pill} [Quarto]{.tech-pill}
+[tidyverse]{.tech-pill} [dplyr]{.tech-pill} [ggplot2]{.tech-pill}
+[plotly]{.tech-pill} [leaflet]{.tech-pill} [DT (DataTables)]{.tech-pill}
+[thestats]{.tech-pill} [stringr]{.tech-pill} [magrittr]{.tech-pill}
+[Quarto]{.tech-pill}
 :::
 :::::::::::::
 
@@ -549,6 +618,7 @@ The following R libraries formed the backbone of our data extraction, manipulati
 ## Continue Exploring
 
 ::: nav-links
-<a href="index.html" class="action-btn">⬅ Return to Home</a> <a href="analysis.html" class="action-btn">Proceed to Analysis ➡</a>
+<a href="index.html" class="action-btn">⬅ Return to Home</a>
+<a href="analysis.html" class="action-btn">Proceed to Analysis ➡</a>
 :::
 ::::

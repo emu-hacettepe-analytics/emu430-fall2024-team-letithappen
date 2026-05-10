@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.30">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>data – Let It Happen</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -66,15 +69,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b6a8276bf55561bdbc268162d41bd1f7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ffa9a6279353761231ec249df0a7fdd3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-6b423f165eeea3787de40cb4f8e821c3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -104,6 +106,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -115,8 +146,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Let It Happen</span>
     </a>
@@ -164,18 +193,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#where-we-got-our-data" id="toc-where-we-got-our-data" class="nav-link" data-scroll-target="#where-we-got-our-data">Where We Got Our Data</a></li>
   <li><a href="#data-cleaning-and-wrangling" id="toc-data-cleaning-and-wrangling" class="nav-link" data-scroll-target="#data-cleaning-and-wrangling">Data Cleaning and Wrangling</a></li>
+  <li><a href="#data-processing-pipeline-in-r" id="toc-data-processing-pipeline-in-r" class="nav-link" data-scroll-target="#data-processing-pipeline-in-r">Data Processing Pipeline in R</a></li>
   <li><a href="#data-dictionary" id="toc-data-dictionary" class="nav-link" data-scroll-target="#data-dictionary">Data Dictionary</a></li>
   <li><a href="#final-dataset" id="toc-final-dataset" class="nav-link" data-scroll-target="#final-dataset">Final Dataset</a></li>
-  <li><a href="#data-processing-pipeline-in-r" id="toc-data-processing-pipeline-in-r" class="nav-link" data-scroll-target="#data-processing-pipeline-in-r">Data Processing Pipeline in R</a></li>
   <li><a href="#acknowledgements-references" id="toc-acknowledgements-references" class="nav-link" data-scroll-target="#acknowledgements-references">Acknowledgements &amp; References</a></li>
   <li><a href="#continue-exploring" id="toc-continue-exploring" class="nav-link" data-scroll-target="#continue-exploring">Continue Exploring</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">Data Preparation</h1></header>
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Preparation</h1>
+</div>
 
 
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
 
 
 <style>
@@ -442,7 +487,7 @@ pre {
 </style>
 <div class="hero-container">
 <section id="data-preparation" class="level1 hero-content">
-
+<h1>Data Preparation</h1>
 <section id="building-a-unified-dataset-for-industrial-engineering-programs-in-turkey" class="level2">
 <h2 class="anchored" data-anchor-id="building-a-unified-dataset-for-industrial-engineering-programs-in-turkey">Building a Unified Dataset for Industrial Engineering Programs in Turkey</h2>
 <p>
@@ -484,61 +529,6 @@ This page documents the complete data sourcing, cleaning, preprocessing, and int
 <li>Used as a normalized indicator of student demand intensity</li>
 </ul>
 </section>
-</section>
-<section id="data-dictionary" class="level2 content-card">
-<h2 class="anchored" data-anchor-id="data-dictionary">Data Dictionary</h2>
-<p>Below are the most important variables included in our final merged dataset.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Variable</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Year</strong></td>
-<td>Academic year between 2018 and 2024</td>
-</tr>
-<tr class="even">
-<td><strong>University_Name</strong></td>
-<td>Standardized university name</td>
-</tr>
-<tr class="odd">
-<td><strong>University_Type</strong></td>
-<td>State or Foundation university</td>
-</tr>
-<tr class="even">
-<td><strong>Rank</strong></td>
-<td>National placement ranking (Unfilled mapped to 300,000)</td>
-</tr>
-<tr class="odd">
-<td><strong>Quota</strong></td>
-<td>Total student quota</td>
-</tr>
-<tr class="even">
-<td><strong>Preferences</strong></td>
-<td>Total number of student preferences</td>
-</tr>
-<tr class="odd">
-<td><strong>Demand_Ratio</strong></td>
-<td>Preferences divided by quota</td>
-</tr>
-<tr class="even">
-<td><strong>Top1_Pref</strong></td>
-<td>Number of first-choice preferences</td>
-</tr>
-<tr class="odd">
-<td><strong>City</strong></td>
-<td>City where the university is located</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="final-dataset" class="level2 content-card">
-<h2 class="anchored" data-anchor-id="final-dataset">Final Dataset</h2>
-<p>As required in the project guidelines, the final merged dataset was saved as an <code>.RData</code> file to ensure reproducibility and transparency.</p>
-<p><a href="data/ie_master_data.RData" class="download-btn"> 💾 Download Final Processed Dataset (.RData) </a></p>
 </section>
 <section id="data-processing-pipeline-in-r" class="level2 content-card">
 <h2 class="anchored" data-anchor-id="data-processing-pipeline-in-r">Data Processing Pipeline in R</h2>
@@ -660,6 +650,86 @@ This page documents the complete data sourcing, cleaning, preprocessing, and int
 <span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(ie_combined, <span class="at">file =</span> <span class="st">"data/ie_master_data.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🛠️ About this Data Processing: Methodology &amp; Workflow
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>What:</strong> A hybrid data extraction, normalization, and imputation pipeline that constructs a flawless, multi-year (2018-2024) master dataset.</li>
+<li><strong>How:</strong> 1. <strong>Extraction:</strong> Historical data (&lt;=2020) was pulled dynamically via the YÖK Atlas API using the <code>thestats</code> R package. Recent data (2021-2024) was imported from a comprehensive Kaggle CSV.
+<ol start="2" type="1">
+<li><strong>Normalization:</strong> A custom string manipulation function (<code>normalize_name()</code>) utilizing regular expressions (<code>str_replace_all</code>) was engineered. This algorithm completely neutralizes Turkish/English character discrepancies (e.g., “Üniversitesi” vs “University”) to create a perfect <code>Join_Key</code>.</li>
+<li><strong>Imputation:</strong> To prevent data loss (NAs) causing algorithmic failure downstream, unfilled program capacities were logically mapped to the maximum competitive threshold (<span class="math inline">\(300,000\)</span>). Missing geographical markers were backfilled (<code>fill(.direction="updown")</code>) utilizing the normalized keys.</li>
+</ol></li>
+<li><strong>Why:</strong> Raw public datasets contain immense formatting inconsistencies and structural gaps. Direct analysis without this extensive wrangling phase would yield mathematically corrupt correlations and distorted visual outputs.</li>
+<li><strong>Finding/Outcome:</strong> The resulting output is a mathematically continuous, robust data frame containing exactly merged time series data, fully stabilized and ready for unsupervised Machine Learning and Pearson Correlation testing.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="data-dictionary" class="level2 content-card">
+<h2 class="anchored" data-anchor-id="data-dictionary">Data Dictionary</h2>
+<p>Below are the most important variables included in our final merged dataset.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Year</strong></td>
+<td>Academic year between 2018 and 2024</td>
+</tr>
+<tr class="even">
+<td><strong>University_Name</strong></td>
+<td>Standardized university name</td>
+</tr>
+<tr class="odd">
+<td><strong>University_Type</strong></td>
+<td>State or Foundation university</td>
+</tr>
+<tr class="even">
+<td><strong>Rank</strong></td>
+<td>National placement ranking (Unfilled mapped to 300,000)</td>
+</tr>
+<tr class="odd">
+<td><strong>Quota</strong></td>
+<td>Total student quota</td>
+</tr>
+<tr class="even">
+<td><strong>Preferences</strong></td>
+<td>Total number of student preferences</td>
+</tr>
+<tr class="odd">
+<td><strong>Demand_Ratio</strong></td>
+<td>Preferences divided by quota</td>
+</tr>
+<tr class="even">
+<td><strong>Top1_Pref</strong></td>
+<td>Number of first-choice preferences</td>
+</tr>
+<tr class="odd">
+<td><strong>City</strong></td>
+<td>City where the university is located</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="final-dataset" class="level2 content-card">
+<h2 class="anchored" data-anchor-id="final-dataset">Final Dataset</h2>
+<p>As required in the project guidelines, the final merged dataset was saved as an <code>.RData</code> file to ensure reproducibility and transparency.</p>
+<p><a href="data/ie_master_data.RData" class="download-btn"> 💾 Download Final Processed Dataset (.RData) </a></p>
 </section>
 <section id="acknowledgements-references" class="level2 content-card">
 <h2 class="anchored" data-anchor-id="acknowledgements-references">Acknowledgements &amp; References</h2>
@@ -667,7 +737,7 @@ This page documents the complete data sourcing, cleaning, preprocessing, and int
 <div class="reference-grid">
 <div class="reference-item">
 <h3 class="anchored">
-<a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank"><strong>Dr.&nbsp;Erdi Daşdemir</strong></a>
+<a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank">Dr. Erdi Daşdemir</a>
 </h3>
 <div class="reference-role">
 <p>Course Instructor, Hacettepe Univ.</p>
