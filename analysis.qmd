@@ -13,8 +13,9 @@ format:
 ---
 
 ```{r setup, include=FALSE}
-# Global Environment Setup - Ensures all libraries are securely loaded
+# Global Environment Setup & Scientific Notation Disable
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+options(scipen = 999) # Bilimsel "e" notasyonunu tamamen kapatır
 library(magrittr)
 library(tidyverse)
 library(thestats)
@@ -37,6 +38,18 @@ library(leaflet)
 <style>
 
 /* =========================
+GLOBAL SELECTION (HIGHLIGHT) FIX
+========================= */
+::selection {
+  background-color: #38bdf8 !important; /* Seçilen metnin arka planı gökyüzü mavisi */
+  color: #0f172a !important; /* Seçilen metnin rengi lacivert */
+}
+::-moz-selection {
+  background-color: #38bdf8 !important;
+  color: #0f172a !important;
+}
+
+/* =========================
 GENERAL
 ========================= */
 
@@ -57,8 +70,8 @@ HERO SECTION
   margin-bottom: 4rem;
 
   background:
-    linear-gradient(rgba(15,23,42,0.82), rgba(15,23,42,0.82)),
-    url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop");
+    linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)),
+    url("[https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop](https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop)");
 
   background-size: cover;
   background-position: center;
@@ -83,14 +96,17 @@ HERO SECTION
 
 .hero-content h2 {
   font-size: 2rem;
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 2rem;
+  color: #38bdf8 !important; /* Yazıyı çok net bir mavi yapar */
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Arka plandan ayırır */
+  letter-spacing: 0.5px;
 }
 
 .hero-content p {
   font-size: 1.2rem;
   line-height: 1.8;
-  opacity: 0.92;
+  opacity: 0.95;
 }
 
 /* =========================
@@ -309,7 +325,7 @@ h3 {
 
 ### Key Takeaways
 
--   **Historical Research Focus:** This study decodes 7 years (2018-2024) of structural growth and academic demand for Industrial Engineering programs in Turkey\[cite: 4, 15\].
+-   **Historical Research Focus:** This study decodes 7 years (2018-2024) of structural growth and academic demand for Industrial Engineering programs in Turkey.
 -   **Geospatial & Value Intelligence:** By integrating interactive Leaflet maps and simulated ROI analysis, we move beyond raw data into executive-level, actionable market insights.
 -   **AI-Driven Market Segmentation:** Utilizing Machine Learning (K-Means Clustering), we successfully segmented universities into distinct tiers based purely on their intrinsic demand and performance metrics.
 -   **Statistical Rigor:** We establish true causation metrics using formal Hypothesis Testing (P-Values) to mathematically prove the dominance of metropolitan educational hubs.
@@ -319,12 +335,12 @@ h3 {
 ::: glass-card
 ## 1. Introduction to Analysis
 
-As Industrial Engineering students, our objective is to apply data-driven decision-making to our own academic domain. \[cite_start\]In this section, we transition from raw admission data to actionable insights using a hybrid data engineering pipeline, utilizing `tidyverse` for data wrangling, and `plotly` for advanced 2D and 3D interactive visualizations\[cite: 5\].
+As Industrial Engineering students, our objective is to apply data-driven decision-making to our own academic domain. In this section, we transition from raw admission data to actionable insights using a hybrid data engineering pipeline, utilizing `tidyverse` for data wrangling, and `plotly` for advanced 2D and 3D interactive visualizations.
 :::
 
 ## 2. Hybrid Data Exploration & Cleaning
 
-To execute our methodology of decoding the drivers of success, we extract metrics alongside geographical data from both the API and our Kaggle integration\[cite: 8\]. To flawlessly merge the API (English) and Kaggle (Turkish) datasets, we implement a character normalization algorithm, which allows us to effectively back-fill missing historical variables.
+To execute our methodology of decoding the drivers of success, we extract metrics alongside geographical data from both the API and our Kaggle integration. To flawlessly merge the API (English) and Kaggle (Turkish) datasets, we implement a character normalization algorithm, which allows us to effectively back-fill missing historical variables.
 
 ```{r}
 #| label: hybrid-data-processing
@@ -481,7 +497,7 @@ datatable(
 :::
 
 ::: insight-box
-(*Per project requirements, the fully harmonized 2018-2024 master dataset has been exported as an `.RData` file\[cite: 10\]. Click the button above to download it for full reproducibility. Additionally, using the interactive table above, you can directly export any filtered subset of the data to Excel, CSV, or PDF formats. Note: The `Professor_Count` and `Erasmus_Students` variables are algorithmically simulated for Phase 1 methodology demonstration and will be populated via web scraping in Phase 2. Blank rankings due to the 300,000 threshold are mapped to 300,000 to maintain numerical filterability.)*
+*(Per project requirements, the fully harmonized 2018-2024 master dataset has been exported as an `.RData` file. Click the button above to download it for full reproducibility. Additionally, using the interactive table above, you can directly export any filtered subset of the data to Excel, CSV, or PDF formats. Note: The `Professor_Count` and `Erasmus_Students` variables are algorithmically simulated for Phase 1 methodology demonstration and will be populated via web scraping in Phase 2. Blank rankings due to the 300,000 threshold are mapped to 300,000 to maintain numerical filterability.)*
 :::
 
 <br>
@@ -584,7 +600,7 @@ p_violin <- ie_combined %>%
   geom_violin(alpha = 0.6, color = "transparent") +
   geom_boxplot(width = 0.15, fill = "#1e293b", color = "#cbd5e1", outlier.shape = NA, alpha = 0.8) +
   scale_fill_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
-  scale_y_reverse() + 
+  scale_y_reverse(labels = function(x) format(x, big.mark = ".", scientific = FALSE)) + 
   theme_minimal() +
   labs(title = "Sector Selectivity: State vs. Foundation Rankings", x = "University Sector", y = "Base Rank (Lower is Better)") +
   theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
@@ -614,10 +630,10 @@ Tracking national success rankings over an extended timeline reveals true shifts
 p2 <- ie_combined %>%
   filter(str_detect(str_to_lower(University_Name), "hacettepe")) %>%
   filter(Rank < 300000) %>%
-  ggplot(aes(x = Year, y = Rank, text = paste("Year:", Year, "<br>Rank:", Rank))) +
+  ggplot(aes(x = Year, y = Rank, text = paste("Year:", Year, "<br>Rank:", format(Rank, big.mark=".", scientific=FALSE)))) +
   geom_line(color = "#38bdf8", linewidth = 1.2, group = 1) +
   geom_point(color = "#0f172a", size = 3) +
-  scale_y_reverse() + 
+  scale_y_reverse(labels = function(x) format(x, big.mark = ".", scientific = FALSE)) + 
   scale_x_continuous(breaks = seq(min(ie_combined$Year, na.rm=TRUE), max(ie_combined$Year, na.rm=TRUE), 1)) +
   theme_minimal() +
   labs(title = "Ranking Shifts: Hacettepe University (IE)", x = "Academic Year", y = "National Base Rank") +
@@ -703,12 +719,12 @@ Before analyzing pure demand, we must consider supply. Does having a smaller cap
 p_quota <- ie_combined %>%
   filter(Year == latest_year, Rank < 300000) %>%
   ggplot(aes(x = Quota, y = Rank, color = University_Type, size = Preferences,
-             text = paste("Uni:", University_Name, "<br>Quota:", Quota, "<br>Rank:", Rank, "<br>Total Prefs:", Preferences))) +
+             text = paste("Uni:", University_Name, "<br>Quota:", Quota, "<br>Rank:", format(Rank, big.mark=".", scientific=FALSE), "<br>Total Prefs:", Preferences))) +
   geom_point(alpha = 0.7) +
   geom_smooth(method = "lm", se = FALSE, linetype = "dotted", color = "#cbd5e1", linewidth = 0.6) +
   scale_color_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
   scale_size_continuous(range = c(2, 12)) + 
-  scale_y_reverse() + 
+  scale_y_reverse(labels = function(x) format(x, big.mark = ".", scientific = FALSE)) + 
   theme_minimal() +
   labs(title = "Capacity vs. Selectivity: The Quota Effect", x = "Total Quota (Number of Seats)", y = "Base Rank (Lower is Better)") +
   theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
@@ -751,12 +767,12 @@ cluster_map <- setNames(c("Elite (High Demand)", "Mainstream (Balanced)", "Acces
 ml_data$Segment <- cluster_map[as.character(ml_data$Cluster)]
 
 p_cluster <- ggplot(ml_data, aes(x = Demand_Ratio, y = Rank, color = Segment, size = Quota,
-                                 text = paste("Uni:", University_Name, "<br>Segment:", Segment, "<br>Rank:", Rank))) +
+                                 text = paste("Uni:", University_Name, "<br>Segment:", Segment, "<br>Rank:", format(Rank, big.mark=".", scientific=FALSE)))) +
   geom_point(alpha = 0.8) +
   scale_color_manual(values = c("Elite (High Demand)" = "#38bdf8", 
                                 "Mainstream (Balanced)" = "#f472b6", 
                                 "Accessible (High Rank)" = "#94a3b8")) +
-  scale_y_reverse() +
+  scale_y_reverse(labels = function(x) format(x, big.mark = ".", scientific = FALSE)) +
   theme_minimal() +
   labs(title = "Machine Learning: University Segmentation Matrix", x = "Demand Ratio", y = "Base Rank (Lower is Better)") +
   theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
@@ -788,7 +804,7 @@ p_3d <- ie_combined %>%
   filter(Year == latest_year, Rank < 300000) %>%
   plot_ly(x = ~Professor_Count, y = ~Erasmus_Students, z = ~Rank, 
           color = ~University_Type, colors = c("#f472b6", "#38bdf8"),
-          text = ~paste("Uni:", University_Name, "<br>Rank:", Rank, "<br>Professors:", Professor_Count, "<br>Erasmus Students:", Erasmus_Students),
+          text = ~paste("Uni:", University_Name, "<br>Rank:", format(Rank, big.mark=".", scientific=FALSE), "<br>Professors:", Professor_Count, "<br>Erasmus Students:", Erasmus_Students),
           hoverinfo = "text",
           type = "scatter3d", mode = "markers",
           marker = list(size = 5, opacity = 0.8)) %>%
@@ -797,7 +813,7 @@ p_3d <- ie_combined %>%
     scene = list(
       xaxis = list(title = "Professor Count", gridcolor = "#cbd5e1", color = "#334155"),
       yaxis = list(title = "Erasmus Mobility", gridcolor = "#cbd5e1", color = "#334155"),
-      zaxis = list(title = "Rank (Lower is Better)", autorange = "reversed", gridcolor = "#cbd5e1", color = "#334155"),
+      zaxis = list(title = "Rank (Lower is Better)", autorange = "reversed", gridcolor = "#cbd5e1", color = "#334155", tickformat = "d"),
       bgcolor = "transparent"
     ),
     paper_bgcolor = "transparent",
@@ -829,12 +845,12 @@ To ensure no variable is left unanalyzed, we examine the absolute count of "Top 
 p_top1 <- ie_combined %>%
   filter(Year == latest_year, Rank < 300000, Top1_Pref > 0) %>%
   ggplot(aes(x = Top1_Pref, y = Rank, color = University_Type, 
-             text = paste("Uni:", University_Name, "<br>First Choices:", Top1_Pref, "<br>Rank:", Rank))) +
+             text = paste("Uni:", University_Name, "<br>First Choices:", Top1_Pref, "<br>Rank:", format(Rank, big.mark=".", scientific=FALSE)))) +
   geom_point(alpha = 0.7, size = 2.5) +
   geom_smooth(method = "loess", se = FALSE, color = "#cbd5e1", linewidth = 0.7) +
   scale_color_manual(values = c("State" = "#38bdf8", "Foundation" = "#f472b6")) +
-  scale_y_reverse() + 
-  scale_x_log10() + # Logarithmic scale for extreme variance
+  scale_y_reverse(labels = function(x) format(x, big.mark = ".", scientific = FALSE)) + 
+  scale_x_log10(labels = function(x) format(x, big.mark = ".", scientific = FALSE)) + 
   theme_minimal() +
   labs(title = "Exclusivity: First Choice Priority vs. Rank", x = "Total 'Top 1' Preferences (Logarithmic Scale)", y = "Base Rank (Lower is Better)") +
   theme(plot.title = element_text(face = "bold", color = "#0f172a"), axis.text = element_text(color = "#334155"))
@@ -870,7 +886,7 @@ p3 <- ie_combined %>%
   ggplot(aes(x = reorder(City, -Rank, FUN = median, na.rm = TRUE), y = Rank, fill = City)) +
   geom_boxplot(alpha = 0.8, show.legend = FALSE, color = "#94a3b8") +
   scale_fill_viridis_d(option = "mako") +
-  scale_y_reverse() +
+  scale_y_reverse(labels = function(x) format(x, big.mark = ".", scientific = FALSE)) +
   coord_flip() +
   theme_minimal() +
   labs(title = "Regional Drivers: City Influence on Rankings", x = "City", y = "Rank (Lower is Better)") +
@@ -952,7 +968,7 @@ leaflet(map_data) %>%
     radius = ~sqrt(Total_Quota) * 0.8, # Scaled bubble size driven by quota capacity
     color = ~ifelse(Avg_Rank < 50000, "#38bdf8", "#f472b6"), # Blue for elite, Pink for others
     stroke = FALSE, fillOpacity = 0.7,
-    popup = ~paste("<b>", City, "</b><br>Active Programs:", Programs, "<br>Total Regional Quota:", Total_Quota, "<br>Avg Base Rank:", round(Avg_Rank))
+    popup = ~paste("<b>", City, "</b><br>Active Programs:", Programs, "<br>Total Regional Quota:", Total_Quota, "<br>Avg Base Rank:", format(round(Avg_Rank), big.mark=".", scientific=FALSE))
   )
 ```
 
@@ -1048,7 +1064,7 @@ p_val_display <- if(t_test_result$p.value < 0.001) "< 0.001" else format.pval(t_
 p_ttest <- ggplot(hyp_data, aes(x = Location, y = Rank, fill = Location)) +
   geom_boxplot(alpha = 0.8, color = "#0f172a", outlier.color = "#ef4444", outlier.size = 2) +
   scale_fill_manual(values = c("Metropolitan Hub" = "#38bdf8", "Anatolian Region" = "#94a3b8")) +
-  scale_y_reverse() +
+  scale_y_reverse(labels = function(x) format(x, big.mark = ".", scientific = FALSE)) +
   theme_minimal() +
   labs(
     title = paste("Significance Test: Metropol vs Anatolian (p-value:", p_val_display, ")"), 
@@ -1085,10 +1101,10 @@ roi_data <- ie_combined %>%
     Simulated_Fee = round(runif(n(), 150000, 300000) + (300000 - Rank) * 1.2)
   )
 
-p_roi <- ggplot(roi_data, aes(x = Simulated_Fee, y = Rank, text = paste("Uni:", University_Name, "<br>Est. 2024 Fee:", format(Simulated_Fee, big.mark=".", decimal.mark=","), "TL<br>Rank:", Rank))) +
+p_roi <- ggplot(roi_data, aes(x = Simulated_Fee, y = Rank, text = paste("Uni:", University_Name, "<br>Est. 2024 Fee:", format(Simulated_Fee, big.mark=".", decimal.mark=","), "TL<br>Rank:", format(Rank, big.mark=".", scientific=FALSE)))) +
   geom_point(color = "#f472b6", size = 3, alpha = 0.8) +
   geom_smooth(method = "loess", se = FALSE, color = "#cbd5e1", linetype = "dashed", linewidth = 1) +
-  scale_y_reverse() +
+  scale_y_reverse(labels = function(x) format(x, big.mark = ".", scientific = FALSE)) +
   scale_x_continuous(labels = function(x) paste0(format(x/1000, big.mark=".", scientific = FALSE), "k TL")) +
   theme_minimal() +
   labs(title = "ROI Analysis: Estimated 2024 Tuition vs Prestige", x = "Simulated Annual Tuition (2024 - TL)", y = "Base Rank (Lower is Better)") +
