@@ -9,9 +9,6 @@ format:
     toc-depth: 2
     smooth-scroll: true
     code-fold: true
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -24,7 +21,6 @@ library(DT)
 library(plotly)
 ```
 
-```{=html}
 <style>
 
 /* GENERAL */
@@ -287,71 +283,62 @@ pre {
 }
 
 </style>
-```
 
-:::: hero-container
-::: hero-content
+<div class="hero-container">
+<div class="hero-content">
 # Data Preparation
-
 ## Building a Unified Dataset for Industrial Engineering Programs in Turkey
+<p>This page documents the complete data sourcing, cleaning, preprocessing, and integration pipeline used throughout our project.</p>
+</div>
+</div>
 
-<p>This page documents the complete data sourcing, cleaning,
-preprocessing, and integration pipeline used throughout our project.</p>
-:::
-::::
-
-::: content-card
+<div class="content-card">
 ## Where We Got Our Data
 
-To analyze long-term trends in Industrial Engineering education across
-Turkey, we combined multiple datasets covering the years between 2018
-and 2024.
+To analyze long-term trends in Industrial Engineering education across Turkey, we combined multiple datasets covering the years between 2018 and 2024.
 
 ### Primary Sources
 
--   **YÖK Atlas Data (2018–2020)** We used the `thestats` R package
-    developed by M. Çavuş and O. Aydın to extract official placement
-    statistics directly into R.
--   **Kaggle Dataset (2021–2024)** To enrich the analysis with more
-    recent information, we integrated a Kaggle dataset containing quota
-    sizes, city information, total preference counts, and additional
-    admission statistics.
+- **YÖK Atlas Data (2018–2020)** We used the `thestats` R package developed by M. Çavuş and O. Aydın to extract official placement statistics directly into R.
+- **Kaggle Dataset (2021–2024)** To enrich the analysis with more recent information, we integrated a Kaggle dataset containing quota sizes, city information, total preference counts, and additional admission statistics.
 
-This hybrid approach allowed us to construct a broader and more
-consistent analytical timeline.
+This hybrid approach allowed us to construct a broader and more consistent analytical timeline.
+
+::: {.callout-note collapse="true" appearance="minimal"}
+#### 🎯 Strategic Data Objectives: Choices & Accomplishments
+
+* **Why this data?** Analyzing admission trends strictly from a single year or a single source limits the scope to a static snapshot. By actively merging historical API data (YÖK) with a comprehensive, modern Kaggle dataset, we chose to observe *longitudinal trends*—tracking the evolution of program popularity and sector behavior over 7 consecutive years.
+* **Our Objectives:** 1. To transition raw, disparate YÖK admission tables into a fully integrated, analyzable Master Dataset.
+  2. To engineer new variables (e.g., `Demand Ratio`) that uncover hidden relationships between university prestige and student preference density.
+* **Our Accomplishments:** We successfully solved significant data discrepancies (such as Turkish/English character conflicts across different sources) by designing a custom Unicode-safe normalization algorithm. We also managed missing Phase 2 variables via robust mathematical simulations, ensuring our downstream machine learning models (K-Means) and 3D visualizations could operate flawlessly without throwing NA (Missing Value) errors.
 :::
 
-::: dark-section
+</div>
+
+<div class="dark-section">
 ## Data Cleaning and Wrangling
 
-Raw admission datasets often contain inconsistent naming conventions,
-irrelevant department matches, and formatting issues. To ensure
-analytical consistency, we applied several preprocessing steps using the
-`tidyverse` ecosystem.
+Raw admission datasets often contain inconsistent naming conventions, irrelevant department matches, and formatting issues. To ensure analytical consistency, we applied several preprocessing steps using the `tidyverse` ecosystem.
 
 ### Main Cleaning Steps
 
--   Filtered only Industrial Engineering departments
--   Removed unrelated engineering programs
--   Standardized university and faculty names
--   Engineered a Unicode-safe normalization algorithm for perfect
-    dataset merging
--   Simulated missing Phase 2 variables (Faculty Size and Erasmus
-    traffic) based on robust performance weights
--   Resolved missing data (NA) cases, logically mapping unfilled quota
-    rankings to the 300,000 threshold to maintain numerical integrity.
+- Filtered only Industrial Engineering departments
+- Removed unrelated engineering programs
+- Standardized university and faculty names
+- Engineered a Unicode-safe normalization algorithm for perfect dataset merging
+- Simulated missing Phase 2 variables (Faculty Size and Erasmus traffic) based on robust performance weights
+- Resolved missing data (NA) cases, logically mapping unfilled quota rankings to the 300,000 threshold to maintain numerical integrity.
 
 ### Derived Variables
 
--   **Demand_Ratio** = Total Preferences / Total Quota
--   Used as a normalized indicator of student demand intensity
-:::
+- **Demand_Ratio** = Total Preferences / Total Quota
+- Used as a normalized indicator of student demand intensity
+</div>
 
-:::: content-card
+<div class="content-card">
 ## Data Processing Pipeline in R
 
-The following code block contains the complete workflow used to extract,
-clean, impute, merge, and save the final master dataset.
+The following code block contains the complete workflow used to extract, clean, impute, merge, and save the final master dataset.
 
 ```{r}
 #| label: data-cleaning
@@ -476,39 +463,20 @@ save(ie_combined, file = "data/ie_master_data.RData")
 ::: {.callout-note collapse="true" appearance="minimal"}
 #### 🛠️ About this Data Processing: Methodology & Workflow
 
--   **What:** A hybrid data extraction, normalization, and imputation
-    pipeline that constructs a flawless, multi-year (2018-2024) master
-    dataset.
--   **How:** 1. **Extraction:** Historical data (\<=2020) was pulled
-    dynamically via the YÖK Atlas API using the `thestats` R package.
-    Recent data (2021-2024) was imported from a comprehensive Kaggle
-    CSV.
-    2.  **Normalization:** A custom string manipulation function
-        (`normalize_name()`) utilizing regular expressions
-        (`str_replace_all`) was engineered. This algorithm completely
-        neutralizes Turkish/English character discrepancies (e.g.,
-        "Üniversitesi" vs "University") to create a perfect `Join_Key`.
-    3.  **Imputation:** To prevent data loss (NAs) causing algorithmic
-        failure downstream, unfilled program capacities were logically
-        mapped to the maximum competitive threshold ($300,000$). Missing
-        geographical markers were backfilled
-        (`fill(.direction="updown")`) utilizing the normalized keys.
--   **Why:** Raw public datasets contain immense formatting
-    inconsistencies and structural gaps. Direct analysis without this
-    extensive wrangling phase would yield mathematically corrupt
-    correlations and distorted visual outputs.
--   **Finding/Outcome:** The resulting output is a mathematically
-    continuous, robust data frame containing exactly merged time series
-    data, fully stabilized and ready for unsupervised Machine Learning
-    and Pearson Correlation testing.
+* **What:** A hybrid data extraction, normalization, and imputation pipeline that constructs a flawless, multi-year (2018-2024) master dataset.
+* **How:** 1.  **Extraction:** Historical data (<=2020) was pulled dynamically via the YÖK Atlas API using the `thestats` R package. Recent data (2021-2024) was imported from a comprehensive Kaggle CSV.
+  2.  **Normalization:** A custom string manipulation function (`normalize_name()`) utilizing regular expressions (`str_replace_all`) was engineered. This algorithm completely neutralizes Turkish/English character discrepancies (e.g., "Üniversitesi" vs "University") to create a perfect `Join_Key`.
+  3.  **Imputation:** To prevent data loss (NAs) causing algorithmic failure downstream, unfilled program capacities were logically mapped to the maximum competitive threshold ($300,000$). Missing geographical markers were backfilled (`fill(.direction="updown")`) utilizing the normalized keys.
+* **Why:** Raw public datasets contain immense formatting inconsistencies and structural gaps. Direct analysis without this extensive wrangling phase would yield mathematically corrupt correlations and distorted visual outputs.
+* **Finding/Outcome:** The resulting output is a mathematically continuous, robust data frame containing exactly merged time series data, fully stabilized and ready for unsupervised Machine Learning and Pearson Correlation testing.
 :::
-::::
 
-::: content-card
+</div>
+
+<div class="content-card">
 ## Data Dictionary
 
-Below are the most important variables included in our final merged
-dataset.
+Below are the most important variables included in our final merged dataset.
 
 | Variable | Description |
 |----|----|
@@ -521,104 +489,73 @@ dataset.
 | **Demand_Ratio** | Preferences divided by quota |
 | **Top1_Pref** | Number of first-choice preferences |
 | **City** | City where the university is located |
-:::
+</div>
 
-::: content-card
+<div class="content-card">
 ## Final Dataset
 
-As required in the project guidelines, the final merged dataset was
-saved as an `.RData` file to ensure reproducibility and transparency.
+As required in the project guidelines, the final merged dataset was saved as an `.RData` file to ensure reproducibility and transparency.
 
-<a href="data/ie_master_data.RData" class="download-btn"> 💾 Download
-Final Processed Dataset (.RData) </a>
-:::
+<a href="data/ie_master_data.RData" class="download-btn"> 💾 Download Final Processed Dataset (.RData) </a>
+</div>
 
-::::::::::::: content-card
-## Acknowledgements & References
 
-This project would not have been possible without the valuable
-open-source contributions and academic guidance of the following
-individuals and technologies:
+<div class="content-card">
+## 🌟 Acknowledgements & References
 
-::::::::::: reference-grid
-:::: reference-item
-<h3><a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank">Dr.
-Erdi Daşdemir</a></h3>
+This project would not have been possible without the valuable open-source contributions and academic guidance of the following individuals and technologies:
 
-::: reference-role
-Course Instructor, Hacettepe Univ.
-:::
+<div class="reference-grid">
 
-<p>For providing the foundational EMU430 Data Analytics course slides,
-rigorous project guidelines, and the pedagogical framework that shaped
-this analysis.</p>
-::::
+<div class="reference-item">
+<h3><a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank">Dr. Erdi Daşdemir</a></h3>
+<div class="reference-role">Course Instructor, Hacettepe Univ.</div>
+<p>For providing the foundational EMU430 Data Analytics course slides, rigorous project guidelines, and the pedagogical framework that shaped this analysis.</p>
+</div>
 
-:::: reference-item
+<div class="reference-item">
 <h3>Ramazan İzci</h3>
+<div class="reference-role">Data Scientist & Contributor</div>
+<p>Special thanks for compiling the comprehensive 2021-2024 Kaggle dataset. You can connect with him on <a href="https://www.linkedin.com/in/ramazanizci/" target="_blank">LinkedIn</a> or explore his educational platform at <a href="https://sinavizcisi.com" target="_blank">sinavizcisi.com</a>.</p>
+</div>
 
-::: reference-role
-Data Scientist & Contributor
-:::
-
-<p>Special thanks for compiling the comprehensive 2021-2024 Kaggle
-dataset. You can connect with him on
-<a href="https://www.linkedin.com/in/ramazanizci/" target="_blank">LinkedIn</a>
-or explore his educational platform at
-<a href="https://sinavizcisi.com" target="_blank">sinavizcisi.com</a>.</p>
-::::
-
-:::: reference-item
+<div class="reference-item">
 <h3>M. Çavuş & O. Aydın</h3>
+<div class="reference-role">R Package Developers</div>
+<p>For developing the <code>thestats</code> R package, which allowed us to seamlessly extract official YÖK Atlas placement statistics via API for historical context.</p>
+</div>
 
-::: reference-role
-R Package Developers
-:::
-
-<p>For developing the <code>thestats</code> R package, which allowed us
-to seamlessly extract official YÖK Atlas placement statistics via API
-for historical context.</p>
-::::
-
-:::: reference-item
+<div class="reference-item">
 <h3>Gemini Pro (Google AI)</h3>
+<div class="reference-role">AI Coding Assistant & Copilot</div>
+<p>Acknowledging the use of Gemini Pro as an advanced AI copilot for executing complex data wrangling scripts, CSS/HTML dashboard design, and structural K-Means machine learning algorithms.</p>
+</div>
 
-::: reference-role
-AI Coding Assistant & Copilot
-:::
+</div>
 
-<p>Acknowledging the use of Gemini Pro as an advanced AI copilot for
-executing complex data wrangling scripts, CSS/HTML dashboard design, and
-structural K-Means machine learning algorithms.</p>
-::::
-:::::::::::
+<h3 style="margin-top: 3rem; margin-bottom: 0.5rem; color: #0f172a;">🛠️ Core Technology Stack</h3>
+<p style="color: #64748b; font-size: 0.95rem;">The following R libraries formed the backbone of our data extraction, manipulation, and interactive visualization pipeline:</p>
 
-<h3 style="margin-top: 3rem; margin-bottom: 0.5rem; color: #0f172a;">
+<div class="tech-stack">
+  <span class="tech-pill">tidyverse</span>
+  <span class="tech-pill">dplyr</span>
+  <span class="tech-pill">ggplot2</span>
+  <span class="tech-pill">plotly</span>
+  <span class="tech-pill">leaflet</span>
+  <span class="tech-pill">DT (DataTables)</span>
+  <span class="tech-pill">thestats</span>
+  <span class="tech-pill">stringr</span>
+  <span class="tech-pill">magrittr</span>
+  <span class="tech-pill">Quarto</span>
+</div>
 
-Core Technology Stack
+</div>
 
-</h3>
-
-<p style="color: #64748b; font-size: 0.95rem;">
-
-The following R libraries formed the backbone of our data extraction,
-manipulation, and interactive visualization pipeline:
-
-</p>
-
-::: tech-stack
-[tidyverse]{.tech-pill} [dplyr]{.tech-pill} [ggplot2]{.tech-pill}
-[plotly]{.tech-pill} [leaflet]{.tech-pill} [DT (DataTables)]{.tech-pill}
-[thestats]{.tech-pill} [stringr]{.tech-pill} [magrittr]{.tech-pill}
-[Quarto]{.tech-pill}
-:::
-:::::::::::::
-
-:::: {.content-card style="text-align: center; padding: 2rem;"}
+<div class="content-card" style="text-align: center; padding: 2rem;">
 ## Continue Exploring
 
-::: nav-links
+<div class="nav-links">
 <a href="index.html" class="action-btn">⬅ Return to Home</a>
 <a href="analysis.html" class="action-btn">Proceed to Analysis ➡</a>
-:::
-::::
+</div>
+</div>

@@ -196,7 +196,7 @@ window.Quarto = {
   <li><a href="#data-processing-pipeline-in-r" id="toc-data-processing-pipeline-in-r" class="nav-link" data-scroll-target="#data-processing-pipeline-in-r">Data Processing Pipeline in R</a></li>
   <li><a href="#data-dictionary" id="toc-data-dictionary" class="nav-link" data-scroll-target="#data-dictionary">Data Dictionary</a></li>
   <li><a href="#final-dataset" id="toc-final-dataset" class="nav-link" data-scroll-target="#final-dataset">Final Dataset</a></li>
-  <li><a href="#acknowledgements-references" id="toc-acknowledgements-references" class="nav-link" data-scroll-target="#acknowledgements-references">Acknowledgements &amp; References</a></li>
+  <li><a href="#acknowledgements-references" id="toc-acknowledgements-references" class="nav-link" data-scroll-target="#acknowledgements-references">🌟 Acknowledgements &amp; References</a></li>
   <li><a href="#continue-exploring" id="toc-continue-exploring" class="nav-link" data-scroll-target="#continue-exploring">Continue Exploring</a></li>
   </ul>
 </nav>
@@ -506,6 +506,29 @@ This page documents the complete data sourcing, cleaning, preprocessing, and int
 <li><strong>Kaggle Dataset (2021–2024)</strong> To enrich the analysis with more recent information, we integrated a Kaggle dataset containing quota sizes, city information, total preference counts, and additional admission statistics.</li>
 </ul>
 <p>This hybrid approach allowed us to construct a broader and more consistent analytical timeline.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>🎯 Strategic Data Objectives: Choices &amp; Accomplishments
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Why this data?</strong> Analyzing admission trends strictly from a single year or a single source limits the scope to a static snapshot. By actively merging historical API data (YÖK) with a comprehensive, modern Kaggle dataset, we chose to observe <em>longitudinal trends</em>—tracking the evolution of program popularity and sector behavior over 7 consecutive years.</li>
+<li><strong>Our Objectives:</strong> 1. To transition raw, disparate YÖK admission tables into a fully integrated, analyzable Master Dataset.
+<ol start="2" type="1">
+<li>To engineer new variables (e.g., <code>Demand Ratio</code>) that uncover hidden relationships between university prestige and student preference density.</li>
+</ol></li>
+<li><strong>Our Accomplishments:</strong> We successfully solved significant data discrepancies (such as Turkish/English character conflicts across different sources) by designing a custom Unicode-safe normalization algorithm. We also managed missing Phase 2 variables via robust mathematical simulations, ensuring our downstream machine learning models (K-Means) and 3D visualizations could operate flawlessly without throwing NA (Missing Value) errors.</li>
+</ul>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="data-cleaning-and-wrangling" class="level2 dark-section">
@@ -651,7 +674,7 @@ This page documents the complete data sourcing, cleaning, preprocessing, and int
 </details>
 </div>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -660,7 +683,7 @@ This page documents the complete data sourcing, cleaning, preprocessing, and int
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
 <li><strong>What:</strong> A hybrid data extraction, normalization, and imputation pipeline that constructs a flawless, multi-year (2018-2024) master dataset.</li>
@@ -732,15 +755,15 @@ This page documents the complete data sourcing, cleaning, preprocessing, and int
 <p><a href="data/ie_master_data.RData" class="download-btn"> 💾 Download Final Processed Dataset (.RData) </a></p>
 </section>
 <section id="acknowledgements-references" class="level2 content-card">
-<h2 class="anchored" data-anchor-id="acknowledgements-references">Acknowledgements &amp; References</h2>
+<h2 class="anchored" data-anchor-id="acknowledgements-references">🌟 Acknowledgements &amp; References</h2>
 <p>This project would not have been possible without the valuable open-source contributions and academic guidance of the following individuals and technologies:</p>
 <div class="reference-grid">
 <div class="reference-item">
 <h3 class="anchored">
-<a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank">Dr. Erdi Daşdemir</a>
+<a href="https://www.linkedin.com/in/erdidasdemir/" target="_blank">Dr.&nbsp;Erdi Daşdemir</a>
 </h3>
 <div class="reference-role">
-<p>Course Instructor, Hacettepe Univ.</p>
+Course Instructor, Hacettepe Univ.
 </div>
 <p>
 For providing the foundational EMU430 Data Analytics course slides, rigorous project guidelines, and the pedagogical framework that shaped this analysis.
@@ -751,7 +774,7 @@ For providing the foundational EMU430 Data Analytics course slides, rigorous pro
 Ramazan İzci
 </h3>
 <div class="reference-role">
-<p>Data Scientist &amp; Contributor</p>
+Data Scientist &amp; Contributor
 </div>
 <p>
 Special thanks for compiling the comprehensive 2021-2024 Kaggle dataset. You can connect with him on <a href="https://www.linkedin.com/in/ramazanizci/" target="_blank">LinkedIn</a> or explore his educational platform at <a href="https://sinavizcisi.com" target="_blank">sinavizcisi.com</a>.
@@ -762,7 +785,7 @@ Special thanks for compiling the comprehensive 2021-2024 Kaggle dataset. You can
 M. Çavuş &amp; O. Aydın
 </h3>
 <div class="reference-role">
-<p>R Package Developers</p>
+R Package Developers
 </div>
 <p>
 For developing the <code>thestats</code> R package, which allowed us to seamlessly extract official YÖK Atlas placement statistics via API for historical context.
@@ -773,7 +796,7 @@ For developing the <code>thestats</code> R package, which allowed us to seamless
 Gemini Pro (Google AI)
 </h3>
 <div class="reference-role">
-<p>AI Coding Assistant &amp; Copilot</p>
+AI Coding Assistant &amp; Copilot
 </div>
 <p>
 Acknowledging the use of Gemini Pro as an advanced AI copilot for executing complex data wrangling scripts, CSS/HTML dashboard design, and structural K-Means machine learning algorithms.
@@ -781,11 +804,11 @@ Acknowledging the use of Gemini Pro as an advanced AI copilot for executing comp
 </div>
 </div>
 <h3 style="margin-top: 3rem; margin-bottom: 0.5rem; color: #0f172a;" class="anchored">
-<p>Core Technology Stack</p>
+🛠️ Core Technology Stack
 </h3>
 <p style="color: #64748b; font-size: 0.95rem;">
-</p><p>The following R libraries formed the backbone of our data extraction, manipulation, and interactive visualization pipeline:</p>
-<p></p>
+The following R libraries formed the backbone of our data extraction, manipulation, and interactive visualization pipeline:
+</p>
 <div class="tech-stack">
 <p><span class="tech-pill">tidyverse</span> <span class="tech-pill">dplyr</span> <span class="tech-pill">ggplot2</span> <span class="tech-pill">plotly</span> <span class="tech-pill">leaflet</span> <span class="tech-pill">DT (DataTables)</span> <span class="tech-pill">thestats</span> <span class="tech-pill">stringr</span> <span class="tech-pill">magrittr</span> <span class="tech-pill">Quarto</span></p>
 </div>
