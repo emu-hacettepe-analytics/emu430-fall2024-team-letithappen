@@ -573,7 +573,7 @@ and higher education trend analysis.</p>
 <h3>Yusuf Bora Çavdar</h3>
 
 ::: contributor-role
-Lead Data Analysis · Visualization · Modeling
+Research Design · Visualization · Modeling
 :::
 ::::
 
@@ -593,7 +593,7 @@ Repo →</a>
 <h3>Onur Furkan Gök</h3>
 
 ::: contributor-role
-Research Design · Data Processing · Methodology
+Lead Data Analysis · Data Processing · Methodology
 :::
 ::::
 
